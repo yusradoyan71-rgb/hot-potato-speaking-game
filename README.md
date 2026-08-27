@@ -78,3 +78,56 @@ No installation, build step, or Node.js server is required.
 1. Double-click `index.html` to open directly in any modern browser (Chrome, Edge, Firefox, Safari).
 2. Or serve locally with any HTTP server (e.g. `npx serve .` or `node server.js`).
 3. Works completely offline once loaded!
+
+---
+
+# 📋 Unit 1 Lesson Plan — Life Online
+
+> An interactive, step-by-step lesson planning tool for EFL/ESL teachers.
+
+## Overview
+
+**`unit1-lesson-plan.html`** is a standalone, interactive lesson plan designed for Unit 1 (*Life Online*) of a B1–B2 level coursebook. It is built for real classroom use — open it during class and follow each stage step by step.
+
+## Features
+
+- **5 complete lesson plans** — Unit Opener, Reading, Grammar 1, Speaking, Grammar 2
+- **40-minute time breakdown** per lesson with visual timer strips
+- **Expandable step cards** — click to open/close each stage
+- **Exact teacher scripts** — what to say, word for word
+- **Board plans** — exactly what to write on the board
+- **Answer keys** built into every exercise
+- **IF/THEN scaffolding cards** — what to do if students are shy, fast, slow, or confused
+- **Transition phrases** between every stage
+- **Unit Overview tab** — full roadmap, vocabulary list, and scaffolding progression
+- Works completely offline as a single HTML file — no server or installation needed
+
+## Tech Stack
+
+- Vanilla HTML, CSS, JavaScript
+- No frameworks, no build tools, no dependencies
+
+## Running Locally
+
+No installation required. Simply open the file directly:
+
+```
+Double-click unit1-lesson-plan.html
+```
+
+Or serve with any HTTP server:
+
+```bash
+npx serve .
+```
+
+## File Structure
+
+```
+├── index.html             # Hot Potato Team Edition game
+├── style.css              # Game styles
+├── script.js              # Game engine & question bank
+├── unit1-lesson-plan.html # Unit 1 interactive lesson plan
+├── vercel.json            # Deployment configuration
+└── README.md              # Documentation
+```

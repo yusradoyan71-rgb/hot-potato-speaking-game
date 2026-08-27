@@ -4,3 +4,23 @@ Thumbs.db
 *.log
 *.pdf
 .gemini/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.cache/
+
+# Editor / IDE
+.vscode/settings.json
+.idea/
+*.suo
+*.user
+
+# OS
+desktop.ini
+ehthumbs.db

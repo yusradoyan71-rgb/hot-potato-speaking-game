@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit 1: Life Online — Teacher Lesson Plan</title>
+  <meta name="description" content="A practical, step-by-step interactive lesson plan for Unit 1: Life Online. Open during class and follow each stage.">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f14;
+      --surface: #16161f;
+      --card: #1c1c28;
+      --card-hover: #222232;
+      --border: rgba(255,255,255,0.07);
+      --accent: #f97316;
+      --accent2: #8b5cf6;
+      --accent3: #22d3ee;
+      --accent4: #10b981;
+      --accent5: #ec4899;
+      --text: #e8e8f0;
+      --muted: #8888aa;
+      --warn: #fbbf24;
+      --danger: #f87171;
+
+      --lesson-vocab:    #f97316;
+      --lesson-reading:  #22d3ee;
+      --lesson-grammar:  #8b5cf6;
+      --lesson-speaking: #10b981;
+      --lesson-listening:#ec4899;
+      --lesson-writing:  #fbbf24;
+      --lesson-unit:     #60a5fa;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(135deg, #1a0533 0%, #0d1a3d 50%, #001a14 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+    .header-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .header-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .unit-badge {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .header-title h1 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .header-title h1 span { color: var(--accent); }
+    .header-meta {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .meta-chip {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .meta-chip .dot { width:8px; height:8px; border-radius:50%; }
+
+    /* ── NAV TABS ── */
+    .lesson-nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 69px;
+      z-index: 99;
+    }
+    .lesson-nav-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .lesson-nav-inner::-webkit-scrollbar { display: none; }
+    .nav-tab {
+      padding: 0.9rem 1.4rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      user-select: none;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+    .nav-tab:hover { color: var(--text); background: rgba(255,255,255,0.03); }
+    .nav-tab.active { color: #fff; border-bottom-color: var(--tab-color, var(--accent)); }
+    .nav-tab .tab-icon { font-size: 1rem; }
+    .lesson-count {
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.1rem 0.45rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* ── MAIN ── */
+    main {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    /* ── LESSON PANEL ── */
+    .lesson-panel { display: none; }
+    .lesson-panel.active { display: block; }
+
+    /* ── QUICK-VIEW BANNER ── */
+    .quick-view {
+      background: linear-gradient(135deg, rgba(249,115,22,0.12) 0%, rgba(139,92,246,0.12) 100%);
+      border: 1px solid rgba(249,115,22,0.25);
+      border-radius: 16px;
+      padding: 1.25rem 1.75rem;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+    }
+    .qv-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .qv-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .qv-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .qv-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border);
+    }
+
+    /* ── STAGE TABLE ── */
+    .stages-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2.5rem;
+      font-size: 0.85rem;
+    }
+    .stages-table th {
+      background: var(--card);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .stages-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+    .stages-table tr:last-child td { border-bottom: none; }
+    .stages-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .stage-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+    .stage-time {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--accent3);
+      white-space: nowrap;
+      font-size: 0.83rem;
+    }
+    .interaction-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .ib-wc  { background: rgba(249,115,22,0.15); color: #f97316; border: 1px solid rgba(249,115,22,0.3); }
+    .ib-pw  { background: rgba(34,211,238,0.12); color: #22d3ee; border: 1px solid rgba(34,211,238,0.3); }
+    .ib-ind { background: rgba(139,92,246,0.12); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+    .ib-grp { background: rgba(16,185,129,0.12); color: #10b981; border: 1px solid rgba(16,185,129,0.3); }
+    .ib-t   { background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+
+    /* ── SECTION HEADER ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .section-subtitle {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ── STEP CARDS ── */
+    .steps-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .step-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .step-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .step-header {
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+    .step-num-circle {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .step-title-block { flex: 1; min-width: 0; }
+    .step-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+    .step-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .step-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+    .step-toggle {
+      color: var(--muted);
+      font-size: 0.8rem;
+      transition: transform 0.2s;
+    }
+    .step-card.open .step-toggle { transform: rotate(180deg); }
+    .step-body {
+      display: none;
+      padding: 0 1.25rem 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+    .step-card.open .step-body { display: block; }
+
+    /* ── CONTENT BLOCKS INSIDE STEP ── */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 768px) {
+      .content-grid { grid-template-columns: 1fr; }
+    }
+    .content-block {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .content-block h4 {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .content-block p, .content-block li {
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .content-block ul, .content-block ol {
+      padding-left: 1.2rem;
+    }
+    .content-block li { margin-bottom: 0.3rem; }
+
+    /* ── TEACHER SAY BLOCK ── */
+    .teacher-say {
+      background: rgba(34,211,238,0.06);
+      border-left: 3px solid var(--accent3);
+      border-radius: 0 8px 8px 0;
+      padding: 0.75rem 1rem;
+      margin: 0.75rem 0;
+      font-size: 0.85rem;
+      font-style: italic;
+      color: #c8f5fb;
+      line-height: 1.6;
+    }
+    .teacher-say::before {
+      content: '💬 SAY: ';
+      font-style: normal;
+      font-weight: 700;
+      color: var(--accent3);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* ── BOARD PLAN ── */
+    .board-plan {
+      background: #1a2a1a;
+      border: 2px solid #2d4a2d;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin: 1rem 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: #c8f5c8;
+      position: relative;
+    }
+    .board-plan::before {
+      content: '🖊 BOARD';
+      position: absolute;
+      top: -0.6rem;
+      left: 1rem;
+      background: #1a2a1a;
+      padding: 0 0.5rem;
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #4ade80;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* ── IF/THEN CARDS ── */
+    .if-then-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .if-then-card {
+      border-radius: 10px;
+      padding: 0.9rem;
+      border: 1px solid transparent;
+    }
+    .if-shy    { background: rgba(236,72,153,0.08); border-color: rgba(236,72,153,0.25); }
+    .if-fast   { background: rgba(34,211,238,0.07); border-color: rgba(34,211,238,0.25); }
+    .if-slow   { background: rgba(251,191,36,0.07); border-color: rgba(251,191,36,0.25); }
+    .if-confused { background: rgba(139,92,246,0.08); border-color: rgba(139,92,246,0.25); }
+    .if-label {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .if-shy    .if-label { color: #f472b6; }
+    .if-fast   .if-label { color: #22d3ee; }
+    .if-slow   .if-label { color: #fbbf24; }
+    .if-confused .if-label { color: #a78bfa; }
+    .if-then-card p { font-size: 0.82rem; line-height: 1.55; color: var(--text); }
+
+    /* ── ANSWERS ── */
+    .answers-box {
+      background: rgba(16,185,129,0.07);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 10px;
+      padding: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .answers-box h4 {
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #10b981;
+      margin-bottom: 0.5rem;
+    }
+    .answers-box p, .answers-box li {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+    .answers-box ul { padding-left: 1.1rem; }
+
+    /* ── TRANSITION ── */
+    .transition-box {
+      background: rgba(249,115,22,0.06);
+      border: 1px solid rgba(249,115,22,0.2);
+      border-radius: 8px;
+      padding: 0.65rem 1rem;
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: #fdba74;
+    }
+    .transition-box::before { content: '➜ TRANSITION: '; font-weight: 700; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── MATERIALS STRIP ── */
+    .materials-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+    }
+    .material-tag {
+      background: rgba(96,165,250,0.1);
+      border: 1px solid rgba(96,165,250,0.25);
+      color: #93c5fd;
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    /* ── VOCAB GRID ── */
+    .vocab-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.4rem;
+      margin: 0.75rem 0;
+    }
+    .vocab-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.4rem 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* ── CLOSING BELL ── */
+    .closing-card {
+      background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(34,211,238,0.1) 100%);
+      border: 1px solid rgba(16,185,129,0.25);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      text-align: center;
+    }
+    .closing-card h3 { font-size: 1.1rem; font-weight: 700; color: #4ade80; margin-bottom: 0.5rem; }
+    .closing-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── PROGRESS TIMER ── */
+    .timer-strip {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .timer-block {
+      flex: 1;
+      min-width: 60px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.5rem;
+      text-align: center;
+      position: relative;
+    }
+    .timer-block .t-stage { font-size: 0.62rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+    .timer-block .t-min { font-size: 1rem; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: var(--accent3); }
+    .timer-progress {
+      height: 3px;
+      border-radius: 3px;
+      margin-top: 0.4rem;
+    }
+
+    /* ── UNIT OVERVIEW ── */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .overview-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      transition: transform 0.2s;
+    }
+    .overview-card:hover { transform: translateY(-2px); }
+    .overview-card .ov-icon { font-size: 1.8rem; margin-bottom: 0.6rem; }
+    .overview-card .ov-title { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 0.4rem; }
+    .overview-card .ov-content { font-size: 0.85rem; line-height: 1.5; color: var(--text); }
+    .overview-card .ov-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+    .ov-tag { font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 999px; font-weight: 600; }
+
+    /* full width spans */
+    .col-span-2 { grid-column: span 2; }
+    @media (max-width: 700px) { .col-span-2 { grid-column: span 1; } }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #333355; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4444aa; }
+
+    /* ── PRINT ── */
+    @media print {
+      header, .lesson-nav { position: relative; top: 0; }
+      .step-body { display: block !important; }
+      body { background: #fff; color: #000; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      main { padding: 1rem; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════ HEADER ════════════════════ -->
+<header>
+  <div class="header-inner">
+    <div class="header-title">
+      <span class="unit-badge">Unit 1</span>
+      <h1>Life <span>Online</span> — Lesson Plans</h1>
+    </div>
+    <div class="header-meta">
+      <span class="meta-chip"><span class="dot" style="background:#f97316"></span>5 Lessons</span>
+      <span class="meta-chip"><span class="dot" style="background:#22d3ee"></span>~40 min each</span>
+      <span class="meta-chip"><span class="dot" style="background:#10b981"></span>B1–B2 Level</span>
+      <span class="meta-chip">📖 Coursebook pp. 9–16</span>
+    </div>
+  </div>
+</header>
+
+<!-- ════════════════════ NAV TABS ════════════════════ -->
+<nav class="lesson-nav">
+  <div class="lesson-nav-inner">
+    <button class="nav-tab active" data-panel="overview" style="--tab-color:#60a5fa" onclick="switchTab(this,'overview')">
+      <span class="tab-icon">🗺️</span> Unit Overview
+    </button>
+    <button class="nav-tab" data-panel="lesson-unit" style="--tab-color:#60a5fa" onclick="switchTab(this,'lesson-unit')">
+      <span class="tab-icon">🎬</span> Lesson 1 — Unit Opener <span class="lesson-count">40m</span>
+    </button>
+    <button class="nav-tab" data-panel="lesson-reading" style="--tab-color:#22d3ee" onclick="switchTab(this,'lesson-reading')">
+      <span class="tab-icon">📖</span> Lesson 2 — Reading <span class="lesson-count">40m</span>
+    </button>
+    <button class="nav-tab" data-panel="lesson-grammar1" style="--tab-color:#8b5cf6" onclick="switchTab(this,'lesson-grammar1')">
+      <span class="tab-icon">⚙️</span> Lesson 3 — Grammar 1 <span class="lesson-count">40m</span>
+    </button>
+    <button class="nav-tab" data-panel="lesson-speaking" style="--tab-color:#10b981" onclick="switchTab(this,'lesson-speaking')">
+      <span class="tab-icon">🎤</span> Lesson 4 — Speaking <span class="lesson-count">40m</span>
+    </button>
+    <button class="nav-tab" data-panel="lesson-grammar2" style="--tab-color:#a78bfa" onclick="switchTab(this,'lesson-grammar2')">
+      <span class="tab-icon">🔤</span> Lesson 5 — Grammar 2 <span class="lesson-count">40m</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ════════════════════ MAIN ════════════════════ -->
+<main>
+
+<!-- ══════ PANEL: OVERVIEW ══════ -->
+<div class="lesson-panel active" id="overview">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(96,165,250,0.15);">🗺️</div>
+    <div>
+      <div class="section-title">Unit 1 — Life Online</div>
+      <div class="section-subtitle">Complete unit roadmap · All lessons at a glance</div>
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-card">
+      <div class="ov-icon">🎯</div>
+      <div class="ov-title">Topic</div>
+      <div class="ov-content">The online world, social media, algorithms, apps, and digital habits.</div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-icon">📚</div>
+      <div class="ov-title">Vocabulary</div>
+      <div class="ov-content">
+        <strong>Set 1 (Social media & internet):</strong><br>access, browse, click, download, follow, log off, log on, post, save, scroll, search, share, swipe, tap, trend, type, upload, view
+      </div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-icon">⚙️</div>
+      <div class="ov-title">Grammar</div>
+      <div class="ov-content">
+        <strong>L3:</strong> Present simple vs. present continuous; state verbs<br>
+        <strong>L5:</strong> Gerunds and infinitives; pronunciation /s/ /z/ /ʃ/ /ʒ/
+      </div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-icon">📰</div>
+      <div class="ov-title">Reading</div>
+      <div class="ov-content">Q&A article: <em>"How Much Does Social Media Know About You?"</em> — matching headings to paragraphs (Reading Expert skill).</div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-icon">🎤</div>
+      <div class="ov-title">Speaking</div>
+      <div class="ov-content">Describing and comparing two photos (Speaking Expert: buying time techniques + key expressions).</div>
+    </div>
+    <div class="overview-card">
+      <div class="ov-icon">🌍</div>
+      <div class="ov-title">Global Goals / Video</div>
+      <div class="ov-content">The social media detox — digital wellbeing discussion.</div>
+    </div>
+  </div>
+
+  <!-- Lesson Roadmap -->
+  <h2 style="font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:1rem;">📅 Lesson Roadmap</h2>
+  <table class="stages-table">
+    <thead>
+      <tr>
+        <th>Lesson</th>
+        <th>Focus</th>
+        <th>Book Page</th>
+        <th>Key Activity</th>
+        <th>Outcome</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="stage-num" style="color:#60a5fa">L1</span></td>
+        <td><strong>Unit Opener</strong></td>
+        <td>p.9</td>
+        <td>Video stills → Pair discussion → Social media habits</td>
+        <td>Ss engage with unit topic, share opinions about social media</td>
+      </tr>
+      <tr>
+        <td><span class="stage-num" style="color:#22d3ee">L2</span></td>
+        <td><strong>Reading</strong></td>
+        <td>pp.10–11</td>
+        <td>Q&A article → Matching task → TikTok vocab</td>
+        <td>Ss can match questions to article sections; know 17 social media verbs</td>
+      </tr>
+      <tr>
+        <td><span class="stage-num" style="color:#8b5cf6">L3</span></td>
+        <td><strong>Grammar 1</strong></td>
+        <td>p.12</td>
+        <td>Scroll Free September text → Present tense forms</td>
+        <td>Ss can use present simple vs. present continuous correctly, including state verbs</td>
+      </tr>
+      <tr>
+        <td><span class="stage-num" style="color:#10b981">L4</span></td>
+        <td><strong>Speaking</strong></td>
+        <td>p.13</td>
+        <td>Photo comparison → Speaking Guide → Pair task</td>
+        <td>Ss can compare two photos for 2 minutes using key expressions and buying-time phrases</td>
+      </tr>
+      <tr>
+        <td><span class="stage-num" style="color:#a78bfa">L5</span></td>
+        <td><strong>Grammar 2</strong></td>
+        <td>p.16</td>
+        <td>Gerund/Infinitive warmer game → Tech questionnaire → Exam tips</td>
+        <td>Ss can correctly use gerunds and infinitives with target verbs</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Progression scaffold -->
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.5rem;margin-bottom:2rem;">
+    <h3 style="font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:1rem;">🎯 Scaffolding Progression (every lesson)</h3>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:0.5rem;">
+      <div style="background:rgba(251,191,36,0.15);border:1px solid rgba(251,191,36,0.3);border-radius:8px;padding:0.5rem 0.9rem;font-size:0.82rem;font-weight:600;color:#fbbf24;">👩‍🏫 Teacher Models</div>
+      <div style="color:var(--muted);font-size:0.9rem;">→</div>
+      <div style="background:rgba(249,115,22,0.12);border:1px solid rgba(249,115,22,0.3);border-radius:8px;padding:0.5rem 0.9rem;font-size:0.82rem;font-weight:600;color:#f97316;">🏫 Whole Class</div>
+      <div style="color:var(--muted);font-size:0.9rem;">→</div>
+      <div style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.3);border-radius:8px;padding:0.5rem 0.9rem;font-size:0.82rem;font-weight:600;color:#22d3ee;">👥 Pair Work</div>
+      <div style="color:var(--muted);font-size:0.9rem;">→</div>
+      <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:0.5rem 0.9rem;font-size:0.82rem;font-weight:600;color:#10b981;">👨‍👩‍👧 Small Group</div>
+      <div style="color:var(--muted);font-size:0.9rem;">→</div>
+      <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:8px;padding:0.5rem 0.9rem;font-size:0.82rem;font-weight:600;color:#a78bfa;">🧑 Individual</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ PANEL: LESSON 1 — UNIT OPENER ══════ -->
+<div class="lesson-panel" id="lesson-unit">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(96,165,250,0.15);">🎬</div>
+    <div>
+      <div class="section-title">Lesson 1 — Unit Opener</div>
+      <div class="section-subtitle">Coursebook p.9 · 40 minutes · Engaging students with the topic</div>
+    </div>
+  </div>
+
+  <!-- Quick view -->
+  <div class="quick-view">
+    <div class="qv-item"><div class="qv-label">Total Time</div><div class="qv-value">40 min</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Pages</div><div class="qv-value">p.9</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Skills</div><div class="qv-value">Speaking · Listening</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Materials</div><div class="qv-value">Coursebook · Board</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Outcome</div><div class="qv-value">Ss share opinions on social media</div></div>
+  </div>
+
+  <!-- Timer strip -->
+  <div class="timer-strip">
+    <div class="timer-block"><div class="t-stage">Warmer</div><div class="t-min">8'</div><div class="timer-progress" style="background:linear-gradient(90deg,#60a5fa,#93c5fd)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 1 — Videos</div><div class="t-min">7'</div><div class="timer-progress" style="background:linear-gradient(90deg,#60a5fa,#93c5fd)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 2 — Pairs</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#60a5fa,#93c5fd)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 3 — Discuss</div><div class="t-min">15'</div><div class="timer-progress" style="background:linear-gradient(90deg,#60a5fa,#93c5fd)"></div></div>
+    <div class="timer-block"><div class="t-stage">Wrap-up</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#60a5fa,#93c5fd)"></div></div>
+  </div>
+
+  <!-- Stage table -->
+  <table class="stages-table">
+    <thead><tr><th>#</th><th>Stage</th><th>Time</th><th>Interaction</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td class="stage-num">1</td><td><strong>Warmer — Smartphone Opinions</strong></td><td class="stage-time">8'</td><td><span class="interaction-badge ib-t">Teacher</span> → <span class="interaction-badge ib-wc">Whole Class</span></td><td>T writes two sentence starters on board. Ss complete them. Class discusses.</td></tr>
+      <tr><td class="stage-num">2</td><td><strong>Ex.1 — Video types</strong></td><td class="stage-time">7'</td><td><span class="interaction-badge ib-ind">Individual</span></td><td>Ss look at 6 video stills, read list of types, choose favourites (max 3).</td></tr>
+      <tr><td class="stage-num">3</td><td><strong>Ex.2 — Compare answers</strong></td><td class="stage-time">5'</td><td><span class="interaction-badge ib-pw">Pair</span></td><td>Ss compare choices, explain reasons. T elicits one shared type per pair.</td></tr>
+      <tr><td class="stage-num">4</td><td><strong>Ex.3 — Deep discussion</strong></td><td class="stage-time">15'</td><td><span class="interaction-badge ib-pw">Pair</span> → <span class="interaction-badge ib-wc">Whole Class</span></td><td>Ss think about Q1–6 individually (1 min), then discuss in pairs, then share with class.</td></tr>
+      <tr><td class="stage-num">5</td><td><strong>Wrap-up</strong></td><td class="stage-time">5'</td><td><span class="interaction-badge ib-wc">Whole Class</span></td><td>T elicits 1 surprising thing each pair discovered. Preview next lesson.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Step cards -->
+  <div class="steps-grid">
+
+    <!-- Step 1 -->
+    <div class="step-card open" id="s1-1">
+      <div class="step-header" onclick="toggleStep('s1-1')">
+        <div class="step-num-circle" style="background:#60a5fa;">1</div>
+        <div class="step-title-block">
+          <div class="step-name">🔥 Warmer — Smartphone Love/Hate</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Teacher → Whole Class</span></div>
+        </div>
+        <div class="step-right">
+          <span class="interaction-badge ib-wc">Whole Class</span>
+          <span class="step-toggle">▼</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="board-plan">
+I love my smartphone because …
+I hate my smartphone because …</div>
+        <div class="teacher-say">Write these two sentences on the board. Tell the class: "I'll give you my example first. I love my smartphone because it keeps me connected to my friends. I hate my smartphone because it distracts me when I'm working." Now — your turn. Think of ONE reason each. You have 30 seconds.</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 What YOU do</h4>
+            <ol>
+              <li>Write both sentence starters on the board.</li>
+              <li>Give your own example out loud.</li>
+              <li>Give Ss 30 seconds to think silently.</li>
+              <li>Ask 4–5 students to share. Don't correct language — just build energy.</li>
+              <li>Ask: "What are the advantages and disadvantages of being connected all the time?"</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>🎓 What STUDENTS do</h4>
+            <ul>
+              <li>Think of their own reasons (silent 30s).</li>
+              <li>Share with the class when asked.</li>
+              <li>React to classmates' answers.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Let them write their sentence down first, then read it aloud. Don't cold-call — ask for volunteers first.</p>
+          </div>
+          <div class="if-then-card if-fast">
+            <div class="if-label">⚡ If they finish fast</div>
+            <p>Ask follow-up: "Do you think smartphones make life better or worse overall? Give 3 reasons."</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Great — you clearly have strong feelings about smartphones! Now let's look at the kinds of videos people watch on social media. Open your books to page 9."</div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-card" id="s1-2">
+      <div class="step-header" onclick="toggleStep('s1-2')">
+        <div class="step-num-circle" style="background:#60a5fa;">2</div>
+        <div class="step-title-block">
+          <div class="step-name">📱 Exercise 1 — Video Types (Individual)</div>
+          <div class="step-meta"><span>⏱ 7 minutes</span><span>Individual → Pair</span></div>
+        </div>
+        <div class="step-right">
+          <span class="interaction-badge ib-ind">Individual</span>
+          <span class="step-toggle">▼</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Look at the six photos at the top of page 9. These are stills from videos people watch online. Look at the list below — music videos, dance routines, sports clips, make-up tutorials, tricks and pranks, pet videos, gaming walkthroughs, cookery tutorials. Choose your TOP THREE. You have 2 minutes — work alone.</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 What YOU do</h4>
+            <ol>
+              <li>Tell Ss to look at photos 1–6 and the list.</li>
+              <li>Check vocab: elicit what's in each photo.</li>
+              <li>Ss choose top 3 individually.</li>
+              <li>Optional: find the most popular type as a class survey (write on board).</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>📸 The 6 video stills show</h4>
+            <ul>
+              <li>1 — Dance routine (outdoor)</li>
+              <li>2 — Make-up tutorial (influencer)</li>
+              <li>3 — Sports clips (football)</li>
+              <li>4 — Tricks and pranks</li>
+              <li>5 — Life hacks / gaming</li>
+              <li>6 — Cookery tutorial</li>
+            </ul>
+          </div>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-slow">
+            <div class="if-label">🐢 If they're slow</div>
+            <p>Tell them to just circle their single favourite — one choice is fine. Keep moving.</p>
+          </div>
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 If they don't know some words</div>
+            <p>"Gaming walkthroughs" = videos showing you how to finish a game. Mime or draw on board.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Now compare your choices with a partner. Explain WHY you chose those videos. You have 3 minutes."</div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-card" id="s1-3">
+      <div class="step-header" onclick="toggleStep('s1-3')">
+        <div class="step-num-circle" style="background:#60a5fa;">3</div>
+        <div class="step-title-block">
+          <div class="step-name">👥 Exercise 2 — Compare with a Partner</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Pair Work → Feedback</span></div>
+        </div>
+        <div class="step-right">
+          <span class="interaction-badge ib-pw">Pair Work</span>
+          <span class="step-toggle">▼</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Tell your partner which videos you chose and WHY. Use this pattern: "I like watching [type] videos because …" Listen to your partner and find ONE thing you both agree on.</div>
+        <div class="board-plan">I like watching ___ videos because ___
+I find ___ videos boring/interesting/funny because ___
+We both enjoy watching ___ videos.</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 What YOU do</h4>
+            <ol>
+              <li>Write the sentence models on the board.</li>
+              <li>Monitor — listen for good language.</li>
+              <li>After 3 min, ask 3 pairs: "Tell the class ONE type you both like, and why."</li>
+              <li>Optional: conduct a class survey — tally votes on board.</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>💡 Language model to show</h4>
+            <p style="font-style:italic;color:#93c5fd">"I like watching cat videos. Cats are so cute and the videos make me laugh."</p>
+            <p style="margin-top:0.5rem;font-size:0.82rem;">Point to the speech bubble in the book — that's the model they should follow.</p>
+          </div>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Let them read their reason from what they wrote. Pair shy students with more talkative ones.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Good job! Now we're going to go deeper — exercise 3 has some really interesting questions about your relationship with social media."</div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-card" id="s1-4">
+      <div class="step-header" onclick="toggleStep('s1-4')">
+        <div class="step-num-circle" style="background:#60a5fa;">4</div>
+        <div class="step-title-block">
+          <div class="step-name">💬 Exercise 3 — Deep Discussion (Main Activity)</div>
+          <div class="step-meta"><span>⏱ 15 minutes</span><span>Individual → Pair → Whole Class</span></div>
+        </div>
+        <div class="step-right">
+          <span class="interaction-badge ib-pw">Pair → Class</span>
+          <span class="step-toggle">▼</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Read questions 1 to 6 silently. Think about your answers — write 2–3 words for each if you like. You have 1 minute to think, then you'll discuss with your partner.</div>
+
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>📝 The 6 questions (p.9)</h4>
+            <ol>
+              <li>Which platforms do you use? What for?</li>
+              <li>How much time do you spend on social media?</li>
+              <li>Is social media good or bad? Why?</li>
+              <li>Do you play games online? Is it a good use of time?</li>
+              <li>What else do you use your phone/computer for?</li>
+              <li>Do you ever have social-media-free days? How does it feel?</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>👩‍🏫 Stage sequence</h4>
+            <ol>
+              <li><strong>1 min:</strong> Ss read questions, note ideas silently.</li>
+              <li><strong>8 min:</strong> Pair discussion — both partners answer all questions.</li>
+              <li><strong>Tell Ss:</strong> "Add a reason or example — don't just say yes/no."</li>
+              <li><strong>5 min:</strong> Whole class — ask each pair to share the most interesting answer.</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="board-plan">Useful language:
+• I use Instagram / TikTok / YouTube for …
+• I think / I believe social media is … because …
+• In my opinion, … / Personally, I …
+• I spend about ___ hours a day on …
+• I've never tried … / I always …</div>
+
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Tell them: "Just answer 2 questions — whichever ones you feel most comfortable with." Don't force all 6.</p>
+          </div>
+          <div class="if-then-card if-fast">
+            <div class="if-label">⚡ If they finish fast</div>
+            <p>Extra question: "If you had to give up ONE social media platform forever, which one would it be? Why?"</p>
+          </div>
+          <div class="if-then-card if-slow">
+            <div class="if-label">🐢 If they're slow</div>
+            <p>Give them questions 1, 3, and 6 only. That's enough for a solid discussion.</p>
+          </div>
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 If discussion dries up</div>
+            <p>Read out a question yourself and give your own answer first. This usually restarts the conversation.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Excellent discussion! Now let's see what the book says about HOW social media works. Next lesson we'll read an article about algorithms."</div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-card" id="s1-5">
+      <div class="step-header" onclick="toggleStep('s1-5')">
+        <div class="step-num-circle" style="background:#60a5fa;">5</div>
+        <div class="step-title-block">
+          <div class="step-name">🔔 Wrap-up & Preview</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right">
+          <span class="interaction-badge ib-wc">Whole Class</span>
+          <span class="step-toggle">▼</span>
+        </div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Before we finish — tell me ONE thing you found out about your partner that surprised you. And a quick question: why do you think you see certain posts in your social media feed and not others?</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 What YOU do</h4>
+            <ol>
+              <li>Ask 2–3 students to share something surprising about their partner.</li>
+              <li>Ask the "algorithm" question — don't explain it yet, just plant curiosity.</li>
+              <li>Briefly preview Lesson 2: "Next class we read about this — and you'll find the answer."</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>🎯 Homework suggestion</h4>
+            <ul>
+              <li>Write 3–5 sentences about your own social media habits.</li>
+              <li>Use: "I usually…", "I sometimes…", "I never…"</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end steps-grid -->
+
+  <div class="closing-card">
+    <h3>✅ End of Lesson 1</h3>
+    <p>Students have engaged with the unit topic and expressed opinions about social media.<br>They are curious about algorithms — ready for the reading lesson.</p>
+  </div>
+</div>
+
+<!-- ══════ PANEL: LESSON 2 — READING ══════ -->
+<div class="lesson-panel" id="lesson-reading">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(34,211,238,0.15);">📖</div>
+    <div>
+      <div class="section-title">Lesson 2 — Reading & Vocabulary</div>
+      <div class="section-subtitle">Coursebook pp.10–11 · 40 minutes · Algorithms + Social media verbs</div>
+    </div>
+  </div>
+
+  <div class="quick-view" style="border-color:rgba(34,211,238,0.25);background:linear-gradient(135deg,rgba(34,211,238,0.08),rgba(96,165,250,0.08))">
+    <div class="qv-item"><div class="qv-label">Total Time</div><div class="qv-value">40 min</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Pages</div><div class="qv-value">pp.10–11</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Audio</div><div class="qv-value">Track 1.1 (summary), 1.2 (TikTok)</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Key Skill</div><div class="qv-value">Reading Expert: Matching</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Outcome</div><div class="qv-value">Match A–H; know 17 social media verbs</div></div>
+  </div>
+
+  <div class="timer-strip">
+    <div class="timer-block"><div class="t-stage">Warmer</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#22d3ee,#67e8f9)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 1 — Pre-read</div><div class="t-min">3'</div><div class="timer-progress" style="background:linear-gradient(90deg,#22d3ee,#67e8f9)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 2 — Read</div><div class="t-min">12'</div><div class="timer-progress" style="background:linear-gradient(90deg,#22d3ee,#67e8f9)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 3 — Summary</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#22d3ee,#67e8f9)"></div></div>
+    <div class="timer-block"><div class="t-stage">Vocab Ex 5–6</div><div class="t-min">12'</div><div class="timer-progress" style="background:linear-gradient(90deg,#22d3ee,#67e8f9)"></div></div>
+    <div class="timer-block"><div class="t-stage">Wrap-up</div><div class="t-min">3'</div><div class="timer-progress" style="background:linear-gradient(90deg,#22d3ee,#67e8f9)"></div></div>
+  </div>
+
+  <table class="stages-table">
+    <thead><tr><th>#</th><th>Stage</th><th>Time</th><th>Interaction</th><th>What happens</th></tr></thead>
+    <tbody>
+      <tr><td class="stage-num" style="color:#22d3ee">1</td><td><strong>Warmer — Social media feed discussion</strong></td><td class="stage-time">5'</td><td><span class="interaction-badge ib-pw">Pair</span></td><td>Ss discuss: What kinds of adverts do you get? Why do you think you get them?</td></tr>
+      <tr><td class="stage-num" style="color:#22d3ee">2</td><td><strong>Ex.1 — Pre-reading</strong></td><td class="stage-time">3'</td><td><span class="interaction-badge ib-wc">Whole Class</span></td><td>Read title, predict what info social media has. T builds curiosity.</td></tr>
+      <tr><td class="stage-num" style="color:#22d3ee">3</td><td><strong>Ex.2 — Reading Expert Matching</strong></td><td class="stage-time">12'</td><td><span class="interaction-badge ib-ind">Individual</span> → <span class="interaction-badge ib-pw">Pair</span></td><td>Read article, match questions A–H to paragraphs 1–6 (2 not needed).</td></tr>
+      <tr><td class="stage-num" style="color:#22d3ee">4</td><td><strong>Ex.3 — Summary (audio optional)</strong></td><td class="stage-time">5'</td><td><span class="interaction-badge ib-ind">Individual</span></td><td>Complete the 8-gap summary. Check in pairs.</td></tr>
+      <tr><td class="stage-num" style="color:#22d3ee">5</td><td><strong>Ex.5–6 — TikTok Vocabulary</strong></td><td class="stage-time">12'</td><td><span class="interaction-badge ib-ind">Individual</span> → <span class="interaction-badge ib-pw">Pair</span></td><td>Choose correct verbs in TikTok text (audio). Then use verbs in Q&A pairs.</td></tr>
+      <tr><td class="stage-num" style="color:#22d3ee">6</td><td><strong>Wrap-up + Critical Thinking</strong></td><td class="stage-time">3'</td><td><span class="interaction-badge ib-wc">Whole Class</span></td><td>Quick opinion: is social media knowing so much about us a good or bad thing?</td></tr>
+    </tbody>
+  </table>
+
+  <div class="steps-grid">
+
+    <div class="step-card open" id="s2-1">
+      <div class="step-header" onclick="toggleStep('s2-1')">
+        <div class="step-num-circle" style="background:#22d3ee;color:#000;">1</div>
+        <div class="step-title-block">
+          <div class="step-name">🔥 Warmer — Your Social Media Feed</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Pair → Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-pw">Pair</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Think about your social media feed. What kinds of adverts and posts do you always see? Tell your partner. For example: "I always get a lot of adverts for clothes, which is OK… And I always get sports videos." Go!</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 What YOU do</h4>
+            <ol>
+              <li>Give your own example first.</li>
+              <li>Ss talk in pairs (2 min).</li>
+              <li>Ask 2–3 pairs: "What do you see most?"</li>
+              <li>Ask: "WHY do you think you get those specific posts?"</li>
+              <li>Don't give the answer yet — let them guess.</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>🎯 Goal</h4>
+            <p>Build curiosity about algorithms before reading. The article will answer their questions.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "You're about to find out WHY. Let's look at the title of today's article. Open page 10."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s2-2">
+      <div class="step-header" onclick="toggleStep('s2-2')">
+        <div class="step-num-circle" style="background:#22d3ee;color:#000;">2</div>
+        <div class="step-title-block">
+          <div class="step-name">📰 Exercise 1 — Pre-Reading</div>
+          <div class="step-meta"><span>⏱ 3 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Read the title of the article: "HOW MUCH DOES SOCIAL MEDIA KNOW ABOUT YOU?" What information do you think social media platforms have about you? Tell me — shout it out!</div>
+        <div class="answers-box">
+          <h4>✅ Suggested answers to elicit</h4>
+          <ul>
+            <li>Your name, age, date of birth, address</li>
+            <li>Your likes and interests</li>
+            <li>Your location</li>
+            <li>What videos/posts you watch</li>
+          </ul>
+        </div>
+        <div class="transition-box">Say: "Now let's read and find out if you were right. Read the READING EXPERT box first — it tells you HOW to do the matching task."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s2-3">
+      <div class="step-header" onclick="toggleStep('s2-3')">
+        <div class="step-num-circle" style="background:#22d3ee;color:#000;">3</div>
+        <div class="step-title-block">
+          <div class="step-name">🔍 Exercise 2 — Matching (Reading Expert)</div>
+          <div class="step-meta"><span>⏱ 12 minutes</span><span>Individual → Pair check</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-ind">Individual</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Read the READING EXPERT box. The strategy is: Read the whole article first to get the main idea. Then read each paragraph and match it to ONE question (A–H). Remember — two questions are NOT needed, so don't worry if two are left over. You have 8 minutes. Work alone.</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>📋 READING EXPERT Strategy (show on board)</h4>
+            <ol>
+              <li>Read the whole article quickly (don't stop at every word).</li>
+              <li>Read paragraph 1 — what is the main idea?</li>
+              <li>Find the question (A–H) that matches best.</li>
+              <li>Repeat for all 6 paragraphs.</li>
+              <li>Check: 2 questions will be left over.</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>💡 For weaker classes</h4>
+            <p>You can tell them which two questions are NOT needed: <strong>C and G</strong>. This reduces pressure and lets them focus on matching.</p>
+          </div>
+        </div>
+        <div class="answers-box">
+          <h4>✅ Answers</h4>
+          <p>1→D &nbsp; 2→B &nbsp; 3→A &nbsp; 4→E &nbsp; 5→H &nbsp; 6→F &nbsp; (C and G not used)</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-slow">
+            <div class="if-label">🐢 If they're slow</div>
+            <p>Give them only paragraphs 1, 2, and 3 to match. Do the rest together as a class.</p>
+          </div>
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 If they're confused about matching</div>
+            <p>Do paragraph 1 together as a class example. Ask: "What is the main topic of paragraph 1? Look at questions A–H — which one asks about that?"</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Compare your answers with your partner. Did you agree? Let's check together." → Check answers quickly, explaining 1–2 tricky ones.</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s2-4">
+      <div class="step-header" onclick="toggleStep('s2-4')">
+        <div class="step-num-circle" style="background:#22d3ee;color:#000;">4</div>
+        <div class="step-title-block">
+          <div class="step-name">✍️ Exercise 3 — Summary Completion</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Individual</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-ind">Individual</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Now complete the summary on page 11 — use ONE word from the article for each space. Read through it first without filling in, just to get the idea. Then fill in the 8 gaps. You have 4 minutes.</div>
+        <div class="answers-box">
+          <h4>✅ Answers</h4>
+          <p>1 algorithms &nbsp;|&nbsp; 2 feed &nbsp;|&nbsp; 3 content &nbsp;|&nbsp; 4 collect &nbsp;|&nbsp; 5 share &nbsp;|&nbsp; 6 adverts &nbsp;|&nbsp; 7 opinions/views/beliefs &nbsp;|&nbsp; 8 follow</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-fast">
+            <div class="if-label">⚡ Fast finishers</div>
+            <p>Exercise 4 — Critical Thinking: "Is it a good or bad thing that social media knows so much about you?" Write 2 reasons for each side.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Now we're going to learn vocabulary for talking about social media. Turn to the right-hand side of page 11."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s2-5">
+      <div class="step-header" onclick="toggleStep('s2-5')">
+        <div class="step-num-circle" style="background:#22d3ee;color:#000;">5</div>
+        <div class="step-title-block">
+          <div class="step-name">📚 Ex.5–6 — TikTok Vocabulary</div>
+          <div class="step-meta"><span>⏱ 12 minutes</span><span>Individual → Pair</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-pw">Pair</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">We're going to learn 17 verbs for social media and the internet. First, let's read the title: "All You Need to Know About TikTok." Who uses TikTok? Great. Read the text and choose the correct verb in each sentence. Use the context to help. You have 4 minutes.</div>
+
+        <div class="board-plan">Social media verbs to learn:
+access · browse · click · download · follow
+log off · log on · post · save · scroll
+search · share · swipe · tap · trend
+type · upload · view</div>
+
+        <div class="answers-box">
+          <h4>✅ Exercise 5 Answers</h4>
+          <p>1 post &nbsp;2 downloaded &nbsp;3 log on &nbsp;4 scroll &nbsp;5 view &nbsp;6 share &nbsp;7 tap &nbsp;8 save &nbsp;9 swipe &nbsp;10 click &nbsp;11 follow &nbsp;12 search &nbsp;13 type &nbsp;14 browse &nbsp;15 trending &nbsp;16 access &nbsp;17 upload</p>
+        </div>
+        <div class="teacher-say">Now exercise 6: Complete the 8 questions using the correct FORM of the verb. Then ask and answer with your partner. You have 5 minutes — this is conversation practice!</div>
+        <div class="answers-box">
+          <h4>✅ Exercise 6 Answers</h4>
+          <p>1 log on &nbsp;2 post/share/upload &nbsp;3 scrolling &nbsp;4 swipe &nbsp;5 shared &nbsp;6 follow &nbsp;7 trending &nbsp;8 downloaded</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Let them write their partner's answers down first, then share with the class.</p>
+          </div>
+          <div class="if-then-card if-fast">
+            <div class="if-label">⚡ Fast finishers</div>
+            <p>Write 3 sentences about yourself using verbs from Ex.5. All must be true.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s2-6">
+      <div class="step-header" onclick="toggleStep('s2-6')">
+        <div class="step-num-circle" style="background:#22d3ee;color:#000;">6</div>
+        <div class="step-title-block">
+          <div class="step-name">🔔 Wrap-up — Critical Thinking</div>
+          <div class="step-meta"><span>⏱ 3 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Last question before we go: Is it a GOOD thing or a BAD thing that social media knows so much about you? Give me one quick reason — yes or no, just one sentence. Starting with you — [name]!</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>📌 Useful phrases to put on board</h4>
+            <ul>
+              <li>I agree / disagree because …</li>
+              <li>I think it's good because …</li>
+              <li>I'm not sure about that, because …</li>
+            </ul>
+          </div>
+          <div class="content-block">
+            <h4>🎯 Homework suggestion</h4>
+            <ul>
+              <li>Keep a 3-day social media "diary" — write 1–2 sentences each day about what you did online using the new verbs.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing-card">
+    <h3>✅ End of Lesson 2</h3>
+    <p>Students can match headings to paragraphs using the Reading Expert strategy.<br>They have learned 17 key social media verbs and can use them in conversation.</p>
+  </div>
+</div>
+
+<!-- ══════ PANEL: LESSON 3 — GRAMMAR 1 ══════ -->
+<div class="lesson-panel" id="lesson-grammar1">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(139,92,246,0.15);">⚙️</div>
+    <div>
+      <div class="section-title">Lesson 3 — Grammar: Present Tense Review</div>
+      <div class="section-subtitle">Coursebook p.12 · 40 minutes · Present Simple vs. Present Continuous + State Verbs</div>
+    </div>
+  </div>
+
+  <div class="quick-view" style="border-color:rgba(139,92,246,0.25);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(96,165,250,0.08))">
+    <div class="qv-item"><div class="qv-label">Total Time</div><div class="qv-value">40 min</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Pages</div><div class="qv-value">p.12</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Grammar</div><div class="qv-value">Present Simple · Present Continuous · State Verbs</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Text</div><div class="qv-value">Scroll Free September</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Outcome</div><div class="qv-value">Ss use both tenses correctly; know state verbs</div></div>
+  </div>
+
+  <div class="timer-strip">
+    <div class="timer-block"><div class="t-stage">Warmer (team game)</div><div class="t-min">8'</div><div class="timer-progress" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Grammar box</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 1 — Text</div><div class="t-min">10'</div><div class="timer-progress" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">State verbs Ex 3</div><div class="t-min">8'</div><div class="timer-progress" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 4–5 practice</div><div class="t-min">7'</div><div class="timer-progress" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Wrap-up</div><div class="t-min">2'</div><div class="timer-progress" style="background:linear-gradient(90deg,#8b5cf6,#a78bfa)"></div></div>
+  </div>
+
+  <div class="steps-grid">
+
+    <div class="step-card open" id="s3-1">
+      <div class="step-header" onclick="toggleStep('s3-1')">
+        <div class="step-num-circle" style="background:#8b5cf6;">1</div>
+        <div class="step-title-block">
+          <div class="step-name">🎮 Warmer — Team Game with Social Media Verbs</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Teams</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-grp">Teams</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="board-plan">Write ALL these verbs on the board (from Exercise 5 on p.11):
+scroll · click · follow · share · upload · view
+access · browse · log on · tap · search · download</div>
+        <div class="teacher-say">We're going to play a team game. I'll divide you into teams of 3–4. Each team takes turns — choose a verb from the board and use it in a sentence WITH the correct preposition if needed. If your sentence is correct — 2 points and cross it out. If it's wrong — the OTHER team gets a bonus point if they can correct it. The team with the most points wins!</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 How to run it</h4>
+            <ol>
+              <li>Divide into 2–4 teams.</li>
+              <li>Team 1 chooses a verb → makes a sentence.</li>
+              <li>You decide if it's correct. If yes: cross out verb, 2 pts.</li>
+              <li>If wrong: other team can steal with a correction (1 pt).</li>
+              <li>Continue until all verbs are gone. Highest score wins.</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>📌 Prepositions (write on board after)</h4>
+            <ul>
+              <li>search <strong>for</strong></li>
+              <li>upload something <strong>from</strong> your gallery</li>
+              <li>click <strong>on</strong></li>
+              <li>tap <strong>on</strong></li>
+              <li>log <strong>on to</strong></li>
+              <li>scroll <strong>through</strong></li>
+              <li>swipe <strong>to</strong> the right</li>
+              <li>share (something) <strong>with</strong></li>
+            </ul>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Excellent! Now we're going to look at grammar — present tenses. You already know these — let's see if you remember the rules."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s3-2">
+      <div class="step-header" onclick="toggleStep('s3-2')">
+        <div class="step-num-circle" style="background:#8b5cf6;">2</div>
+        <div class="step-title-block">
+          <div class="step-name">📘 Grammar Box — Study Together</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Open page 12. Read the Grammar box — you have 2 minutes. Then I'll ask you to give me your OWN examples. Don't just read mine.</div>
+        <div class="board-plan">PRESENT SIMPLE — habits, facts, routines
+  Every morning, I check my phone.
+  She always posts videos on Fridays.
+
+PRESENT CONTINUOUS — happening now / around now
+  They're watching a livestream right now.
+  I'm trying to spend less time online.
+
+STATE VERBS — NOT used in continuous:
+  know · believe · think · remember · understand
+  want · prefer · hate · like · need
+  hear · seem · taste · own · belong · have</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 What YOU do</h4>
+            <ol>
+              <li>Give examples for each tense from YOUR OWN life.</li>
+              <li>Ask Ss to add their own examples for each section.</li>
+              <li>Special attention to state verbs — elicit common mistakes: "I'm knowing / I'm wanting".</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>💡 Teaching Tip</h4>
+            <p>Give extra examples of your daily routine: "Every morning, I get up at 7. I have a shower. At the moment, I'm teaching an English class."</p>
+            <p style="margin-top:0.5rem;">Ask Ss to add their own examples for both tenses before moving on.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s3-3">
+      <div class="step-header" onclick="toggleStep('s3-3')">
+        <div class="step-num-circle" style="background:#8b5cf6;">3</div>
+        <div class="step-title-block">
+          <div class="step-name">📝 Exercise 1 — Scroll Free September Text</div>
+          <div class="step-meta"><span>⏱ 10 minutes</span><span>Individual → Pairs</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-ind">Individual</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Read the text about Scroll Free September. First, read it without filling anything in. Ask yourself: What is Scroll Free September? Why do people do it? Then read again and complete the gaps with the correct form of the verbs. You have 6 minutes.</div>
+        <div class="answers-box">
+          <h4>✅ Answers</h4>
+          <p>1 use &nbsp;2 's/is happening &nbsp;3 don't see &nbsp;4 is it starting &nbsp;5 challenges &nbsp;6 is currently trying &nbsp;7 check &nbsp;8 wake up &nbsp;9 'm/am not finding &nbsp;10 'm/am spending &nbsp;11 are doing &nbsp;12 Do I recommend</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-slow">
+            <div class="if-label">🐢 If they're slow</div>
+            <p>Tell them: gaps 4 and 12 need question forms. Highlight those two and let them focus there first.</p>
+          </div>
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 If confused which tense</div>
+            <p>Ask: "Is this a habit or a fact? → Present Simple. Is this happening right now or around now? → Present Continuous."</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Now let's look at state verbs — these are verbs we DON'T use in the continuous form, even when we're talking about right now."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s3-4">
+      <div class="step-header" onclick="toggleStep('s3-4')">
+        <div class="step-num-circle" style="background:#8b5cf6;">4</div>
+        <div class="step-title-block">
+          <div class="step-name">🧠 State Verbs — Exercise 3</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Individual → Pair</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-ind">Individual</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Read the State Verbs box. Key rule: "Right now, I want to go home" — NOT "I'm wanting to go home". Now complete sentences 1–7. Be careful — some need the SIMPLE, some need the CONTINUOUS. Work alone first, then check with a partner.</div>
+        <div class="answers-box">
+          <h4>✅ Answers</h4>
+          <p>1 looks &nbsp;2 don't/do not remember &nbsp;3 don't/do not seem &nbsp;4 'm/am getting &nbsp;5 Do you want, 'm/am not using &nbsp;6 're/are learning &nbsp;7 belongs</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 Common confusion</div>
+            <p>"I think it's a good idea" = it's my opinion (state verb, simple). "I'm thinking of going to the beach" = I'm considering (action, continuous). Show both!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s3-5">
+      <div class="step-header" onclick="toggleStep('s3-5')">
+        <div class="step-num-circle" style="background:#8b5cf6;">5</div>
+        <div class="step-title-block">
+          <div class="step-name">🗣️ Exercises 4–5 — Pair Interview</div>
+          <div class="step-meta"><span>⏱ 7 minutes</span><span>Pair Work</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-pw">Pair Work</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Exercise 4: Look at the prompts. Decide — is each question Present Simple (PS) or Present Continuous (PC)? Write PS or PC next to each. Then Exercise 5: Ask your partner ALL the questions. Try to add follow-up questions to find out MORE. You have 5 minutes.</div>
+        <div class="answers-box">
+          <h4>✅ Exercise 4 Answers</h4>
+          <p>2 PC &nbsp;3 PS &nbsp;4 PS &nbsp;5 PS &nbsp;6 PC</p>
+        </div>
+        <div class="answers-box" style="margin-top:0.5rem;">
+          <h4>✅ Exercise 5 — Full question forms</h4>
+          <p>2 Are you having a break from social media at the moment?<br>
+          3 Which subjects do you like the most?<br>
+          4 How often do you see your friends during the week?<br>
+          5 Do you think you have enough free time?<br>
+          6 Are you watching any good programmes at the moment?</p>
+        </div>
+        <div class="transition-box">Say: "Great work today! Now you know when to use simple vs. continuous. Next class — we're going to work on speaking: describing photos."</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing-card">
+    <h3>✅ End of Lesson 3</h3>
+    <p>Students can distinguish between present simple and present continuous, including state verbs.<br>They can form and answer questions using both tenses.</p>
+  </div>
+</div>
+
+<!-- ══════ PANEL: LESSON 4 — SPEAKING ══════ -->
+<div class="lesson-panel" id="lesson-speaking">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(16,185,129,0.15);">🎤</div>
+    <div>
+      <div class="section-title">Lesson 4 — Speaking: Describing a Photo</div>
+      <div class="section-subtitle">Coursebook p.13 · 40 minutes · Comparing photos + buying-time techniques</div>
+    </div>
+  </div>
+
+  <div class="quick-view" style="border-color:rgba(16,185,129,0.25);background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(34,211,238,0.08))">
+    <div class="qv-item"><div class="qv-label">Total Time</div><div class="qv-value">40 min</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Pages</div><div class="qv-value">p.13</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Audio</div><div class="qv-value">Tracks 1.3 (key expressions) · 1.4 (model)</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Key Skill</div><div class="qv-value">Speaking Expert: Buying time</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Outcome</div><div class="qv-value">Ss compare 2 photos for ~2 minutes</div></div>
+  </div>
+
+  <div class="timer-strip">
+    <div class="timer-block"><div class="t-stage">Warmer</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 1 — Warm compare</div><div class="t-min">7'</div><div class="timer-progress" style="background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 2–3 — Audio</div><div class="t-min">8'</div><div class="timer-progress" style="background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+    <div class="timer-block"><div class="t-stage">Key expressions</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 4 — Speaking Guide</div><div class="t-min">13'</div><div class="timer-progress" style="background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+    <div class="timer-block"><div class="t-stage">Feedback + wrap</div><div class="t-min">2'</div><div class="timer-progress" style="background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
+  </div>
+
+  <div class="steps-grid">
+
+    <div class="step-card open" id="s4-1">
+      <div class="step-header" onclick="toggleStep('s4-1')">
+        <div class="step-num-circle" style="background:#10b981;">1</div>
+        <div class="step-title-block">
+          <div class="step-name">🔥 Warmer — Look at the Photos Again</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Look at the photos on pages 10, 11, and 12. What is similar about ALL of them? What's different? [Pause] They all show people relaxing in their free time. But are they using technology? Look more carefully. Today, we're going to practise COMPARING photos — like in an exam.</div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Do this as whole class — you describe the photos and ask Ss to agree/disagree. Don't ask students to speak yet.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Turn to page 13. Exercise 1 — look at TWO photos. How are they similar? How are they different? I want you to think first, then discuss with a partner."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s4-2">
+      <div class="step-header" onclick="toggleStep('s4-2')">
+        <div class="step-num-circle" style="background:#10b981;">2</div>
+        <div class="step-title-block">
+          <div class="step-name">👥 Exercise 1 — Compare Two Photos</div>
+          <div class="step-meta"><span>⏱ 7 minutes</span><span>Pair Work</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-pw">Pair Work</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="board-plan">SIMILARITIES          | DIFFERENCES
+Both photos show …    | In the first photo …
+They both …           | In the second photo …
+In both photos …      | One obvious difference is …</div>
+        <div class="teacher-say">Look at the two photos. Work with your partner — make a list of 2 similarities and 2 differences. Write them down if you like. You have 3 minutes. Then we'll share.</div>
+        <div class="answers-box">
+          <h4>✅ Suggested similarities & differences</h4>
+          <p><strong>Similarities:</strong> Both show young people playing/having fun. Both are active/energetic.</p>
+          <p><strong>Differences:</strong> First photo — girl alone, indoors, using technology (gaming). Second — group outdoors, no technology visible, playing a physical game.</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Elicit the similarities and differences from the class first (you write them on the board). THEN Ss just add their own ideas in pairs.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Now let's listen to a boy doing this task. Listen carefully to HOW he describes the photos — especially what he says first, second, and last."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s4-3">
+      <div class="step-header" onclick="toggleStep('s4-3')">
+        <div class="step-num-circle" style="background:#10b981;">3</div>
+        <div class="step-title-block">
+          <div class="step-name">🎧 Exercises 2–3 — Audio + Speaking Expert</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Listen to Track 1.4. A boy is describing the two photos. Which of YOUR ideas does he mention? And which question (a, b, or c) does he answer at the end? a) advantages and disadvantages? b) which activity he enjoys most? c) which is better for families? Listen carefully!</div>
+        <div class="answers-box">
+          <h4>✅ Answers</h4>
+          <p><strong>Question answered:</strong> b — which activity he enjoys most</p>
+          <p><strong>Techniques used:</strong> Repeats the question + uses filler phrases</p>
+          <p><strong>Key expressions used:</strong> "Both photos show…", "One thing the photos have in common…", "One obvious difference…", "In the first photo…whereas…", "Another difference…", "Everyone seems happy", "She could be…", "On the whole…"</p>
+        </div>
+        <div class="teacher-say">Now read the SPEAKING EXPERT box. "Buying time" means — techniques to give yourself a few extra seconds to think. What do we do in OUR language when we need time to think? [Elicit native language equivalents.] In English, we can say: "Let me see…", "Let me think for a moment…", "I'm not really sure…", "Er, basically…"</div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 If they don't understand "buying time"</div>
+            <p>Ask a student a hard question (e.g. "What's the capital of Mongolia?") and then say "Let me think…Er…basically…" — they'll laugh and understand immediately.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s4-4">
+      <div class="step-header" onclick="toggleStep('s4-4')">
+        <div class="step-num-circle" style="background:#10b981;">4</div>
+        <div class="step-title-block">
+          <div class="step-name">📚 Key Expressions — Listen & Practise</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Whole Class → Pair</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="board-plan">KEY EXPRESSIONS (Track 1.3)
+
+COMPARING:                   CONTRASTING:
+Both photos show …           One obvious difference is that …
+The photos are similar in    In the first photo …
+  that they both …           whereas/while in the second …
+In both photos we can see …  Another difference is …
+
+SPECULATING:                 CONCLUDING:
+Everyone seems happy.        On the whole, …
+She could be (playing).      To sum up, …
+It looks as if (she's        
+  talking to someone).
+
+BUYING TIME:
+Let me see … / Let me think …
+I'm not really sure … / Er, basically …</div>
+        <div class="teacher-say">Listen to Track 1.3. These are all the key expressions. Repeat them after the audio. Pay attention to how they SOUND — the stress and rhythm. We'll use them in the next exercise.</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s4-5">
+      <div class="step-header" onclick="toggleStep('s4-5')">
+        <div class="step-num-circle" style="background:#10b981;">5</div>
+        <div class="step-title-block">
+          <div class="step-name">🗣️ Exercise 4 — Speaking Guide (Main Task)</div>
+          <div class="step-meta"><span>⏱ 13 minutes</span><span>Pair Work</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-pw">Pair Work</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Now it's your turn. Look at the two new photos in Exercise 4 — one shows students in a classroom with computers, the other shows a teacher with students around a board. Follow the SPEAKING GUIDE. Student A: TALK about the similarities and differences — aim for 30 seconds to 2 minutes! Student B: Listen. When A finishes, ask ONE of the three follow-up questions. Then SWAP roles. You have 8 minutes total.</div>
+
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>📋 Speaking Guide — steps</h4>
+            <ol>
+              <li><strong>PLAN</strong> — both partners: make a quick list of 2–3 similarities and 2–3 differences.</li>
+              <li><strong>Student A SPEAKS</strong> — describes photos using key expressions (aim for ~2 min). Student B TIMES and LISTENS.</li>
+              <li><strong>Student B ASKS</strong> one follow-up question:
+                <ul>
+                  <li>Which way of learning do you prefer and why?</li>
+                  <li>What are the advantages and disadvantages?</li>
+                  <li>What other technology do you use to help you learn?</li>
+                </ul>
+              </li>
+              <li>Swap roles. Student B describes the same or different photos.</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>👩‍🏫 Your role while monitoring</h4>
+            <ul>
+              <li>Listen for correct use of key expressions.</li>
+              <li>Note common errors (don't interrupt).</li>
+              <li>Encourage students who stop: "Keep going — use a filler phrase!"</li>
+              <li>After: write 2–3 common errors on board and correct them together.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="if-then-grid">
+          <div class="if-then-card if-shy">
+            <div class="if-label">😶 If students are shy</div>
+            <p>Let them write 3 sentences first, then read them aloud. Even reading is OK — it builds confidence. Gradually reduce the notes they use.</p>
+          </div>
+          <div class="if-then-card if-slow">
+            <div class="if-label">🐢 If they struggle to talk</div>
+            <p>Give them a "script starter": "Both photos show students learning. In the first photo, we can see… In the second photo, there is…" — just fill in the blanks.</p>
+          </div>
+          <div class="if-then-card if-fast">
+            <div class="if-label">⚡ Fast finishers</div>
+            <p>Write about the advantages of using technology for learning. Or find a photo of a VR classroom online and compare it to one of the book photos.</p>
+          </div>
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 Don't know what to say</div>
+            <p>Encourage them to start with the obvious: "Both photos show people studying." Then push for subtle differences: "In the first photo, there is NO teacher…"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s4-6">
+      <div class="step-header" onclick="toggleStep('s4-6')">
+        <div class="step-num-circle" style="background:#10b981;">6</div>
+        <div class="step-title-block">
+          <div class="step-name">🔔 Feedback & Wrap-up</div>
+          <div class="step-meta"><span>⏱ 2 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">What did you find easy? What was difficult? [Quick show of hands.] Here are two things I heard that were really good — [give genuine example]. And here's one thing to practise — [correct a common error on the board]. Next lesson: grammar with gerunds and infinitives.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing-card">
+    <h3>✅ End of Lesson 4</h3>
+    <p>Students can describe and compare two photos for approximately 2 minutes using key expressions and buying-time techniques.</p>
+  </div>
+</div>
+
+<!-- ══════ PANEL: LESSON 5 — GRAMMAR 2 ══════ -->
+<div class="lesson-panel" id="lesson-grammar2">
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(139,92,246,0.15);">🔤</div>
+    <div>
+      <div class="section-title">Lesson 5 — Grammar: Gerunds &amp; Infinitives</div>
+      <div class="section-subtitle">Coursebook p.16 · 40 minutes · Gerunds, infinitives, pronunciation /s/ /z/ /ʃ/ /ʒ/</div>
+    </div>
+  </div>
+
+  <div class="quick-view" style="border-color:rgba(139,92,246,0.25);background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(96,165,250,0.08))">
+    <div class="qv-item"><div class="qv-label">Total Time</div><div class="qv-value">40 min</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Pages</div><div class="qv-value">p.16</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Audio</div><div class="qv-value">Track 1.6 (pronunciation)</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Grammar</div><div class="qv-value">Gerunds + Infinitives; /s/ /z/ /ʃ/ /ʒ/</div></div>
+    <div class="qv-divider"></div>
+    <div class="qv-item"><div class="qv-label">Outcome</div><div class="qv-value">Ss use gerunds/infinitives with target verbs correctly</div></div>
+  </div>
+
+  <div class="timer-strip">
+    <div class="timer-block"><div class="t-stage">Team Warmer</div><div class="t-min">8'</div><div class="timer-progress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Grammar box</div><div class="t-min">5'</div><div class="timer-progress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 1 — Questionnaire</div><div class="t-min">8'</div><div class="timer-progress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Pronunciation</div><div class="t-min">7'</div><div class="timer-progress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 4–5 — Exam tips</div><div class="t-min">10'</div><div class="timer-progress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+    <div class="timer-block"><div class="t-stage">Ex 6 + wrap</div><div class="t-min">2'</div><div class="timer-progress" style="background:linear-gradient(90deg,#7c3aed,#a78bfa)"></div></div>
+  </div>
+
+  <div class="steps-grid">
+
+    <div class="step-card open" id="s5-1">
+      <div class="step-header" onclick="toggleStep('s5-1')">
+        <div class="step-num-circle" style="background:#7c3aed;">1</div>
+        <div class="step-title-block">
+          <div class="step-name">🎮 Warmer — Team Sentence Game</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Teams</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-grp">Teams</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="board-plan">Write these sentence beginnings on the board:
+
+We all enjoy …          It's very easy …
+I can't imagine …       Last week, I managed …
+It's difficult …        I prefer …
+Last year, I started …  I've decided …
+Yesterday, I forgot …   It's sometimes useful …
+At the moment, I'm trying …</div>
+        <div class="teacher-say">Teams! I've written sentence beginnings on the board. Your team must choose ONE beginning and complete it using a VERB — either the -ING form or the TO + VERB form. If your sentence is correct — 2 points. If wrong, the other team can steal by correcting it — 1 point. I'll go first: "We all enjoy USING apps." Your team — go!</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 How to run it</h4>
+            <ol>
+              <li>Divide class into 2–4 teams.</li>
+              <li>Teams take turns choosing a sentence beginning.</li>
+              <li>They complete it with verb + -ing OR to + verb.</li>
+              <li>Award 2 pts for correct; steal 1 pt for wrong → correct.</li>
+              <li>Highest score wins!</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>💡 Why this works</h4>
+            <p>Students will naturally get some wrong (enjoy TO… / manage DOING…). This creates the perfect "teachable moment" before you explain the grammar rule.</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "So some of you weren't sure which form to use — let's find out the rule. Open page 16 and look at the Grammar box."</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s5-2">
+      <div class="step-header" onclick="toggleStep('s5-2')">
+        <div class="step-num-circle" style="background:#7c3aed;">2</div>
+        <div class="step-title-block">
+          <div class="step-name">📘 Grammar Box — Gerunds & Infinitives</div>
+          <div class="step-meta"><span>⏱ 5 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="board-plan">GERUND (verb + -ing) — use after:
+  avoid, consider, enjoy, imagine, like, prefer,
+  risk, start, stop, suggest
+  e.g. We all enjoy USING apps.
+  Also: after a preposition ("by WALKING")
+  Also: as the subject ("DOING exercise is fun.")
+
+INFINITIVE (to + verb) — use after:
+  agree, choose, decide, forget, help, hope,
+  learn, manage, try
+  e.g. You can CHOOSE TO RUN, walk or cycle.
+  Also: after an adjective ("It's easy TO USE.")
+  Also: to say WHY ("to make our lives easier")</div>
+        <div class="teacher-say">Read through the Grammar box. The key point: there is NO rule about WHY some verbs take gerunds and others take infinitives — you simply have to learn them. I'll read the examples aloud. After I read each one, you give me YOUR OWN example with the same verb. Ready?</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>👩‍🏫 Elicitation technique</h4>
+            <ol>
+              <li>Say: "Enjoy + ?" → "USING / PLAYING / WATCHING"</li>
+              <li>"Hope + ?" → "TO PASS / TO IMPROVE / TO TRAVEL"</li>
+              <li>"It's easy + ?" → "TO FORGET / TO LEARN / TO LOSE"</li>
+              <li>Give correction: gerund or infinitive? Ask: "Which verb list is 'enjoy' on?"</li>
+            </ol>
+          </div>
+          <div class="content-block">
+            <h4>💡 Teaching Tip</h4>
+            <p>Encourage students to self-correct. When they make a gerund/infinitive error during the lesson, ask: <em>"Gerund or infinitive?"</em> — don't just correct it for them.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s5-3">
+      <div class="step-header" onclick="toggleStep('s5-3')">
+        <div class="step-num-circle" style="background:#7c3aed;">3</div>
+        <div class="step-title-block">
+          <div class="step-name">📝 Exercise 1 — Technology & You Questionnaire</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Individual → Pair</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-ind">Individual</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Look at the "Technology and You" questionnaire. Complete the 5 questions with the correct form — gerund (-ing) or infinitive (to + verb). Then in Exercise 2: ask your partner the questions and listen to their answers.</div>
+        <div class="answers-box">
+          <h4>✅ Answers</h4>
+          <p>1 living, quitting &nbsp;|&nbsp; 2 to organize, to meet &nbsp;|&nbsp; 3 streaming, listening &nbsp;|&nbsp; 4 adding, using &nbsp;|&nbsp; 5 losing, to use</p>
+        </div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-slow">
+            <div class="if-label">🐢 If they're slow</div>
+            <p>Highlight the key verb in each question (imagine, help, manage, enjoy, prefer, avoid, risk, learn). Tell them: "Find that verb in the Grammar box — which list is it on?"</p>
+          </div>
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 Note — "organize" vs "to organize"</div>
+            <p>The book uses "help + to organize" but "help + infinitive (no to)" is also acceptable. Accept both!</p>
+          </div>
+        </div>
+        <div class="transition-box">Say: "Now let's work on pronunciation. Some of these words are tricky to say. Can you tell the difference between /s/ and /z/, or /ʃ/ and /ʒ/?"</div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s5-4">
+      <div class="step-header" onclick="toggleStep('s5-4')">
+        <div class="step-num-circle" style="background:#7c3aed;">4</div>
+        <div class="step-title-block">
+          <div class="step-name">🔊 Exercise 3 — Pronunciation /s/ /z/ /ʃ/ /ʒ/</div>
+          <div class="step-meta"><span>⏱ 7 minutes</span><span>Whole Class → Individual</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Look at the pronunciation table. I'm going to model each sound. Repeat after me. /s/ — like in "stream, scroll, save". /z/ — like in "music, choose". /ʃ/ — like in "sure, sugar". /ʒ/ — like in "usually, revision, measure". Now put the words from the box into the correct column — then we'll listen to check.</div>
+        <div class="answers-box">
+          <h4>✅ Answers (Track 1.6)</h4>
+          <p><strong>/s/:</strong> apps, effects, save &nbsp;|&nbsp; <strong>/z/:</strong> filters, photos &nbsp;|&nbsp; <strong>/ʃ/:</strong> sugar &nbsp;|&nbsp; <strong>/ʒ/:</strong> decision, measure, unusual</p>
+        </div>
+        <div class="board-plan">Sound guide:
+/s/  — hissing snake: STREAM, SCROLL, SAVE, APPS
+/z/  — buzzing bee: MUSIC, CHOOSE, FILTERS, PHOTOS
+/ʃ/  — "shush!": SURE, SUGAR
+/ʒ/  — like "vision": USUALLY, DECISION, MEASURE</div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-confused">
+            <div class="if-label">😕 If they confuse /s/ and /z/</div>
+            <p>Put your hand on your throat: /z/ vibrates (voiced). /s/ does not. This physical trick always works!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s5-5">
+      <div class="step-header" onclick="toggleStep('s5-5')">
+        <div class="step-num-circle" style="background:#7c3aed;">5</div>
+        <div class="step-title-block">
+          <div class="step-name">✍️ Exercise 4 — Top 10 Exam Tips</div>
+          <div class="step-meta"><span>⏱ 8 minutes</span><span>Individual → Pair</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-ind">Individual</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Look at the "Top 10 Exam Revision Tips". Complete each gap with a verb in the correct form — gerund or infinitive. Think about which verb makes sense AND which form is grammatically correct. You have 5 minutes, then compare with a partner.</div>
+        <div class="answers-box">
+          <h4>✅ Suggested answers</h4>
+          <p>2 to plan/to organize &nbsp;3 to find/to choose (finding/choosing also OK) &nbsp;4 spending/wasting &nbsp;5 Writing &nbsp;6 to take/to have &nbsp;7 going &nbsp;8 Having/Getting &nbsp;9 Eating/Having &nbsp;10 to arrive/to get there</p>
+        </div>
+        <div class="teacher-say">Exercise 5: Ask your partner: "How do you usually revise?" Share which tips you BOTH think are useful. Tell me — which tip did your partner say they'd never considered?</div>
+        <div class="if-then-grid">
+          <div class="if-then-card if-fast">
+            <div class="if-label">⚡ Fast finishers</div>
+            <p>Exercise 6 — Creativity: Write your own "Top 10 Tips for Learning English". Use gerunds and infinitives for each tip.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s5-6">
+      <div class="step-header" onclick="toggleStep('s5-6')">
+        <div class="step-num-circle" style="background:#7c3aed;">6</div>
+        <div class="step-title-block">
+          <div class="step-name">🔔 Extra Activity + Wrap-up</div>
+          <div class="step-meta"><span>⏱ 2 minutes</span><span>Whole Class</span></div>
+        </div>
+        <div class="step-right"><span class="interaction-badge ib-wc">Whole Class</span><span class="step-toggle">▼</span></div>
+      </div>
+      <div class="step-body">
+        <div class="teacher-say">Last thing — write 3 sentences about yourself. Two should be TRUE and one should be FALSE. Use gerunds or infinitives. For example: "I enjoy cooking. I've decided to start running. I prefer swimming to cycling." Read to your partner — they guess which one is false!</div>
+        <div class="content-grid">
+          <div class="content-block">
+            <h4>🎯 Why this works</h4>
+            <p>The "2 truths 1 lie" format is low-stress and personal — students engage because it's about themselves. It also forces them to produce gerunds/infinitives naturally.</p>
+          </div>
+          <div class="content-block">
+            <h4>🎯 Homework suggestion</h4>
+            <ul>
+              <li>WB p.12 (grammar practice — continuous assessment)</li>
+              <li>WB p.108 (Grammar bank)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="closing-card">
+    <h3>✅ End of Lesson 5 — End of Unit 1 Language Lessons</h3>
+    <p>Students can correctly use gerunds and infinitives after target verbs.<br>They can distinguish between /s/, /z/, /ʃ/, and /ʒ/ sounds.<br>Unit 1 foundation complete — reading, vocabulary, grammar (×2), and speaking all covered.</p>
+  </div>
+</div>
+
+</main>
+
+<script>
+function switchTab(btn, panelId) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.lesson-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(panelId).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleStep(id) {
+  const card = document.getElementById(id);
+  card.classList.toggle('open');
+}
+
+// Open first step in each panel by default
+document.querySelectorAll('.lesson-panel').forEach(panel => {
+  const first = panel.querySelector('.step-card');
+  if (first) first.classList.add('open');
+});
+
+// Keyboard shortcut: Escape closes all open steps in active panel
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const active = document.querySelector('.lesson-panel.active');
+    if (active) {
+      active.querySelectorAll('.step-card.open').forEach(c => c.classList.remove('open'));
+    }
+  }
+});
+</script>
+
+</body>
+</html>
