@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏝️ ESCAPE THE ISLAND | Classroom English Adventure</title>
+  <meta name="description" content="An immersive classroom English adventure game for 7th & 8th grade students. Complete missions, collect escape items, power the radio, launch the boat, and escape!">
+
+  <!-- Google Fonts: Outfit, Cinzel, Fredoka -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Fredoka:wght@500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Fullscreen Animated Background Effects -->
+  <div class="island-ambient-bg" aria-hidden="true">
+    <div class="sky-gradient"></div>
+    <div class="sun-glow"></div>
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="ocean-water"></div>
+  </div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============================================================
+       TOP HEADER & ESCAPE PROGRESSION BAR
+       ============================================================ -->
+  <header class="top-nav-bar" id="top-nav-bar">
+    <div class="nav-left">
+      <a href="../../index.html" class="nav-btn nav-back-hub" id="btn-back-hub" title="Back to Games Hub" aria-label="Back to Games Hub">
+        <span class="nav-btn-icon">←</span>
+        <span class="nav-btn-text">HUB</span>
+      </a>
+      <div class="game-logo" id="logo-badge" title="Escape the Island">
+        <span class="logo-icon">🏝️</span>
+        <div class="logo-text">
+          <span class="logo-title">ESCAPE THE ISLAND</span>
+          <span class="logo-tag">CLASSROOM ADVENTURE</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESCAPE PROGRESS MILESTONES (Always Visible During Game) -->
+    <div class="escape-milestones-widget" id="escape-milestones-widget">
+      <div class="milestones-track">
+        <div class="milestone-step active" data-step="0" id="step-0" title="Beach (Crash Site)">
+          <span class="step-icon">🏝️</span>
+          <span class="step-label">Beach</span>
+        </div>
+        <div class="milestone-line" id="line-1"></div>
+        <div class="milestone-step" data-step="1" id="step-1" title="Mission 1: Jungle">
+          <span class="step-icon">🌴</span>
+          <span class="step-label">Jungle</span>
+        </div>
+        <div class="milestone-line" id="line-2"></div>
+        <div class="milestone-step" data-step="2" id="step-2" title="Mission 2: Temple">
+          <span class="step-icon">🗿</span>
+          <span class="step-label">Temple</span>
+        </div>
+        <div class="milestone-line" id="line-3"></div>
+        <div class="milestone-step" data-step="3" id="step-3" title="Mission 3: Camp">
+          <span class="step-icon">🛖</span>
+          <span class="step-label">Camp</span>
+        </div>
+        <div class="milestone-line" id="line-4"></div>
+        <div class="milestone-step" data-step="4" id="step-4" title="Mission 4: Radio Tower">
+          <span class="step-icon">📻</span>
+          <span class="step-label">Radio</span>
+        </div>
+        <div class="milestone-line" id="line-5"></div>
+        <div class="milestone-step" data-step="5" id="step-5" title="Mission 5: Escape Boat">
+          <span class="step-icon">🚤</span>
+          <span class="step-label">Boat</span>
+        </div>
+        <div class="milestone-line" id="line-6"></div>
+        <div class="milestone-step" data-step="6" id="step-6" title="Mission 6: Rescue!">
+          <span class="step-icon">🚁</span>
+          <span class="step-label">Rescue</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIVES / ENERGY HEARTS -->
+    <div class="lives-widget" id="lives-widget" title="Team Energy / Lives">
+      <span class="lives-label">ENERGY:</span>
+      <div class="hearts-row" id="hearts-row">
+        <span class="heart-icon full" id="heart-1">❤️</span>
+        <span class="heart-icon full" id="heart-2">❤️</span>
+        <span class="heart-icon full" id="heart-3">❤️</span>
+      </div>
+    </div>
+
+    <!-- HEADER TOOLBAR BUTTONS -->
+    <div class="nav-right">
+      <button type="button" class="nav-btn" id="sound-toggle-btn" title="Toggle Sound (M)" aria-label="Toggle Sound">
+        <span class="nav-btn-icon" id="sound-btn-icon">🔊</span>
+        <span class="nav-btn-text">SOUND</span>
+      </button>
+      <button type="button" class="nav-btn teacher-highlight" id="teacher-btn" title="Teacher Settings (T)" aria-label="Teacher Settings">
+        <span class="nav-btn-icon">🎓</span>
+        <span class="nav-btn-text">TEACHER</span>
+      </button>
+      <button type="button" class="nav-btn" id="rules-btn" title="Rules & How to Play" aria-label="How to Play">
+        <span class="nav-btn-icon">❓</span>
+        <span class="nav-btn-text">RULES</span>
+      </button>
+      <button type="button" class="nav-btn" id="fullscreen-btn" title="Toggle Fullscreen (F)" aria-label="Toggle Fullscreen">
+        <span class="nav-btn-icon">⛶</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN APP VIEWPORT
+       ============================================================ -->
+  <main class="app-viewport" id="app-viewport">
+
+    <!-- ==========================================================
+         SCREEN 1: EXPEDITION SETUP
+         ========================================================== -->
+    <section class="screen-panel setup-screen active" id="setup-screen">
+      <div class="setup-container">
+        <div class="setup-hero-card">
+          <div class="setup-badge">🏝️ SURVIVAL ESCAPE ADVENTURE</div>
+          <h1 class="setup-main-title">ESCAPE THE ISLAND</h1>
+          <p class="setup-subtitle">Complete English Language Missions • Find Escape Items • Escape the Island!</p>
+
+          <div class="setup-grid">
+            <!-- Play Mode / Team Selection -->
+            <div class="setup-card">
+              <h3 class="setup-card-title">👥 EXPEDITION TEAMS</h3>
+              <p class="setup-card-desc">Choose whole-class cooperative play or compete in classroom teams:</p>
+              <div class="team-count-buttons" id="team-count-buttons">
+                <button type="button" class="btn-count active" data-teams="1">1 Team (Whole Class)</button>
+                <button type="button" class="btn-count" data-teams="2">2 Teams</button>
+                <button type="button" class="btn-count" data-teams="3">3 Teams</button>
+                <button type="button" class="btn-count" data-teams="4">4 Teams</button>
+              </div>
+
+              <div class="teams-list-preview" id="teams-list-preview">
+                <!-- Dynamically populated team cards -->
+              </div>
+            </div>
+
+            <!-- Grade & Difficulty Settings -->
+            <div class="setup-card">
+              <h3 class="setup-card-title">📚 CURRICULUM & GRADE</h3>
+              
+              <div class="setup-field-group">
+                <label class="setup-field-label">Target Grade Level:</label>
+                <div class="grade-toggle-group">
+                  <button type="button" class="btn-toggle active" data-grade="all">7th &amp; 8th (Mixed)</button>
+                  <button type="button" class="btn-toggle" data-grade="7">7th Grade</button>
+                  <button type="button" class="btn-toggle" data-grade="8">8th Grade</button>
+                </div>
+              </div>
+
+              <div class="setup-field-group">
+                <label class="setup-field-label">Challenges Per Mission:</label>
+                <div class="mission-len-group">
+                  <button type="button" class="btn-toggle" data-len="2">Quick (2 / Mission)</button>
+                  <button type="button" class="btn-toggle active" data-len="3">Standard (3 / Mission)</button>
+                  <button type="button" class="btn-toggle" data-len="4">Epic (4 / Mission)</button>
+                </div>
+              </div>
+
+              <div class="adventure-overview-box">
+                <div class="overview-title">🗺️ THE 6 ESCAPE MISSIONS:</div>
+                <div class="overview-list">
+                  <span>1. 🌴 Find Jungle Path</span>
+                  <span>2. 🗿 Unlock Temple</span>
+                  <span>3. 🛖 Search Camp</span>
+                  <span>4. 📻 Repair Radio</span>
+                  <span>5. 🚤 Reach Boat</span>
+                  <span>6. 🚁 Call Rescue!</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="setup-start-row">
+            <button type="button" class="btn-primary-action btn-start-game" id="btn-start-expedition">
+              <span class="btn-action-icon">🚀</span>
+              <span class="btn-action-text">START ADVENTURE</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         SCREEN 2: STORY INTRO (CINEMATIC OPENING)
+         ========================================================== -->
+    <section class="screen-panel intro-screen hidden" id="intro-screen">
+      <div class="intro-backdrop">
+        <div class="intro-dialog-box">
+          <div class="intro-day-tag" id="intro-day-tag">DAY 1 — 06:00 AM</div>
+          <div class="intro-story-text" id="intro-story-text">
+            You wake up stranded on a mysterious island...
+          </div>
+          <div class="intro-subtext" id="intro-subtext">
+            Your boat is gone. Dark storm clouds are gathering.
+          </div>
+
+          <div class="intro-action-container">
+            <button type="button" class="btn-primary-action btn-intro-next" id="btn-intro-next">
+              <span>CONTINUE ➔</span>
+            </button>
+            <button type="button" class="btn-skip-intro" id="btn-skip-intro">Skip Intro ⏩</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================
+         SCREEN 3: MAIN ADVENTURE ARENA (MAP + MISSIONS)
+         ========================================================== -->
+    <section class="screen-panel game-screen hidden" id="game-screen">
+      
+      <div class="adventure-layout">
+        
+        <!-- ======================================================
+             LEFT / TOP: LARGE ILLUSTRATED ISLAND MAP
+             ====================================================== -->
+        <div class="island-map-container" id="island-map-container">
+          
+          <div class="map-header-bar">
+            <div class="map-title-group">
+              <span class="map-badge">🗺️ ISLAND EXPEDITION MAP</span>
+              <span class="active-team-indicator" id="active-team-indicator">🐯 TIGERS' TURN</span>
+            </div>
+            <div class="map-legend">
+              <span class="legend-item"><span class="dot completed"></span> Completed</span>
+              <span class="legend-item"><span class="dot current"></span> Current</span>
+              <span class="legend-item"><span class="dot locked"></span> Locked</span>
+            </div>
+          </div>
+
+          <!-- Illustrated Island Canvas / SVG Area -->
+          <div class="island-map-viewport" id="island-map-viewport">
+            
+            <!-- Animated Map Elements (Clouds, Waves, Birds) -->
+            <div class="map-animated-elements" aria-hidden="true">
+              <div class="map-cloud mc-1">☁️</div>
+              <div class="map-cloud mc-2">☁️</div>
+              <div class="map-bird mb-1">🦅</div>
+              <div class="map-bird mb-2">🦅</div>
+              <div class="map-wave mw-1">〰️</div>
+              <div class="map-wave mw-2">〰️</div>
+            </div>
+
+            <!-- Island Map Graphic Base -->
+            <svg class="map-svg-canvas" id="map-svg-canvas" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMid slice">
+              <defs>
+                <radialGradient id="islandGradient" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#4ade80" />
+                  <stop offset="45%" stop-color="#22c55e" />
+                  <stop offset="75%" stop-color="#15803d" />
+                  <stop offset="100%" stop-color="#ca8a04" />
+                </radialGradient>
+                <filter id="mapShadow" x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#0284c7" flood-opacity="0.6"/>
+                </filter>
+              </defs>
+
+              <!-- Island Terrain Silhouette -->
+              <path class="island-terrain" d="M 120,440 C 90,300 160,180 280,140 C 400,100 520,80 660,110 C 800,140 920,220 900,380 C 880,500 760,540 600,560 C 440,580 280,560 180,520 Z" filter="url(#mapShadow)" />
+              
+              <!-- Mountain & Jungle Textures -->
+              <path class="island-ridge" d="M 380,240 Q 520,160 680,200 Q 740,240 780,220" />
+              <path class="island-ridge-2" d="M 440,320 Q 560,260 640,300" />
+
+              <!-- Adventure Path Connecting All 6 Locations -->
+              <path class="adventure-trail" id="adventure-trail-bg" d="M 140,432 L 280,288 L 480,180 L 640,324 L 760,132 L 860,444 L 920,96" />
+              <path class="adventure-trail active-dash" id="adventure-trail-active" d="M 140,432 L 280,288 L 480,180 L 640,324 L 760,132 L 860,444 L 920,96" />
+            </svg>
+
+            <!-- Interactive Map Node Markers (Positioned via percentage) -->
+            <div class="map-nodes-layer" id="map-nodes-layer">
+              <!-- Dynamically populated node markers -->
+            </div>
+
+            <!-- Animated Character / Team Avatar Token -->
+            <div class="character-token" id="character-token" style="left: 14%; top: 72%;">
+              <div class="token-pulse-ring"></div>
+              <div class="token-avatar" id="token-avatar">🏃</div>
+              <div class="token-nametag" id="token-nametag">TEAM</div>
+            </div>
+
+          </div>
+
+          <!-- INVENTORY BAR (Escape Items Collected) -->
+          <div class="inventory-bar" id="inventory-bar">
+            <div class="inventory-label">
+              <span class="inv-icon">🎒</span>
+              <span>ESCAPE ITEMS:</span>
+            </div>
+            <div class="inventory-slots" id="inventory-slots">
+              <div class="inv-slot locked" id="slot-map" title="Island Map">
+                <span class="item-icon">🗺️</span>
+                <span class="item-name">Map</span>
+                <span class="lock-tag">🔒</span>
+              </div>
+              <div class="inv-slot locked" id="slot-compass" title="Compass">
+                <span class="item-icon">🧭</span>
+                <span class="item-name">Compass</span>
+                <span class="lock-tag">🔒</span>
+              </div>
+              <div class="inv-slot locked" id="slot-key" title="Boat Key">
+                <span class="item-icon">🔑</span>
+                <span class="item-name">Key</span>
+                <span class="lock-tag">🔒</span>
+              </div>
+              <div class="inv-slot locked" id="slot-battery" title="Battery Pack">
+                <span class="item-icon">🔋</span>
+                <span class="item-name">Battery</span>
+                <span class="lock-tag">🔒</span>
+              </div>
+              <div class="inv-slot locked" id="slot-radio" title="Emergency Radio">
+                <span class="item-icon">📻</span>
+                <span class="item-name">Radio</span>
+                <span class="lock-tag">🔒</span>
+              </div>
+              <div class="inv-slot locked" id="slot-fuel" title="Boat Fuel">
+                <span class="item-icon">⛽</span>
+                <span class="item-name">Fuel</span>
+                <span class="lock-tag">🔒</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- ======================================================
+             RIGHT / BOTTOM: MISSION & CHALLENGE CONSOLE
+             ====================================================== -->
+        <div class="challenge-console" id="challenge-console">
+
+          <!-- 1. MISSION BRIEFING CARD (Before starting mission questions) -->
+          <div class="console-card mission-briefing-card" id="mission-briefing-card">
+            <div class="briefing-header">
+              <span class="briefing-mission-badge" id="briefing-mission-badge">MISSION 1 OF 6</span>
+              <h2 class="briefing-title" id="briefing-title">🌴 FIND THE JUNGLE PATH</h2>
+              <p class="briefing-tagline" id="briefing-tagline">Navigate through the dense tropical forest</p>
+            </div>
+
+            <div class="briefing-body">
+              <div class="briefing-story" id="briefing-story">
+                You wake up on the stormy beach. Your boat is destroyed, and the coastline is surrounded by steep cliffs. The only way forward is through the thick jungle.
+              </div>
+
+              <div class="briefing-meta-grid">
+                <div class="briefing-meta-item">
+                  <span class="meta-label">🎯 OBJECTIVE</span>
+                  <span class="meta-val" id="briefing-objective">Answer 3 English questions correctly</span>
+                </div>
+                <div class="briefing-meta-item">
+                  <span class="meta-label">🎁 UNLOCK ITEM</span>
+                  <span class="meta-val highlight" id="briefing-reward">🧭 Brass Compass</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="briefing-footer">
+              <button type="button" class="btn-primary-action btn-start-mission" id="btn-start-mission">
+                <span class="btn-action-icon">⚔️</span>
+                <span class="btn-action-text">START MISSION</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. LIVE ENGLISH QUESTION CHALLENGE CARD -->
+          <div class="console-card question-card hidden" id="question-card">
+            <div class="question-header">
+              <div class="q-meta-left">
+                <span class="mission-indicator-pill" id="q-mission-pill">MISSION 1 • CHALLENGE 1/3</span>
+                <span class="category-pill" id="q-category-pill">Simple Past • A2</span>
+              </div>
+              <div class="q-meta-right">
+                <span class="energy-mini" id="q-energy-mini">❤️❤️❤️</span>
+              </div>
+            </div>
+
+            <!-- Big Question Prompt -->
+            <div class="question-prompt-container">
+              <h3 class="question-prompt-text" id="question-prompt-text">
+                What did you do yesterday afternoon?
+              </h3>
+            </div>
+
+            <!-- 4 Multiple Choice Options (A, B, C, D) -->
+            <div class="options-grid" id="options-grid">
+              <button type="button" class="option-btn" id="opt-btn-0" data-index="0">
+                <span class="opt-letter">A</span>
+                <span class="opt-text" id="opt-text-0">Option A</span>
+              </button>
+              <button type="button" class="option-btn" id="opt-btn-1" data-index="1">
+                <span class="opt-letter">B</span>
+                <span class="opt-text" id="opt-text-1">Option B</span>
+              </button>
+              <button type="button" class="option-btn" id="opt-btn-2" data-index="2">
+                <span class="opt-letter">C</span>
+                <span class="opt-text" id="opt-text-2">Option C</span>
+              </button>
+              <button type="button" class="option-btn" id="opt-btn-3" data-index="3">
+                <span class="opt-letter">D</span>
+                <span class="opt-text" id="opt-text-3">Option D</span>
+              </button>
+            </div>
+
+            <!-- Explanation & Feedback Banner (Revealed on choice) -->
+            <div class="explanation-card hidden" id="explanation-card">
+              <div class="exp-header">
+                <span class="exp-badge" id="exp-badge">🎉 CORRECT!</span>
+                <span class="exp-reward-note" id="exp-reward-note">Path unlocked!</span>
+              </div>
+              <p class="exp-text" id="exp-text">
+                Explanation of the grammar rule and why this answer is correct.
+              </p>
+              <div class="exp-action-row">
+                <button type="button" class="btn-primary-action btn-next-step" id="btn-next-step">
+                  <span>CONTINUE ➔</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. MISSION COMPLETE / ITEM UNLOCKED POPUP MODAL -->
+          <div class="console-card mission-complete-card hidden" id="mission-complete-card">
+            <div class="complete-header">
+              <div class="complete-trophy-anim">🏆</div>
+              <span class="complete-badge">MISSION COMPLETE!</span>
+              <h2 class="complete-title" id="complete-mission-title">🌴 JUNGLE PATH OPENED!</h2>
+            </div>
+
+            <div class="item-unlocked-showcase" id="item-unlocked-showcase">
+              <div class="item-unlock-glow">
+                <span class="item-unlock-icon" id="unlocked-item-icon">🧭</span>
+              </div>
+              <div class="item-unlock-details">
+                <span class="item-unlock-tag">✨ NEW ITEM ACQUIRED!</span>
+                <h3 class="item-unlock-name" id="unlocked-item-name">Brass Compass</h3>
+                <p class="item-unlock-desc" id="unlocked-item-desc">Guides the expedition northward through the island.</p>
+              </div>
+            </div>
+
+            <div class="complete-footer">
+              <button type="button" class="btn-primary-action btn-next-mission" id="btn-next-mission">
+                <span class="btn-action-icon">🗺️</span>
+                <span class="btn-action-text">PROCEED TO NEXT LOCATION ➔</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4. EXPEDITION EXHAUSTED (GAME OVER / TRY AGAIN) -->
+          <div class="console-card exhausted-card hidden" id="exhausted-card">
+            <div class="exhausted-icon">⚠️</div>
+            <h2 class="exhausted-title">EXPEDITION EXHAUSTED!</h2>
+            <p class="exhausted-desc">
+              Your energy ran out! But true explorers never give up on the island.
+            </p>
+            <div class="exhausted-action-row">
+              <button type="button" class="btn-primary-action btn-retry-mission" id="btn-retry-mission">
+                <span class="btn-action-icon">🔄</span>
+                <span class="btn-action-text">REST &amp; RETRY MISSION</span>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================================
+         SCREEN 4: CINEMATIC FINAL ESCAPE SEQUENCE
+         ========================================================== -->
+    <section class="screen-panel victory-screen hidden" id="victory-screen">
+      <div class="victory-container">
+        
+        <!-- Multi-Stage Animated Sequence Box -->
+        <div class="escape-cinema-card" id="escape-cinema-card">
+          
+          <div class="cinema-stage stage-1" id="stage-boat">
+            <div class="cinema-icon-anim">🚤</div>
+            <h2 class="cinema-title">ESCAPE BOAT READY!</h2>
+            <p class="cinema-desc">You reach the coastal dock and turn the key. The engine roars to life!</p>
+          </div>
+
+          <div class="cinema-stage stage-2 hidden" id="stage-radio">
+            <div class="cinema-icon-anim">📻</div>
+            <h2 class="cinema-title">RADIO TRANSMISSION ACTIVE</h2>
+            <p class="cinema-desc">"MAYDAY! MAYDAY! This is Expedition Team! Coordinates confirmed!"</p>
+          </div>
+
+          <div class="cinema-stage stage-3 hidden" id="stage-heli">
+            <div class="cinema-icon-anim">🚁</div>
+            <h2 class="cinema-title">RESCUE HELICOPTER INBOUND!</h2>
+            <p class="cinema-desc">Searchlights spot your boat cutting through the open ocean waves!</p>
+          </div>
+
+          <div class="cinema-stage stage-4 hidden" id="stage-victory">
+            <div class="victory-banner-badge">🎉 RESCUE SUCCESSFUL!</div>
+            <h1 class="victory-main-title">YOU ESCAPED THE ISLAND!</h1>
+            <p class="victory-subtitle">All 6 missions completed! Excellent teamwork and English mastery!</p>
+
+            <div class="victory-stats-grid">
+              <div class="vstat-card">
+                <span class="vstat-val" id="vstat-missions">6 / 6</span>
+                <span class="vstat-label">Missions Done</span>
+              </div>
+              <div class="vstat-card">
+                <span class="vstat-val" id="vstat-accuracy">100%</span>
+                <span class="vstat-label">Accuracy</span>
+              </div>
+              <div class="vstat-card">
+                <span class="vstat-val" id="vstat-items">6 Items</span>
+                <span class="vstat-label">Escaped With</span>
+              </div>
+            </div>
+
+            <div class="victory-action-row">
+              <button type="button" class="btn-primary-action btn-play-again" id="btn-play-again">
+                <span class="btn-action-icon">🔄</span>
+                <span class="btn-action-text">PLAY AGAIN (NEW EXPEDITION)</span>
+              </button>
+              <a href="../../index.html" class="btn-hub-return">
+                <span>🎮 BACK TO GAMES HUB</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================
+       TEACHER SETTINGS DRAWER / MODAL (🎓)
+       ============================================================ -->
+  <div class="modal-overlay hidden" id="teacher-modal" role="dialog" aria-modal="true" aria-labelledby="teacher-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="teacher-modal-title">🎓 Teacher Control Panel</h2>
+        <button type="button" class="btn-modal-close" id="btn-teacher-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="setting-row">
+          <label class="setting-label">Grade Filter:</label>
+          <div class="setting-toggles" id="teacher-grade-toggles">
+            <button type="button" class="btn-toggle active" data-grade="all">7th &amp; 8th (All)</button>
+            <button type="button" class="btn-toggle" data-grade="7">7th Grade</button>
+            <button type="button" class="btn-toggle" data-grade="8">8th Grade</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <label class="setting-label">Difficulty Filter:</label>
+          <div class="setting-toggles" id="teacher-diff-toggles">
+            <button type="button" class="btn-toggle active" data-diff="all">All</button>
+            <button type="button" class="btn-toggle" data-diff="A2">Easy (A2)</button>
+            <button type="button" class="btn-toggle" data-diff="B1">Hard (B1)</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <label class="setting-label">Questions per Mission:</label>
+          <div class="setting-toggles" id="teacher-len-toggles">
+            <button type="button" class="btn-toggle" data-len="2">2 (Quick)</button>
+            <button type="button" class="btn-toggle active" data-len="3">3 (Standard)</button>
+            <button type="button" class="btn-toggle" data-len="4">4 (Full)</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <label class="setting-label">Jump to Mission (Classroom Pace):</label>
+          <div class="jump-missions-grid" id="jump-missions-grid">
+            <button type="button" class="btn-jump" data-mission="1">🌴 Mission 1</button>
+            <button type="button" class="btn-jump" data-mission="2">🗿 Mission 2</button>
+            <button type="button" class="btn-jump" data-mission="3">🛖 Mission 3</button>
+            <button type="button" class="btn-jump" data-mission="4">📻 Mission 4</button>
+            <button type="button" class="btn-jump" data-mission="5">🚤 Mission 5</button>
+            <button type="button" class="btn-jump" data-mission="6">🚁 Mission 6</button>
+            <button type="button" class="btn-jump highlight" data-mission="escape">🎉 Test Escape</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <label class="setting-label">Game Management:</label>
+          <div class="setting-toggles">
+            <button type="button" class="btn-toggle danger" id="btn-reset-game">🔄 Reset / New Game</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       RULES MODAL (❓)
+       ============================================================ -->
+  <div class="modal-overlay hidden" id="rules-modal" role="dialog" aria-modal="true" aria-labelledby="rules-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="rules-modal-title">🏝️ How to Play Escape the Island</h2>
+        <button type="button" class="btn-modal-close" id="btn-rules-close" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body rules-content">
+        <h3>Story &amp; Objective</h3>
+        <p>Your team is stranded on an uncharted island. To escape, complete 6 survival missions by answering English grammar and vocabulary challenges.</p>
+        
+        <h3>Missions &amp; Items</h3>
+        <ul>
+          <li><strong>Mission 1 (🌴 Jungle):</strong> Find Compass &amp; Map</li>
+          <li><strong>Mission 2 (🗿 Temple):</strong> Recover Boat Key</li>
+          <li><strong>Mission 3 (🛖 Camp):</strong> Secure Battery Pack</li>
+          <li><strong>Mission 4 (📻 Radio):</strong> Tune Long-Range Radio</li>
+          <li><strong>Mission 5 (🚤 Boat):</strong> Collect Emergency Fuel</li>
+          <li><strong>Mission 6 (🚁 Rescue):</strong> Broadcast SOS coordinates and escape!</li>
+        </ul>
+
+        <h3>Energy / Lives (❤️❤️❤️)</h3>
+        <p>Each incorrect answer costs 1 energy heart. If you lose all 3 hearts, you can rest and retry the mission!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="questions.js"></script>
+  <script src="story-data.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
