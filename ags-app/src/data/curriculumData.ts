@@ -1210,15 +1210,11 @@ const generateSozelTopicContent = (topic: Topic): TopicContent => {
   };
 };
 
-import { getConcreteTopicContent } from './topicContentGenerators';
+import { resolveAuthenticTopicContent } from './topics';
 
 // Domain-specific content generators ensuring academic depth and compliance with the AGS Content Quality System
 const generateTopicContent = (topic: Topic): TopicContent => {
-  const isSozel = topic.unit_id.startsWith('unit-sozel');
-  if (isSozel) {
-    return generateSozelTopicContent(topic);
-  }
-  return getConcreteTopicContent(topic);
+  return resolveAuthenticTopicContent(topic);
 };
 
 export const AGS_TOPIC_CONTENTS: Record<string, TopicContent> = {};
