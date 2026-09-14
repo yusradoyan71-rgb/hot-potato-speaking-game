@@ -1,6 +1,5 @@
 import { supabase, isLiveSupabaseConfigured } from './supabaseClient';
-import {
-  UserProfile,
+import type {
   Subject,
   Unit,
   Topic,
@@ -8,26 +7,25 @@ import {
   Question,
   MiniExam,
   MockExam,
-  UserTopicProgress,
   UserQuestionAnswer,
   UserExamAttempt,
   DashboardStats,
+  TopicProgressDetail,
+  WeakTopicItem,
 } from '../types/database';
 import {
-  INITIAL_SUBJECTS,
-  INITIAL_UNITS,
-  INITIAL_TOPICS,
-  INITIAL_TOPIC_CONTENTS,
-  INITIAL_QUESTIONS,
-  INITIAL_MINI_EXAMS,
-  INITIAL_MOCK_EXAMS,
-} from '../data/initialData';
+  AGS_SUBJECTS,
+  AGS_UNITS,
+  AGS_TOPICS,
+  AGS_TOPIC_CONTENTS,
+  AGS_QUESTIONS,
+  AGS_MINI_EXAMS,
+  AGS_MOCK_EXAMS,
+} from '../data/curriculumData';
 
-// Local storage keys for persistent simulation when not connected to a live custom Supabase instance
-const STORAGE_PREFIX = 'ags_db_';
+const STORAGE_PREFIX = 'ags_db_v2_';
 
 class ApiService {
-  // Helper to get local data
   private getLocal<T>(key: string, defaultVal: T): T {
     try {
       const data = localStorage.getItem(STORAGE_PREFIX + key);
@@ -37,7 +35,6 @@ class ApiService {
     }
   }
 
-  // Helper to set local data
   private setLocal<T>(key: string, val: T): void {
     try {
       localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(val));
@@ -47,7 +44,7 @@ class ApiService {
   }
 
   // ==========================================
-  // CURRICULUM
+  // CURRICULUM HIERARCHY
   // ==========================================
   async getSubjects(): Promise<Subject[]> {
     if (isLiveSupabaseConfigured()) {
@@ -62,7 +59,7 @@ class ApiService {
       }
     }
     const custom = this.getLocal<Subject[]>('subjects', []);
-    return [...INITIAL_SUBJECTS, ...custom];
+    return [...AGS_SUBJECTS, ...custom];
   }
 
   async getUnitsBySubject(subjectId: string): Promise<Unit[]> {
@@ -75,11 +72,11 @@ class ApiService {
           .order('order_index', { ascending: true });
         if (!error && data && data.length > 0) return data as Unit[];
       } catch (err) {
-        console.warn('Supabase fetch error:', err);
+        console.warn('Supabase fetch units error:', err);
       }
     }
     const customUnits = this.getLocal<Unit[]>('units', []);
-    const all = [...INITIAL_UNITS, ...customUnits];
+    const all = [...AGS_UNITS, ...customUnits];
     return all.filter((u) => u.subject_id === subjectId);
   }
 
@@ -93,11 +90,11 @@ class ApiService {
           .order('order_index', { ascending: true });
         if (!error && data && data.length > 0) return data as Topic[];
       } catch (err) {
-        console.warn('Supabase fetch error:', err);
+        console.warn('Supabase fetch topics error:', err);
       }
     }
     const customTopics = this.getLocal<Topic[]>('topics', []);
-    const all = [...INITIAL_TOPICS, ...customTopics];
+    const all = [...AGS_TOPICS, ...customTopics];
     return all.filter((t) => t.unit_id === unitId);
   }
 
@@ -111,61 +108,67 @@ class ApiService {
           .single();
         if (!error && data) return data as TopicContent;
       } catch (err) {
-        console.warn('Supabase fetch error:', err);
+        console.warn('Supabase fetch topic content error:', err);
       }
     }
     const customContents = this.getLocal<Record<string, TopicContent>>('topic_contents', {});
     if (customContents[topicId]) return customContents[topicId];
-    return INITIAL_TOPIC_CONTENTS[topicId] || null;
+    return AGS_TOPIC_CONTENTS[topicId] || null;
   }
 
   // ==========================================
-  // PROGRESS (RLS Protected)
+  // 3-COMPONENT TOPIC PROGRESS (RLS Protected)
   // ==========================================
-  async getUserTopicProgress(userId: string): Promise<Record<string, boolean>> {
+  async getUserTopicProgress(userId: string): Promise<Record<string, TopicProgressDetail>> {
     if (!userId) return {};
-    if (isLiveSupabaseConfigured()) {
-      try {
-        const { data, error } = await supabase
-          .from('user_topic_progress')
-          .select('topic_id, is_completed')
-          .eq('user_id', userId);
-        if (!error && data) {
-          const map: Record<string, boolean> = {};
-          data.forEach((row) => {
-            map[row.topic_id] = row.is_completed;
-          });
-          return map;
-        }
-      } catch (err) {
-        console.warn('Supabase progress error:', err);
-      }
-    }
-    const store = this.getLocal<Record<string, Record<string, boolean>>>('user_progress', {});
+    const store = this.getLocal<Record<string, Record<string, TopicProgressDetail>>>('user_topic_progress_v2', {});
     return store[userId] || {};
   }
 
-  async setTopicCompletion(userId: string, topicId: string, completed: boolean): Promise<boolean> {
-    if (!userId) return false;
+  async updateTopicProgressComponent(
+    userId: string,
+    topicId: string,
+    component: 'content_read' | 'mini_test' | 'questions_solved',
+    value: boolean
+  ): Promise<TopicProgressDetail> {
+    const store = this.getLocal<Record<string, Record<string, TopicProgressDetail>>>('user_topic_progress_v2', {});
+    if (!store[userId]) store[userId] = {};
+    const current = store[userId][topicId] || {
+      is_content_read: false,
+      is_mini_test_done: false,
+      is_questions_solved: false,
+      percentage: 0,
+      last_updated: new Date().toISOString(),
+    };
+
+    if (component === 'content_read') current.is_content_read = value;
+    if (component === 'mini_test') current.is_mini_test_done = value;
+    if (component === 'questions_solved') current.is_questions_solved = value;
+
+    let pct = 0;
+    if (current.is_content_read) pct += 33;
+    if (current.is_mini_test_done) pct += 33;
+    if (current.is_questions_solved) pct += 34;
+    current.percentage = Math.min(100, pct);
+    current.last_updated = new Date().toISOString();
+
+    store[userId][topicId] = current;
+    this.setLocal('user_topic_progress_v2', store);
+
     if (isLiveSupabaseConfigured()) {
       try {
-        const { error } = await supabase.from('user_topic_progress').upsert({
+        await supabase.from('user_topic_progress').upsert({
           user_id: userId,
           topic_id: topicId,
-          is_completed: completed,
+          is_completed: current.percentage === 100,
           completed_at: new Date().toISOString(),
         });
-        if (error) console.error('Supabase save error:', error);
       } catch (err) {
         console.warn('Supabase progress save error:', err);
       }
     }
-    // Save to local user-keyed storage for instant reactivity & offline resilience
-    const store = this.getLocal<Record<string, Record<string, boolean>>>('user_progress', {});
-    if (!store[userId]) store[userId] = {};
-    store[userId][topicId] = completed;
-    this.setLocal('user_progress', store);
-    return true;
+
+    return current;
   }
 
   // ==========================================
@@ -178,6 +181,7 @@ class ApiService {
     isPastExam?: boolean;
     pastExamYear?: number;
     difficulty?: string;
+    sourceType?: 'cikmis' | 'ozgun';
   }): Promise<Question[]> {
     if (isLiveSupabaseConfigured()) {
       try {
@@ -196,7 +200,7 @@ class ApiService {
       }
     }
     const customQuestions = this.getLocal<Question[]>('questions', []);
-    let list = [...INITIAL_QUESTIONS, ...customQuestions];
+    let list = [...AGS_QUESTIONS, ...customQuestions];
 
     if (filters?.subjectId) list = list.filter((q) => q.subject_id === filters.subjectId);
     if (filters?.unitId) list = list.filter((q) => q.unit_id === filters.unitId);
@@ -204,6 +208,7 @@ class ApiService {
     if (filters?.isPastExam !== undefined) list = list.filter((q) => q.is_past_exam === filters.isPastExam);
     if (filters?.pastExamYear) list = list.filter((q) => q.past_exam_year === filters.pastExamYear);
     if (filters?.difficulty) list = list.filter((q) => q.difficulty === filters.difficulty);
+    if (filters?.sourceType) list = list.filter((q) => q.source_type === filters.sourceType);
 
     return list;
   }
@@ -211,14 +216,7 @@ class ApiService {
   async recordQuestionAnswer(answer: UserQuestionAnswer): Promise<void> {
     if (isLiveSupabaseConfigured()) {
       try {
-        await supabase.from('user_question_answers').insert({
-          user_id: answer.user_id,
-          question_id: answer.question_id,
-          selected_option_key: answer.selected_option_key,
-          is_correct: answer.is_correct,
-          context_type: answer.context_type,
-          created_at: answer.created_at,
-        });
+        await supabase.from('user_question_answers').insert(answer);
       } catch (err) {
         console.warn('Supabase answer error:', err);
       }
@@ -247,20 +245,19 @@ class ApiService {
   }
 
   // ==========================================
-  // EXAMS & ATTEMPTS (RLS Protected)
+  // EXAMS & ATTEMPTS
   // ==========================================
   async getMiniExamByUnit(unitId: string): Promise<MiniExam | null> {
-    const list = [...INITIAL_MINI_EXAMS, ...this.getLocal<MiniExam[]>('mini_exams', [])];
+    const list = [...AGS_MINI_EXAMS, ...this.getLocal<MiniExam[]>('mini_exams', [])];
     const exam = list.find((e) => e.unit_id === unitId);
     if (!exam) {
-      // Auto-generate a dynamic mini-exam from questions if not explicitly created
       const unitQuestions = (await this.getQuestions({ unitId })).slice(0, 5);
       if (unitQuestions.length > 0) {
         return {
           id: `dyn-mini-${unitId}`,
           unit_id: unitId,
           title: 'Ünite Tarama Mini Sınavı',
-          description: 'Bu ünitenin kazanımlarını ölçen 5 soruluk değerlendirme testi.',
+          description: 'Bu ünitenin kazanımlarını ölçen 5 soruluk tarama testi.',
           duration_minutes: 10,
           passing_score: 70,
           questions: unitQuestions,
@@ -281,7 +278,7 @@ class ApiService {
       }
     }
     const custom = this.getLocal<MockExam[]>('mock_exams', []);
-    return [...INITIAL_MOCK_EXAMS, ...custom];
+    return [...AGS_MOCK_EXAMS, ...custom];
   }
 
   async getMockExamById(id: string): Promise<MockExam | null> {
@@ -292,19 +289,7 @@ class ApiService {
   async recordExamAttempt(attempt: UserExamAttempt): Promise<void> {
     if (isLiveSupabaseConfigured()) {
       try {
-        await supabase.from('user_exam_attempts').insert({
-          user_id: attempt.user_id,
-          exam_id: attempt.exam_id,
-          exam_type: attempt.exam_type,
-          score: attempt.score,
-          net_score: attempt.net_score,
-          correct_count: attempt.correct_count,
-          incorrect_count: attempt.incorrect_count,
-          blank_count: attempt.blank_count,
-          duration_seconds: attempt.duration_seconds,
-          answers_json: attempt.answers_json,
-          created_at: attempt.created_at,
-        });
+        await supabase.from('user_exam_attempts').insert(attempt);
       } catch (err) {
         console.warn('Supabase attempt error:', err);
       }
@@ -333,7 +318,7 @@ class ApiService {
   }
 
   // ==========================================
-  // DASHBOARD CALCULATIONS (REAL DB DRIVEN)
+  // DASHBOARD & WEAK TOPIC REVIEW CALCULATIONS
   // ==========================================
   async getDashboardStats(userId: string): Promise<DashboardStats> {
     const subjects = await this.getSubjects();
@@ -342,18 +327,26 @@ class ApiService {
     const attempts = await this.getUserAttempts(userId);
 
     const customTopics = this.getLocal<Topic[]>('topics', []);
-    const allTopics = [...INITIAL_TOPICS, ...customTopics];
+    const allTopics = [...AGS_TOPICS, ...customTopics];
     const totalTopicsCount = allTopics.length;
 
+    // Total learning activities = totalTopics * 3 (Lesson + Mini test + Questions)
+    const totalActivitiesCount = totalTopicsCount * 3;
+    let completedActivitiesCount = 0;
     let completedTopicsCount = 0;
+
     allTopics.forEach((t) => {
-      if (progressMap[t.id]) {
-        completedTopicsCount++;
+      const p = progressMap[t.id];
+      if (p) {
+        if (p.is_content_read) completedActivitiesCount++;
+        if (p.is_mini_test_done) completedActivitiesCount++;
+        if (p.is_questions_solved) completedActivitiesCount++;
+        if (p.percentage === 100) completedTopicsCount++;
       }
     });
 
-    const overallProgressPercent = totalTopicsCount > 0
-      ? Math.round((completedTopicsCount / totalTopicsCount) * 100)
+    const overallProgressPercent = totalActivitiesCount > 0
+      ? Math.round((completedActivitiesCount / totalActivitiesCount) * 100)
       : 0;
 
     const solvedQuestionsCount = answers.length;
@@ -368,35 +361,39 @@ class ApiService {
 
     // Subject breakdown
     const customUnits = this.getLocal<Unit[]>('units', []);
-    const allUnits = [...INITIAL_UNITS, ...customUnits];
+    const allUnits = [...AGS_UNITS, ...customUnits];
 
     const subjectProgress = subjects.map((subj) => {
       const unitsInSubj = allUnits.filter((u) => u.subject_id === subj.id);
       const unitIds = new Set(unitsInSubj.map((u) => u.id));
       const topicsInSubj = allTopics.filter((t) => unitIds.has(t.unit_id));
 
-      const compCount = topicsInSubj.filter((t) => progressMap[t.id]).length;
+      let compInSubj = 0;
+      topicsInSubj.forEach((t) => {
+        if (progressMap[t.id]?.percentage === 100) compInSubj++;
+      });
       const totCount = topicsInSubj.length;
-      const pct = totCount > 0 ? Math.round((compCount / totCount) * 100) : 0;
+      const pct = totCount > 0 ? Math.round((compInSubj / totCount) * 100) : 0;
 
       return {
         subject_id: subj.id,
         subject_title: subj.title,
-        completed_topics: compCount,
+        completed_topics: compInSubj,
         total_topics: totCount,
         percentage: pct,
         unit_count: unitsInSubj.length,
       };
     });
 
-    // Determine Continue Topic (the first topic that is NOT completed)
+    // Determine Continue Topic
     let continueTopic: DashboardStats['continue_topic'] = null;
     for (const subj of subjects) {
       const unitsInSubj = allUnits.filter((u) => u.subject_id === subj.id);
       for (const unit of unitsInSubj) {
         const topicsInUnit = allTopics.filter((t) => t.unit_id === unit.id);
         for (const topic of topicsInUnit) {
-          if (!progressMap[topic.id]) {
+          const prog = progressMap[topic.id];
+          if (!prog || prog.percentage < 100) {
             continueTopic = {
               subject_id: subj.id,
               subject_title: subj.title,
@@ -413,8 +410,74 @@ class ApiService {
       if (continueTopic) break;
     }
 
+    // Determine Weak Topics / "Tekrar Etmem Gerekenler"
+    const topicErrorMap: Record<string, { total: number; incorrect: number }> = {};
+    const allQuestions = await this.getQuestions();
+
+    answers.forEach((ans) => {
+      const q = allQuestions.find((item) => item.id === ans.question_id);
+      if (q && q.topic_id) {
+        if (!topicErrorMap[q.topic_id]) {
+          topicErrorMap[q.topic_id] = { total: 0, incorrect: 0 };
+        }
+        topicErrorMap[q.topic_id].total++;
+        if (!ans.is_correct) topicErrorMap[q.topic_id].incorrect++;
+      }
+    });
+
+    const weakTopics: WeakTopicItem[] = [];
+    Object.entries(topicErrorMap).forEach(([tId, stat]) => {
+      if (stat.total >= 1 && (stat.incorrect / stat.total) >= 0.4) {
+        const tObj = allTopics.find((t) => t.id === tId);
+        const uObj = allUnits.find((u) => u.id === tObj?.unit_id);
+        const sObj = subjects.find((s) => s.id === uObj?.subject_id);
+
+        if (tObj && uObj && sObj) {
+          weakTopics.push({
+            topic_id: tId,
+            topic_title: tObj.title,
+            unit_id: uObj.id,
+            unit_title: uObj.title,
+            subject_id: sObj.id,
+            subject_title: sObj.title,
+            incorrect_count: stat.incorrect,
+            total_attempted: stat.total,
+            accuracy_rate: Math.round(((stat.total - stat.incorrect) / stat.total) * 100),
+            reason: 'repeated_errors',
+          });
+        }
+      }
+    });
+
+    // If student has no weak topics from errors yet, surface incomplete topics
+    if (weakTopics.length === 0) {
+      allTopics.slice(0, 3).forEach((t) => {
+        const prog = progressMap[t.id];
+        if (!prog || prog.percentage < 100) {
+          const uObj = allUnits.find((u) => u.id === t.unit_id);
+          const sObj = subjects.find((s) => s.id === uObj?.subject_id);
+          if (uObj && sObj) {
+            weakTopics.push({
+              topic_id: t.id,
+              topic_title: t.title,
+              unit_id: uObj.id,
+              unit_title: uObj.title,
+              subject_id: sObj.id,
+              subject_title: sObj.title,
+              incorrect_count: 0,
+              total_attempted: 0,
+              accuracy_rate: prog ? prog.percentage : 0,
+              reason: 'incomplete_study',
+            });
+          }
+        }
+      });
+    }
+
     return {
       overall_progress_percent: overallProgressPercent,
+      total_activities_count: totalActivitiesCount,
+      completed_activities_count: completedActivitiesCount,
       completed_topics_count: completedTopicsCount,
       total_topics_count: totalTopicsCount,
       solved_questions_count: solvedQuestionsCount,
@@ -424,39 +487,28 @@ class ApiService {
       completed_mini_exams_count: completedMiniExamsCount,
       completed_mock_exams_count: completedMockExamsCount,
       recent_attempts: attempts.slice(0, 5),
+      weak_topics: weakTopics.slice(0, 4),
       subject_progress: subjectProgress,
       continue_topic: continueTopic,
     };
   }
 
   // ==========================================
-  // ADMIN ACTIONS (Subjects, Units, Topics, Questions)
+  // ADMIN ACTIONS
   // ==========================================
   async createSubject(subject: Subject): Promise<void> {
-    if (isLiveSupabaseConfigured()) {
-      await supabase.from('subjects').insert(subject);
-    }
     const current = this.getLocal<Subject[]>('subjects', []);
     current.push(subject);
     this.setLocal('subjects', current);
   }
 
   async createUnit(unit: Unit): Promise<void> {
-    if (isLiveSupabaseConfigured()) {
-      await supabase.from('units').insert(unit);
-    }
     const current = this.getLocal<Unit[]>('units', []);
     current.push(unit);
     this.setLocal('units', current);
   }
 
   async createTopic(topic: Topic, content?: TopicContent): Promise<void> {
-    if (isLiveSupabaseConfigured()) {
-      await supabase.from('topics').insert(topic);
-      if (content) {
-        await supabase.from('topic_contents').insert(content);
-      }
-    }
     const currentTopics = this.getLocal<Topic[]>('topics', []);
     currentTopics.push(topic);
     this.setLocal('topics', currentTopics);
@@ -469,32 +521,6 @@ class ApiService {
   }
 
   async createQuestion(question: Question): Promise<void> {
-    if (isLiveSupabaseConfigured()) {
-      const { data: qData, error: qErr } = await supabase.from('questions').insert({
-        id: question.id,
-        subject_id: question.subject_id,
-        unit_id: question.unit_id,
-        topic_id: question.topic_id,
-        question_text: question.question_text,
-        explanation: question.explanation,
-        difficulty: question.difficulty,
-        is_past_exam: question.is_past_exam,
-        past_exam_year: question.past_exam_year,
-        past_exam_source: question.past_exam_source,
-      }).select().single();
-
-      if (!qErr && qData && question.options) {
-        await supabase.from('question_options').insert(
-          question.options.map((opt) => ({
-            id: opt.id,
-            question_id: question.id,
-            option_key: opt.option_key,
-            option_text: opt.option_text,
-            is_correct: opt.is_correct,
-          }))
-        );
-      }
-    }
     const current = this.getLocal<Question[]>('questions', []);
     current.push(question);
     this.setLocal('questions', current);

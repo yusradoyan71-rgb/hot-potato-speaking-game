@@ -10,11 +10,12 @@ import {
   AlertTriangle,
   ArrowRight,
   ArrowLeft,
-  RotateCcw,
   Award,
   ChevronRight,
-  FileText,
-  BarChart2,
+  TrendingUp,
+  TrendingDown,
+  BookOpen,
+  RotateCcw,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { NavigationTab } from '../components/Sidebar';
@@ -40,6 +41,11 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
   const [subjectBreakdown, setSubjectBreakdown] = useState<
     { subjectId: string; title: string; correct: number; incorrect: number; blank: number; net: number }[]
   >([]);
+  const [recommendedTopics, setRecommendedTopics] = useState<
+    { topicId: string; topicTitle: string; unitId: string; subjectId: string }[]
+  >([]);
+  const [strongestArea, setStrongestArea] = useState<string>('');
+  const [weakestArea, setWeakestArea] = useState<string>('');
   const [timeLeft, setTimeLeft] = useState<number>(3600);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -62,7 +68,6 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
     loadMock();
   }, [mockExamId]);
 
-  // Countdown timer
   useEffect(() => {
     if (isSubmitted || loading || questions.length === 0) return;
     const timer = setInterval(() => {
@@ -105,11 +110,16 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
       string,
       { title: string; correct: number; incorrect: number; blank: number }
     > = {
+      'sozel-yetenek': { title: 'Sözel Yetenek', correct: 0, incorrect: 0, blank: 0 },
+      'sayisal-yetenek': { title: 'Sayısal Yetenek', correct: 0, incorrect: 0, blank: 0 },
+      'tarih': { title: 'Tarih', correct: 0, incorrect: 0, blank: 0 },
+      'cografya': { title: 'Türkiye Coğrafyası', correct: 0, incorrect: 0, blank: 0 },
       'egitim-bilimleri': { title: 'Eğitim Bilimleri', correct: 0, incorrect: 0, blank: 0 },
-      'genel-yetenek': { title: 'Genel Yetenek', correct: 0, incorrect: 0, blank: 0 },
-      'genel-kultur': { title: 'Genel Kültür', correct: 0, incorrect: 0, blank: 0 },
+      'milli-egitim-sistemi': { title: 'Türk Millî Eğitim Sistemi', correct: 0, incorrect: 0, blank: 0 },
       'mevzuat': { title: 'Mevzuat & ÖMK', correct: 0, incorrect: 0, blank: 0 },
     };
+
+    const missedTopicIds = new Set<string>();
 
     questions.forEach((q) => {
       const selected = selectedAnswers[q.id];
@@ -117,7 +127,7 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
       const isCorr = correctOpt && correctOpt.option_key === selected;
 
       const subjEntry = subjMap[q.subject_id] || {
-        title: 'Diğer',
+        title: 'Genel',
         correct: 0,
         incorrect: 0,
         blank: 0,
@@ -126,12 +136,14 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
       if (!selected) {
         blank++;
         subjEntry.blank++;
+        if (q.topic_id) missedTopicIds.add(q.topic_id);
       } else if (isCorr) {
         correct++;
         subjEntry.correct++;
       } else {
         incorrect++;
         subjEntry.incorrect++;
+        if (q.topic_id) missedTopicIds.add(q.topic_id);
       }
       subjMap[q.subject_id] = subjEntry;
     });
@@ -139,15 +151,41 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
     const netScore = Math.max(0, Number((correct - incorrect * 0.25).toFixed(2)));
     const scorePct = Math.round((correct / questions.length) * 100);
 
-    const breakdownList = Object.entries(subjMap).map(([sId, data]) => ({
-      subjectId: sId,
-      title: data.title,
-      correct: data.correct,
-      incorrect: data.incorrect,
-      blank: data.blank,
-      net: Math.max(0, Number((data.correct - data.incorrect * 0.25).toFixed(2))),
-    }));
+    const breakdownList = Object.entries(subjMap)
+      .filter(([_, data]) => data.correct + data.incorrect + data.blank > 0)
+      .map(([sId, data]) => ({
+        subjectId: sId,
+        title: data.title,
+        correct: data.correct,
+        incorrect: data.incorrect,
+        blank: data.blank,
+        net: Math.max(0, Number((data.correct - data.incorrect * 0.25).toFixed(2))),
+      }));
+
     setSubjectBreakdown(breakdownList);
+
+    // Identify strongest and weakest areas
+    if (breakdownList.length > 0) {
+      const sortedByNet = [...breakdownList].sort((a, b) => b.net - a.net);
+      setStrongestArea(sortedByNet[0]?.title || '');
+      setWeakestArea(sortedByNet[sortedByNet.length - 1]?.title || '');
+    }
+
+    // Map missed topic recommendations
+    const recs: { topicId: string; topicTitle: string; unitId: string; subjectId: string }[] = [];
+    for (const q of questions) {
+      if (q.topic_id && missedTopicIds.has(q.topic_id)) {
+        if (!recs.find((r) => r.topicId === q.topic_id)) {
+          recs.push({
+            topicId: q.topic_id,
+            topicTitle: q.topic_id.replace('topic-', '').replace(/-/g, ' ').toUpperCase(),
+            unitId: q.unit_id || '',
+            subjectId: q.subject_id,
+          });
+        }
+      }
+    }
+    setRecommendedTopics(recs.slice(0, 4));
 
     const attempt: UserExamAttempt = {
       user_id: user.id,
@@ -168,10 +206,8 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
     setShowSubmitModal(false);
     setAttemptResult(attempt);
 
-    // Save to Database
     await apiService.recordExamAttempt(attempt);
 
-    // Save individual question answers to user_question_answers
     for (const q of questions) {
       const sel = selectedAnswers[q.id];
       if (sel) {
@@ -201,7 +237,7 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
   if (loading) {
     return (
       <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-        <div>Genel deneme sınavı yükleniyor...</div>
+        <div>Genel deneme sınavı hazırlanıyor...</div>
       </div>
     );
   }
@@ -237,7 +273,10 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
             <ArrowLeft size={14} />
             <span>Denemelere Dön</span>
           </button>
-          <h1 style={{ fontSize: '1.25rem', fontWeight: 800 }}>{exam?.title}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <h1 style={{ fontSize: '1.25rem', fontWeight: 800 }}>{exam?.title}</h1>
+            {exam?.tier_name && <span className="badge badge-amber">{exam.tier_name}</span>}
+          </div>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
@@ -279,7 +318,7 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
         </div>
       </div>
 
-      {/* Result Scorecard (When Submitted) */}
+      {/* Result Scorecard & Weak Area Recommendations (When Submitted) */}
       {isSubmitted && attemptResult && (
         <div
           className="card animate-fade-in"
@@ -293,14 +332,14 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <Award size={32} color="#fbbf24" />
             <div>
-              <h2 style={{ fontSize: '1.4rem', fontWeight: 800 }}>AGS Deneme Sınavı Sonuç Raporu</h2>
+              <h2 style={{ fontSize: '1.4rem', fontWeight: 800 }}>AGS Deneme Sınavı Sonuç Karnesi</h2>
               <div style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                4 Yanlış 1 Doğruyu Götürür formülü ile hesaplanan resmi sınav netiniz
+                4 Yanlış 1 Doğruyu Götürür formülüyle resmi net hesaplaması
               </div>
             </div>
           </div>
 
-          <div className="grid-4" style={{ gap: '14px', marginBottom: '24px' }}>
+          <div className="grid-4" style={{ gap: '14px', marginBottom: '20px' }}>
             <div style={{ backgroundColor: 'var(--bg-input)', padding: '16px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
               <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Toplam Net</div>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: '#34d399' }}>{attemptResult.net_score} Net</div>
@@ -317,15 +356,77 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
               </div>
             </div>
             <div style={{ backgroundColor: 'var(--bg-input)', padding: '16px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Boş Bırakılan</div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Boş Soru</div>
               <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--text-muted)' }}>{attemptResult.blank_count}</div>
             </div>
           </div>
 
+          {/* Strongest & Weakest Area Insights */}
+          <div className="grid-2" style={{ gap: '14px', marginBottom: '20px' }}>
+            {strongestArea && (
+              <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.08)', border: '1px solid rgba(16, 185, 129, 0.25)', padding: '14px', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <TrendingUp size={22} color="#10b981" />
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#34d399', fontWeight: 700, textTransform: 'uppercase' }}>En Güçlü Alanınız</div>
+                  <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#ffffff' }}>{strongestArea}</div>
+                </div>
+              </div>
+            )}
+            {weakestArea && (
+              <div style={{ backgroundColor: 'rgba(244, 63, 94, 0.08)', border: '1px solid rgba(244, 63, 94, 0.25)', padding: '14px', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <TrendingDown size={22} color="#fb7185" />
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#fb7185', fontWeight: 700, textTransform: 'uppercase' }}>Geliştirilmesi Gereken Alan</div>
+                  <div style={{ fontWeight: 800, fontSize: '1.05rem', color: '#ffffff' }}>{weakestArea}</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Recommended Topics for Revision */}
+          {recommendedTopics.length > 0 && (
+            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '18px', marginBottom: '18px' }}>
+              <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BookOpen size={17} color="var(--primary)" />
+                <span>Bu Denemeye Göre Çalışman Önerilen Konular:</span>
+              </div>
+              <div className="grid-2" style={{ gap: '10px' }}>
+                {recommendedTopics.map((rt, idx) => (
+                  <div
+                    key={idx}
+                    style={{
+                      backgroundColor: 'var(--bg-input)',
+                      padding: '12px 14px',
+                      borderRadius: 'var(--radius-md)',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{rt.topicTitle}</span>
+                    <button
+                      onClick={() =>
+                        onNavigate('topic-detail', {
+                          subjectId: rt.subjectId,
+                          unitId: rt.unitId,
+                          topicId: rt.topicId,
+                        })
+                      }
+                      className="btn btn-primary"
+                      style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                    >
+                      Konuyu Çalış
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Subject-based net breakdown */}
           <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '18px' }}>
-            <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '12px' }}>Ders Bazlı Performans Dağılımı</h3>
-            <div className="grid-2" style={{ gap: '12px' }}>
+            <h3 style={{ fontSize: '0.95rem', fontWeight: 700, marginBottom: '12px' }}>7 Ders Bazlı Net Karnesi</h3>
+            <div className="grid-2" style={{ gap: '10px' }}>
               {subjectBreakdown.map((sb, idx) => (
                 <div
                   key={idx}
@@ -339,7 +440,7 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
                   }}
                 >
                   <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{sb.title}</div>
-                  <div style={{ fontSize: '0.85rem' }}>
+                  <div style={{ fontSize: '0.825rem' }}>
                     <span style={{ color: '#34d399' }}>{sb.correct}D</span> ·{' '}
                     <span style={{ color: '#fb7185' }}>{sb.incorrect}Y</span> ·{' '}
                     <span style={{ color: 'var(--text-muted)' }}>{sb.blank}B</span> ={' '}
@@ -445,7 +546,14 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
         {currentQ && (
           <div className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '18px' }}>
-              <span className="badge badge-blue">Soru #{currentIndex + 1}</span>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span className="badge badge-blue">Soru #{currentIndex + 1}</span>
+                {currentQ.question_type && (
+                  <span className="badge badge-slate" style={{ textTransform: 'capitalize' }}>
+                    {currentQ.question_type}
+                  </span>
+                )}
+              </div>
 
               {!isSubmitted && (
                 <button
@@ -556,7 +664,7 @@ export const MockExamSimulatorPage: React.FC<MockExamSimulatorPageProps> = ({
                 }}
               >
                 <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#60a5fa', marginBottom: '4px' }}>
-                  💡 Soru Çözümü & Analizi:
+                  💡 Soru Çözümü & Detaylı Analiz:
                 </div>
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6, whiteSpace: 'pre-line' }}>
                   {currentQ.explanation}

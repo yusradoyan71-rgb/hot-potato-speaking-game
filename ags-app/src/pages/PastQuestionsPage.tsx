@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiService } from '../services/apiService';
-import { Question, Subject, Unit, UserQuestionAnswer } from '../types/database';
+import { Question, Subject, UserQuestionAnswer } from '../types/database';
 import {
   FileQuestion,
   Filter,
@@ -12,6 +12,8 @@ import {
   HelpCircle,
   RotateCcw,
   Search,
+  BookOpen,
+  Tag,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -23,9 +25,9 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
   const { user } = useAuth();
   const [questions, setQuestions] = useState<Question[]>([]);
   const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [units, setUnits] = useState<Unit[]>([]);
   const [selectedSubject, setSelectedSubject] = useState<string>('all');
-  const [selectedYear, setSelectedYear] = useState<string>('all');
+  const [selectedSourceType, setSelectedSourceType] = useState<string>('all');
+  const [selectedQuestionType, setSelectedQuestionType] = useState<string>('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState<string>('all');
   const [userAnswers, setUserAnswers] = useState<Record<string, { selected: string; isCorrect: boolean }>>({});
   const [revealedSolutions, setRevealedSolutions] = useState<Record<string, boolean>>({});
@@ -37,7 +39,7 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
       const subjs = await apiService.getSubjects();
       setSubjects(subjs);
 
-      const qs = await apiService.getQuestions({ isPastExam: true });
+      const qs = await apiService.getQuestions();
       setQuestions(qs);
 
       if (user) {
@@ -81,7 +83,8 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
 
   const filteredQuestions = questions.filter((q) => {
     if (selectedSubject !== 'all' && q.subject_id !== selectedSubject) return false;
-    if (selectedYear !== 'all' && q.past_exam_year?.toString() !== selectedYear) return false;
+    if (selectedSourceType !== 'all' && q.source_type !== selectedSourceType) return false;
+    if (selectedQuestionType !== 'all' && q.question_type !== selectedQuestionType) return false;
     if (selectedDifficulty !== 'all' && q.difficulty !== selectedDifficulty) return false;
     return true;
   });
@@ -95,10 +98,10 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
           <FileQuestion size={22} color="var(--primary)" />
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>Çıkmış Sorular Bankası</h1>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>Soru Bankası & Çıkmış Soru Analizleri</h1>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          ÖSYM ve MEB tarafından daha önce yayımlanan geçmiş yıllara ait AGS & Eğitim Bilimleri soruları.
+          ÖSYM / MEB resmi sınav formatı analizleri ve AGS tarzı özgün senaryo soruları.
         </p>
       </div>
 
@@ -128,7 +131,7 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
             onChange={(e) => setSelectedSubject(e.target.value)}
             style={{ fontSize: '0.85rem', padding: '6px 12px' }}
           >
-            <option value="all">Tüm Dersler</option>
+            <option value="all">Tüm Dersler (7 Ders)</option>
             {subjects.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.title}
@@ -136,16 +139,28 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
             ))}
           </select>
 
-          {/* Year Filter */}
+          {/* Source Type Filter (Çıkmış vs Özgün) */}
           <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(e.target.value)}
+            value={selectedSourceType}
+            onChange={(e) => setSelectedSourceType(e.target.value)}
             style={{ fontSize: '0.85rem', padding: '6px 12px' }}
           >
-            <option value="all">Tüm Yıllar</option>
-            <option value="2024">2024 AGS / ÖSYM</option>
-            <option value="2023">2023 ÖSYM</option>
-            <option value="2022">2022 ÖSYM</option>
+            <option value="all">Tüm Kaynaklar</option>
+            <option value="cikmis">ÖSYM / MEB Çıkmış Soru Analizleri</option>
+            <option value="ozgun">AGS Tarzı Özgün Sorular</option>
+          </select>
+
+          {/* Question Type Filter */}
+          <select
+            value={selectedQuestionType}
+            onChange={(e) => setSelectedQuestionType(e.target.value)}
+            style={{ fontSize: '0.85rem', padding: '6px 12px' }}
+          >
+            <option value="all">Tüm Soru Tipleri</option>
+            <option value="scenario">Senaryo / Vaka Soruları</option>
+            <option value="conceptual">Kavramsal / İlke Soruları</option>
+            <option value="knowledge">Bilgi / Mevzuat Soruları</option>
+            <option value="interpretation">Yorum / Çıkarım Soruları</option>
           </select>
 
           {/* Difficulty Filter */}
@@ -195,8 +210,19 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span className="badge badge-blue">Soru #{idx + 1}</span>
-                    {q.past_exam_year && (
-                      <span className="badge badge-amber">{q.past_exam_year} Çıkmış Soru</span>
+                    <span className={q.source_type === 'cikmis' ? 'badge badge-amber' : 'badge badge-emerald'}>
+                      {q.source_type === 'cikmis' ? 'ÖSYM / MEB Formatı' : 'AGS Tarzı Özgün Soru'}
+                    </span>
+                    {q.question_type && (
+                      <span className="badge badge-slate" style={{ textTransform: 'capitalize' }}>
+                        {q.question_type === 'scenario'
+                          ? 'Senaryo / Vaka'
+                          : q.question_type === 'conceptual'
+                          ? 'Kavramsal'
+                          : q.question_type === 'knowledge'
+                          ? 'Bilgi'
+                          : 'Yorum'}
+                      </span>
                     )}
                     {q.past_exam_source && (
                       <span className="badge badge-slate">{q.past_exam_source}</span>
@@ -224,7 +250,7 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
                   {q.question_text}
                 </div>
 
-                {/* Options */}
+                {/* Options A-E */}
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
                   {q.options.map((opt) => {
                     const isSelected = userAns?.selected === opt.option_key;
@@ -300,7 +326,7 @@ export const PastQuestionsPage: React.FC<PastQuestionsPageProps> = ({ onNavigate
                     }}
                   >
                     <div style={{ fontWeight: 700, fontSize: '0.825rem', color: '#60a5fa', marginBottom: '4px' }}>
-                      💡 Soru Çözümü & Açıklaması:
+                      💡 Soru Çözümü & Akademik Analiz:
                     </div>
                     <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
                       {q.explanation}

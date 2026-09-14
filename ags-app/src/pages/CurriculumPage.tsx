@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiService } from '../services/apiService';
-import { Subject, Unit, Topic } from '../types/database';
+import { Subject, Unit, Topic, TopicProgressDetail } from '../types/database';
 import {
   BookOpen,
   CheckCircle2,
@@ -15,7 +15,7 @@ import {
   Globe,
   FileQuestion,
   PlayCircle,
-  ArrowRight,
+  TrendingUp,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -28,7 +28,7 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [unitsBySubject, setUnitsBySubject] = useState<Record<string, Unit[]>>({});
   const [topicsByUnit, setTopicsByUnit] = useState<Record<string, Topic[]>>({});
-  const [progressMap, setProgressMap] = useState<Record<string, boolean>>({});
+  const [progressMap, setProgressMap] = useState<Record<string, TopicProgressDetail>>({});
   const [expandedUnits, setExpandedUnits] = useState<Record<string, boolean>>({});
   const [selectedSubjectId, setSelectedSubjectId] = useState<string>('egitim-bilimleri');
   const [loading, setLoading] = useState(true);
@@ -43,6 +43,8 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
         return <Globe size={20} />;
       case 'Scale':
         return <Scale size={20} />;
+      case 'TrendingUp':
+        return <TrendingUp size={20} />;
       default:
         return <BookOpen size={20} />;
     }
@@ -53,6 +55,9 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
       setLoading(true);
       const subjs = await apiService.getSubjects();
       setSubjects(subjs);
+      if (subjs.length > 0 && !subjs.find((s) => s.id === selectedSubjectId)) {
+        setSelectedSubjectId(subjs[0].id);
+      }
 
       const uMap: Record<string, Unit[]> = {};
       const tMap: Record<string, Topic[]> = {};
@@ -64,7 +69,7 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
         for (const u of uList) {
           const tList = await apiService.getTopicsByUnit(u.id);
           tMap[u.id] = tList;
-          expandMap[u.id] = true; // Default expand
+          expandMap[u.id] = true;
         }
       }
 
@@ -102,14 +107,14 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
           <BookOpen size={22} color="var(--primary)" />
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>AGS Müfredatı ve Konular</h1>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>Resmi AGS Müfredat Kataloğu</h1>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Milli Eğitim Akademisi Giriş Sınavı resmi konu kapsamına uygun konu anlatımları ve ünite tarama testleri.
+          Milli Eğitim Akademisi Giriş Sınavı resmi 7 dersi: Konu anlatımları, karşılaştırma tabloları, AGS uyarıları ve ünite tarama testleri.
         </p>
       </div>
 
-      {/* Subject Filter Tabs */}
+      {/* Subject Filter Tabs (7 Subjects) */}
       <div
         style={{
           display: 'flex',
@@ -129,7 +134,7 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
             const topics = topicsByUnit[u.id] || [];
             totalInSubj += topics.length;
             topics.forEach((t) => {
-              if (progressMap[t.id]) completedInSubj++;
+              if (progressMap[t.id]?.percentage === 100) completedInSubj++;
             });
           });
 
@@ -190,7 +195,7 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
           currentUnits.map((unit, uIndex) => {
             const topics = topicsByUnit[unit.id] || [];
             const isExpanded = expandedUnits[unit.id] ?? true;
-            const completedCount = topics.filter((t) => progressMap[t.id]).length;
+            const completedCount = topics.filter((t) => progressMap[t.id]?.percentage === 100).length;
             const isUnitComplete = topics.length > 0 && completedCount === topics.length;
 
             return (
@@ -267,8 +272,11 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
                   <div style={{ padding: '16px 24px', backgroundColor: 'rgba(10, 15, 29, 0.5)' }}>
                     {/* Topics List */}
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-                      {topics.map((topic, tIndex) => {
-                        const isDone = !!progressMap[topic.id];
+                      {topics.map((topic) => {
+                        const pDetail = progressMap[topic.id];
+                        const isDone = pDetail?.percentage === 100;
+                        const pct = pDetail?.percentage || 0;
+
                         return (
                           <div
                             key={topic.id}
@@ -293,15 +301,19 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
                               {isDone ? (
                                 <CheckCircle2 size={20} color="#10b981" />
                               ) : (
-                                <Circle size={20} color="var(--text-muted)" />
+                                <Circle size={20} color={pct > 0 ? '#38bdf8' : 'var(--text-muted)'} />
                               )}
                               <div>
                                 <div style={{ fontWeight: 600, fontSize: '0.925rem', color: isDone ? '#fff' : 'var(--text-primary)' }}>
                                   {topic.title}
                                 </div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
                                   <Clock size={12} />
-                                  <span>Yaklaşık {topic.estimated_minutes} dakika</span>
+                                  <span>{topic.estimated_minutes} dakika</span>
+                                  <span>•</span>
+                                  <span style={{ color: pct > 0 ? '#60a5fa' : 'var(--text-muted)' }}>
+                                    %{pct} Tamamlandı
+                                  </span>
                                 </div>
                               </div>
                             </div>
@@ -336,7 +348,7 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
                         <FileQuestion size={20} color="var(--primary)" />
                         <div>
                           <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>
-                            {unit.title} - Ünite Mini Denemesi
+                            {unit.title} - Ünite Mini Sınavı
                           </div>
                           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
                             Kazanım tarama testi ile bu ünitedeki bilginizi test edin.

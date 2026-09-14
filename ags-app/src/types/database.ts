@@ -36,6 +36,18 @@ export interface Topic {
   estimated_minutes: number;
 }
 
+export interface ComparisonTable {
+  title: string;
+  headers: string[];
+  rows: string[][];
+}
+
+export interface SelfCheckQuestion {
+  question: string;
+  options: { key: 'A' | 'B' | 'C' | 'D' | 'E'; text: string; isCorrect: boolean }[];
+  explanation: string;
+}
+
 export interface TopicSection {
   title: string;
   content: string;
@@ -45,12 +57,27 @@ export interface TopicSection {
 export interface TopicContent {
   id: string;
   topic_id: string;
+  learning_objectives: string[];
   overview: string;
   key_concepts: { term: string; definition: string; icon?: string }[];
   structured_sections: TopicSection[];
-  exam_tips: { tip: string; importance: 'high' | 'medium' | 'critical' }[];
+  comparison_tables?: ComparisonTable[];
+  exam_tips: { tip: string; importance: 'high' | 'medium' | 'critical' }[]; // AGS'DE DİKKAT
+  mnemonics?: { title: string; memory_trick: string; description: string }[]; // Hatırlama İpucu
   summary: string;
+  what_to_remember: string[]; // "Neleri Hatırlamalıyım?"
+  self_check_questions?: SelfCheckQuestion[];
 }
+
+export type QuestionType =
+  | 'scenario'
+  | 'conceptual'
+  | 'knowledge'
+  | 'interpretation'
+  | 'comparison'
+  | 'application';
+
+export type SourceType = 'cikmis' | 'ozgun';
 
 export interface QuestionOption {
   id: string;
@@ -67,7 +94,10 @@ export interface Question {
   topic_id?: string;
   question_text: string;
   explanation: string;
+  explanation_why_wrong?: Record<string, string>;
   difficulty: 'kolay' | 'orta' | 'zor';
+  question_type?: QuestionType;
+  source_type: SourceType; // 'cikmis' or 'ozgun'
   is_past_exam: boolean;
   past_exam_year?: number;
   past_exam_source?: string;
@@ -84,22 +114,36 @@ export interface MiniExam {
   questions?: Question[];
 }
 
+export type MockDifficulty = 'temel' | 'orta' | 'orta-zor' | 'zor';
+
 export interface MockExam {
   id: string;
   title: string;
   description: string;
   total_questions: number;
   duration_minutes: number;
-  difficulty: 'kolay' | 'orta' | 'zor';
+  difficulty: MockDifficulty;
+  tier_name: string; // e.g., 'Deneme 1 — Temel Seviye'
   questions?: Question[];
+}
+
+export interface TopicProgressDetail {
+  is_content_read: boolean; // 33%
+  is_mini_test_done: boolean; // 33%
+  is_questions_solved: boolean; // 34%
+  percentage: number; // 0 - 100
+  last_updated: string;
 }
 
 export interface UserTopicProgress {
   id?: string;
   user_id: string;
   topic_id: string;
-  is_completed: boolean;
-  completed_at: string;
+  is_content_read: boolean;
+  is_mini_test_done: boolean;
+  is_questions_solved: boolean;
+  percentage: number;
+  completed_at?: string;
 }
 
 export interface UserQuestionAnswer {
@@ -128,8 +172,23 @@ export interface UserExamAttempt {
   created_at: string;
 }
 
+export interface WeakTopicItem {
+  topic_id: string;
+  topic_title: string;
+  unit_id: string;
+  unit_title: string;
+  subject_id: string;
+  subject_title: string;
+  incorrect_count: number;
+  total_attempted: number;
+  accuracy_rate: number;
+  reason: 'low_quiz_score' | 'repeated_errors' | 'incomplete_study';
+}
+
 export interface DashboardStats {
   overall_progress_percent: number;
+  total_activities_count: number;
+  completed_activities_count: number;
   completed_topics_count: number;
   total_topics_count: number;
   solved_questions_count: number;
@@ -139,6 +198,7 @@ export interface DashboardStats {
   completed_mini_exams_count: number;
   completed_mock_exams_count: number;
   recent_attempts: UserExamAttempt[];
+  weak_topics: WeakTopicItem[];
   subject_progress: {
     subject_id: string;
     subject_title: string;

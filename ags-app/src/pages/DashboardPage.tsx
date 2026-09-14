@@ -12,9 +12,10 @@ import {
   Sparkles,
   HelpCircle,
   FileText,
-  Flame,
-  ArrowUpRight,
+  AlertTriangle,
+  RotateCcw,
   Target,
+  ListTodo,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -65,25 +66,12 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
           overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            right: '-30px',
-            top: '-30px',
-            width: '200px',
-            height: '200px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%)',
-            pointerEvents: 'none',
-          }}
-        />
-
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
               <span className="badge badge-blue">
                 <Sparkles size={12} />
-                2025 AGS Hazırlık
+                2025 AGS Akademi Hazırlık
               </span>
               <span className="badge badge-amber">
                 <Target size={12} />
@@ -94,7 +82,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               Hoş Geldiniz, {user?.full_name || 'AGS Adayı'} 👋
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', maxWidth: '650px' }}>
-              Milli Eğitim Akademisi Giriş Sınavı hazırlık sürecinizde konu tamamlama oranınızı ve deneme netlerinizi buradan anlık takip edin.
+              Resmi 7 derslik AGS müfredatındaki 3 aşamalı öğrenme adımlarınızı (Konu Anlatımı + Mini Test + İlgili Sorular) ve deneme netlerinizi buradan anlık takip edin.
             </p>
           </div>
 
@@ -150,8 +138,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             />
           </div>
           <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between' }}>
-            <span>{stats.completed_topics_count} Tamamlandı</span>
-            <span>{remainingTopics} Kalan Konu</span>
+            <span>{stats.completed_activities_count} / {stats.total_activities_count} Öğrenme Adımı</span>
+            <span>{stats.completed_topics_count} Tam Konu</span>
           </div>
         </div>
 
@@ -217,7 +205,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             {stats.completed_mini_exams_count} <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-muted)' }}>Mini Sınav</span>
           </div>
           <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '16px' }}>
-            Ünite sonu tarama ve kavrama testleri
+            Ünite kazanım ve tarama testleri
           </p>
         </div>
 
@@ -246,12 +234,84 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             {stats.completed_mock_exams_count} <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-muted)' }}>Deneme</span>
           </div>
           <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '16px' }}>
-            Gerçek sınav süreli genel AGS provaları
+            4 Seviyeli resmi süreli AGS provaları
           </p>
         </div>
       </div>
 
-      {/* Continue Studying Card & Subject Progress in 2 columns */}
+      {/* Weak Topics Review System ("Tekrar Etmem Gerekenler") */}
+      {stats.weak_topics.length > 0 && (
+        <div
+          className="card"
+          style={{
+            marginBottom: '28px',
+            backgroundColor: 'rgba(244, 63, 94, 0.04)',
+            borderColor: 'rgba(244, 63, 94, 0.25)',
+          }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertTriangle size={20} color="#fb7185" />
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff' }}>
+                Öncelikli Tekrar Edilmesi Gereken Konular
+              </h2>
+            </div>
+            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+              Çözülen sorular ve test sonuçlarınıza göre belirlenmiştir
+            </span>
+          </div>
+
+          <div className="grid-2" style={{ gap: '12px' }}>
+            {stats.weak_topics.map((wt) => (
+              <div
+                key={wt.topic_id}
+                className="card"
+                style={{
+                  padding: '16px',
+                  backgroundColor: 'var(--bg-input)',
+                  border: '1px solid var(--border-subtle)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#93c5fd', fontWeight: 600 }}>
+                    {wt.subject_title} &gt; {wt.unit_title}
+                  </div>
+                  <div style={{ fontWeight: 700, fontSize: '0.925rem', marginTop: '2px', marginBottom: '4px' }}>
+                    {wt.topic_title}
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                    {wt.incorrect_count > 0 ? (
+                      <span style={{ color: '#fb7185' }}>{wt.incorrect_count} Yanlış Yanıt ({wt.accuracy_rate}% Başarı)</span>
+                    ) : (
+                      <span style={{ color: '#fbbf24' }}>Öğrenme adımları henüz tamamlanmadı (%{wt.accuracy_rate})</span>
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() =>
+                    onNavigate('topic-detail', {
+                      subjectId: wt.subject_id,
+                      unitId: wt.unit_id,
+                      topicId: wt.topic_id,
+                    })
+                  }
+                  className="btn btn-primary"
+                  style={{ padding: '6px 12px', fontSize: '0.78rem', whiteSpace: 'nowrap' }}
+                >
+                  <RotateCcw size={13} />
+                  <span>Tekrar Et</span>
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Continue Studying Card & Quick Actions in 2 columns */}
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', marginBottom: '28px' }}>
         {/* Continue Studying Highlight Box */}
         <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
@@ -281,7 +341,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   {stats.continue_topic.topic_title}
                 </h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                  Bu konunun konu anlatımı ve örnek analizleri sırada bekliyor. Hemen çalışıp konuyu tamamlayın.
+                  Bu konunun akademik anlatımı, karşılaştırma tabloları ve AGS'DE DİKKAT uyarıları sırada bekliyor.
                 </p>
               </div>
 
@@ -370,9 +430,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   <HelpCircle size={18} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Çıkmış Sorular Bankası</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Çıkmış Sorular & Özgün Banka</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    2023 - 2024 MEB & ÖSYM formatı sorular
+                    ÖSYM referanslı ve AGS tarzı özgün sorular
                   </div>
                 </div>
               </div>
@@ -406,9 +466,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   <Award size={18} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Türkiye Geneli AGS Denemesi</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>4 Seviyeli Genel Denemeler</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    Süreli gerçek sınav deneyimi ve net hesabı
+                    Temel, Orta, Orta-Zor ve Zor seviye AGS provaları
                   </div>
                 </div>
               </div>
@@ -442,9 +502,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   <TrendingUp size={18} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Gelişim Grafikleri & Rapor</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>İlerlemem ve Gelişim Raporu</div>
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    Ders bazlı eksik analizi ve başarı grafiği
+                    7 derslik kazanım matrisi ve eksik analizi
                   </div>
                 </div>
               </div>
@@ -454,10 +514,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* Subject-based progress grid */}
+      {/* 7 Official Subjects Progress Grid */}
       <div style={{ marginBottom: '28px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Ders Bazlı İlerleme Durumu</h2>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Resmi 7 Ders Bazlı Müfredat Durumu</h2>
           <button onClick={() => onNavigate('curriculum')} className="btn btn-ghost" style={{ fontSize: '0.85rem' }}>
             <span>Müfredatı İncele</span>
             <ChevronRight size={16} />
@@ -487,7 +547,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                <span>{subj.completed_topics} / {subj.total_topics} Konu Tamamlandı</span>
+                <span>{subj.completed_topics} / {subj.total_topics} Konu Bitti</span>
                 <span>{subj.unit_count} Ünite</span>
               </div>
             </div>

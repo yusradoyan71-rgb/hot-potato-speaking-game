@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiService } from '../services/apiService';
-import { Subject, Unit, Topic, Question, QuestionOption, TopicContent } from '../types/database';
+import { Subject, Unit, Topic, Question, TopicContent } from '../types/database';
 import {
   ShieldCheck,
   PlusCircle,
@@ -10,7 +10,6 @@ import {
   FileQuestion,
   CheckCircle2,
   AlertCircle,
-  Database,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -97,6 +96,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
       question_text: qText,
       explanation: qExplanation,
       difficulty: qDifficulty,
+      question_type: 'scenario',
+      source_type: qIsPast ? 'cikmis' : 'ozgun',
       is_past_exam: qIsPast,
       past_exam_year: qIsPast ? parseInt(qPastYear) : undefined,
       past_exam_source: qIsPast ? qPastSource : undefined,
@@ -131,20 +132,22 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
     const content: TopicContent = {
       id: 'tc_' + topicId,
       topic_id: topicId,
+      learning_objectives: [`${tTitle} konusunun temel ilkelerini kavramak.`],
       overview: tOverview || `${tTitle} konusu kapsamlı açıklaması.`,
       key_concepts: [
-        { term: 'Temel AGS Kavramı', definition: 'Bu konunun sınavda en çok sorgulanan anahtar kavramıdır.' }
+        { term: 'Temel AGS Kavramı', definition: 'Bu konunun sınavda en çok sorgulanan anahtar kavramıdır.' },
       ],
       structured_sections: [
         {
           title: '1. Giriş ve Temel Esaslar',
           content: `${tTitle} konusuna ilişkin temel prensipler ve detaylar burada yer almaktadır.`,
-        }
+        },
       ],
       exam_tips: [
-        { tip: 'Bu konudan son yıllarda vaka ve uygulama soruları gelmektedir.', importance: 'high' }
+        { tip: 'Bu konudan son yıllarda vaka ve uygulama soruları gelmektedir.', importance: 'high' },
       ],
       summary: tSummary || `${tTitle} konusu özet bilgileri.`,
+      what_to_remember: [`${tTitle} ile ilgili temel tanımları unutmayınız.`],
     };
 
     await apiService.createTopic(newTopic, content);
@@ -307,7 +310,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         </button>
       </div>
 
-      {/* Tab 1: Soru Ekleme Formu */}
+      {/* Soru Ekleme Formu */}
       {activeAdminTab === 'question' && (
         <form onSubmit={handleCreateQuestion} className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Yeni Soru Oluştur & Soru Bankasına Ekle</h2>
@@ -454,7 +457,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         </form>
       )}
 
-      {/* Tab 2: Konu Ekleme Formu */}
+      {/* Konu Ekleme Formu */}
       {activeAdminTab === 'topic' && (
         <form onSubmit={handleCreateTopic} className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Yeni Konu ve İçerik Ekle</h2>
@@ -526,7 +529,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         </form>
       )}
 
-      {/* Tab 3: Ünite Ekleme Formu */}
+      {/* Ünite Ekleme Formu */}
       {activeAdminTab === 'unit' && (
         <form onSubmit={handleCreateUnit} className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Yeni Ünite Oluştur</h2>
@@ -574,7 +577,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigate }) => {
         </form>
       )}
 
-      {/* Tab 4: Ders Ekleme Formu */}
+      {/* Ders Ekleme Formu */}
       {activeAdminTab === 'subject' && (
         <form onSubmit={handleCreateSubject} className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 700 }}>Yeni Ders Kategorisi Ekle</h2>

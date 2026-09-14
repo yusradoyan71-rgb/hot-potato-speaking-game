@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { apiService } from '../services/apiService';
-import { DashboardStats, Subject, Unit, Topic } from '../types/database';
+import { DashboardStats, Subject, Unit, Topic, TopicProgressDetail } from '../types/database';
 import {
   BarChart3,
   TrendingUp,
@@ -11,6 +11,8 @@ import {
   BookOpen,
   PieChart,
   Target,
+  AlertTriangle,
+  RotateCcw,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -24,7 +26,7 @@ export const ProgressAnalyticsPage: React.FC<ProgressAnalyticsPageProps> = ({ on
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [unitsBySubject, setUnitsBySubject] = useState<Record<string, Unit[]>>({});
   const [topicsByUnit, setTopicsByUnit] = useState<Record<string, Topic[]>>({});
-  const [progressMap, setProgressMap] = useState<Record<string, boolean>>({});
+  const [progressMap, setProgressMap] = useState<Record<string, TopicProgressDetail>>({});
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -75,7 +77,7 @@ export const ProgressAnalyticsPage: React.FC<ProgressAnalyticsPageProps> = ({ on
           <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>İlerlemem ve Başarı Analizi</h1>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Tüm derslerdeki öğrenme adımlarınız, soru çözme doğruluk oranlarınız ve genel AGS deneme geçmişiniz.
+          7 Resmi AGS dersindeki 3 adımlı konu kazanımlarınız, soru çözme doğruluk oranlarınız ve deneme geçmişiniz.
         </p>
       </div>
 
@@ -83,7 +85,7 @@ export const ProgressAnalyticsPage: React.FC<ProgressAnalyticsPageProps> = ({ on
       <div className="grid-4" style={{ marginBottom: '28px' }}>
         <div className="card">
           <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '8px' }}>
-            Müfredat Tamamlama
+            Müfredat Adımları
           </div>
           <div style={{ fontSize: '2rem', fontWeight: 800, color: '#3b82f6', marginBottom: '6px' }}>
             %{stats.overall_progress_percent}
@@ -92,7 +94,7 @@ export const ProgressAnalyticsPage: React.FC<ProgressAnalyticsPageProps> = ({ on
             <div className="progress-fill" style={{ width: `${stats.overall_progress_percent}%` }} />
           </div>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-            {stats.completed_topics_count} / {stats.total_topics_count} Konu Bitti
+            {stats.completed_activities_count} / {stats.total_activities_count} Öğrenme Adımı Bitti
           </div>
         </div>
 
@@ -136,10 +138,63 @@ export const ProgressAnalyticsPage: React.FC<ProgressAnalyticsPageProps> = ({ on
         </div>
       </div>
 
+      {/* Weak Topics Review Recommendation */}
+      {stats.weak_topics.length > 0 && (
+        <div
+          className="card"
+          style={{
+            marginBottom: '28px',
+            backgroundColor: 'rgba(244, 63, 94, 0.04)',
+            borderColor: 'rgba(244, 63, 94, 0.25)',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+            <AlertTriangle size={18} color="#fb7185" />
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#ffffff' }}>
+              Tekrar Etmem Gereken Öncelikli Konular
+            </h2>
+          </div>
+
+          <div className="grid-2" style={{ gap: '10px' }}>
+            {stats.weak_topics.map((wt) => (
+              <div
+                key={wt.topic_id}
+                style={{
+                  backgroundColor: 'var(--bg-input)',
+                  padding: '12px 16px',
+                  borderRadius: 'var(--radius-md)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: '0.75rem', color: '#93c5fd' }}>{wt.subject_title}</div>
+                  <div style={{ fontWeight: 600, fontSize: '0.875rem' }}>{wt.topic_title}</div>
+                </div>
+                <button
+                  onClick={() =>
+                    onNavigate('topic-detail', {
+                      subjectId: wt.subject_id,
+                      unitId: wt.unit_id,
+                      topicId: wt.topic_id,
+                    })
+                  }
+                  className="btn btn-primary"
+                  style={{ padding: '4px 10px', fontSize: '0.75rem' }}
+                >
+                  Tekrar Et
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Subject-based Detailed Mastery Grid */}
       <div className="card" style={{ marginBottom: '28px' }}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '16px' }}>
-          Ders & Konu Kazanım Matrisi
+          7 Resmi Ders & Konu Kazanım Matrisi
         </h2>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -171,7 +226,7 @@ export const ProgressAnalyticsPage: React.FC<ProgressAnalyticsPageProps> = ({ on
                 <div className="grid-2" style={{ gap: '12px' }}>
                   {uList.map((unit) => {
                     const topics = topicsByUnit[unit.id] || [];
-                    const completed = topics.filter((t) => progressMap[t.id]).length;
+                    const completed = topics.filter((t) => progressMap[t.id]?.percentage === 100).length;
                     const pct = topics.length > 0 ? Math.round((completed / topics.length) * 100) : 0;
 
                     return (

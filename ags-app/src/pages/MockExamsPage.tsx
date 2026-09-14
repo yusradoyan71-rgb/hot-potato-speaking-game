@@ -8,10 +8,7 @@ import {
   FileQuestion,
   PlayCircle,
   TrendingUp,
-  CheckCircle2,
-  ChevronRight,
   Shield,
-  RotateCcw,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -47,10 +44,10 @@ export const MockExamsPage: React.FC<MockExamsPageProps> = ({ onNavigate }) => {
       <div style={{ marginBottom: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
           <Award size={22} color="#fbbf24" />
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>Genel Deneme Sınavları</h1>
+          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>4 Seviyeli AGS Genel Deneme Sınavları</h1>
         </div>
         <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Milli Eğitim Akademisi Giriş Sınavı (AGS) birebir prova denemeleri. Süreli, optik form destekli ve detaylı net analizli.
+          Milli Eğitim Akademisi Giriş Sınavı resmi soru dağılımına uygun; Temel, Standart, İleri ve Zor seviye genel provalar.
         </p>
       </div>
 
@@ -81,17 +78,17 @@ export const MockExamsPage: React.FC<MockExamsPageProps> = ({ onNavigate }) => {
               >
                 <div style={{ maxWidth: '650px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <span className="badge badge-amber">AGS Genel Deneme</span>
+                    <span className="badge badge-amber">{exam.tier_name || 'AGS Deneme'}</span>
                     <span
                       className={
-                        exam.difficulty === 'kolay'
+                        exam.difficulty === 'temel'
                           ? 'badge badge-emerald'
                           : exam.difficulty === 'zor'
                           ? 'badge badge-rose'
                           : 'badge badge-blue'
                       }
                     >
-                      {exam.difficulty?.toUpperCase()} DÜZEY
+                      {exam.difficulty?.toUpperCase()} SEVİYE
                     </span>
                     {pastAttempt && (
                       <span className="badge badge-emerald">Tamamlandı: {pastAttempt.net_score} Net</span>
