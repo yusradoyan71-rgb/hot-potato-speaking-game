@@ -1,21 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { apiService } from '../services/apiService';
-import { DashboardStats } from '../types/database';
+import { studyTrackerService, OverallTrackerStats } from '../services/studyTrackerService';
+import { SubjectStudyPlan, StudyTask } from '../types/database';
 import {
   TrendingUp,
-  BookOpen,
+  BrainCircuit,
+  Landmark,
+  Globe2,
+  GraduationCap,
+  ShieldCheck,
   CheckCircle2,
-  Clock,
+  Circle,
+  PlayCircle,
   Award,
   ChevronRight,
   Sparkles,
-  HelpCircle,
-  FileText,
-  AlertTriangle,
-  RotateCcw,
   Target,
   ListTodo,
+  Check,
+  BookOpen,
+  ArrowRight,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
@@ -25,592 +29,423 @@ interface DashboardPageProps {
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const { user } = useAuth();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const userId = user?.id || 'guest';
+
+  const studyPlans = useMemo(() => studyTrackerService.getStudyPlans(), []);
+  const [completedTaskIds, setCompletedTaskIds] = useState<Set<string>>(new Set());
+  const [stats, setStats] = useState<OverallTrackerStats | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadStats = async () => {
-    if (!user) return;
+  const loadData = async () => {
     setLoading(true);
-    const data = await apiService.getDashboardStats(user.id);
-    setStats(data);
+    const taskSet = await studyTrackerService.getCompletedTaskIds(userId);
+    setCompletedTaskIds(taskSet);
+    setStats(studyTrackerService.calculateStats(taskSet));
     setLoading(false);
   };
 
   useEffect(() => {
-    loadStats();
-  }, [user]);
+    loadData();
+  }, [userId]);
+
+  const handleToggleTask = async (taskId: string) => {
+    const isCompleted = completedTaskIds.has(taskId);
+    const updatedSet = await studyTrackerService.toggleTask(userId, taskId, !isCompleted);
+    setCompletedTaskIds(updatedSet);
+    setStats(studyTrackerService.calculateStats(updatedSet));
+  };
+
+  const getSubjectIcon = (iconName: string) => {
+    switch (iconName) {
+      case 'BrainCircuit':
+        return <BrainCircuit size={22} />;
+      case 'TrendingUp':
+        return <TrendingUp size={22} />;
+      case 'Landmark':
+        return <Landmark size={22} />;
+      case 'Globe2':
+        return <Globe2 size={22} />;
+      case 'GraduationCap':
+        return <GraduationCap size={22} />;
+      case 'ShieldCheck':
+        return <ShieldCheck size={22} />;
+      default:
+        return <BookOpen size={22} />;
+    }
+  };
+
+  // Find upcoming uncompleted tasks across all subjects
+  const upcomingTasks = useMemo(() => {
+    const list: { task: StudyTask; subjectTitle: string; subjectId: string }[] = [];
+    for (const plan of studyPlans) {
+      for (const sec of plan.sections) {
+        for (const t of sec.tasks) {
+          if (!completedTaskIds.has(t.id)) {
+            list.push({ task: t, subjectTitle: plan.short_title, subjectId: plan.subject_id });
+            if (list.length >= 6) return list;
+          }
+        }
+      }
+    }
+    return list;
+  }, [studyPlans, completedTaskIds]);
 
   if (loading || !stats) {
     return (
-      <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-        <div className="animate-spin" style={{ display: 'inline-block', marginBottom: '12px' }}>
-          ⏳
-        </div>
-        <div>Öğrenci ilerleme verileri yükleniyor...</div>
+      <div className="page-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '16px' }}>📊</div>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+          Öğrenci İlerleme Paneli Yükleniyor...
+        </h2>
       </div>
     );
   }
 
-  const remainingTopics = stats.total_topics_count - stats.completed_topics_count;
-
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Welcome Banner */}
+    <div className="page-container" style={{ maxWidth: '1280px', margin: '0 auto', paddingBottom: '80px' }}>
+      {/* 1. HERO BANNER WITH WEIGHTED PROGRESS */}
       <div
-        className="card"
+        className="glass-panel"
         style={{
-          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%)',
-          borderColor: 'rgba(59, 130, 246, 0.3)',
+          padding: '28px 32px',
+          borderRadius: '24px',
           marginBottom: '28px',
-          position: 'relative',
-          overflow: 'hidden',
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(168, 85, 247, 0.08) 50%, rgba(16, 185, 129, 0.06) 100%)',
+          border: '1px solid rgba(99, 102, 241, 0.25)',
+          boxShadow: '0 12px 36px rgba(0, 0, 0, 0.1)',
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px' }}>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-              <span className="badge badge-blue">
-                <Sparkles size={12} />
-                2025 AGS Akademi Hazırlık
-              </span>
-              <span className="badge badge-amber">
-                <Target size={12} />
-                Hedef: {user?.target_score || 85} Puan
-              </span>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '24px' }}>
+          <div style={{ flex: 1, minWidth: '280px' }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '4px 12px', borderRadius: '999px', backgroundColor: 'rgba(99, 102, 241, 0.15)', color: 'var(--color-primary)', fontSize: '0.8rem', fontWeight: 700, marginBottom: '10px' }}>
+              <Sparkles size={14} />
+              <span>Kişisel AGS Hazırlık Takipçisi</span>
             </div>
-            <h1 style={{ fontSize: '1.75rem', fontWeight: 800, marginBottom: '6px' }}>
-              Hoş Geldiniz, {user?.full_name || 'AGS Adayı'} 👋
+            <h1 style={{ fontSize: '1.85rem', fontWeight: 900, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.02em' }}>
+              Hoş Geldiniz, {user?.full_name || 'Öğrenci'} 👋
             </h1>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.925rem', maxWidth: '650px' }}>
-              Resmi 7 derslik AGS müfredatındaki 3 aşamalı öğrenme adımlarınızı (Konu Anlatımı + Mini Test + İlgili Sorular) ve deneme netlerinizi buradan anlık takip edin.
+            <p style={{ fontSize: '0.95rem', color: 'var(--text-secondary)', margin: '8px 0 0', lineHeight: 1.5 }}>
+              AGS hazırlık sürecinizde tamamladığınız soru tiplerini, videoları ve denemeleri işaretleyerek resmî sınav ağırlıklarına göre puan hedefinize adım adım yaklaşın.
             </p>
           </div>
 
-          {stats.continue_topic && (
-            <button
-              onClick={() =>
-                onNavigate('topic-detail', {
-                  subjectId: stats.continue_topic?.subject_id,
-                  unitId: stats.continue_topic?.unit_id,
-                  topicId: stats.continue_topic?.topic_id,
-                })
-              }
-              className="btn btn-primary"
-              style={{ padding: '12px 24px', fontSize: '0.95rem' }}
-            >
-              <span>Derse Devam Et</span>
-              <ChevronRight size={18} />
-            </button>
-          )}
+          {/* Large Circular Weighted Score Indicator */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '20px',
+              padding: '16px 24px',
+              borderRadius: '20px',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.06)',
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', marginBottom: '2px' }}>
+                Resmî AGS Ağırlıklı İlerleme
+              </div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
+                <span style={{ fontSize: '2.4rem', fontWeight: 900, color: 'var(--color-primary)', letterSpacing: '-0.03em' }}>
+                  %{stats.weightedProgress}
+                </span>
+                <span style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-muted)' }}>/ 100</span>
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--color-success)', fontWeight: 700 }}>
+                {stats.completedTasks} / {stats.totalTasks} Görev Tamamlandı
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Global Progress Bar */}
+        <div style={{ marginTop: '20px' }}>
+          <div style={{ width: '100%', height: '12px', backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: '999px', overflow: 'hidden' }}>
+            <div
+              style={{
+                width: `${stats.weightedProgress}%`,
+                height: '100%',
+                background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #10b981 100%)',
+                borderRadius: '999px',
+                transition: 'width 0.8s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Main Stats Grid */}
-      <div className="grid-4" style={{ marginBottom: '28px' }}>
-        {/* Overall Progress Card */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Müfredat İlerlemesi
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: 'var(--primary-subtle)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--primary)',
-              }}
-            >
-              <TrendingUp size={18} />
+      {/* 2. SUMMARY METRIC COUNTERS */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: '16px',
+          marginBottom: '32px',
+        }}
+      >
+        <div className="glass-panel" style={{ padding: '20px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(99, 102, 241, 0.12)', color: 'var(--color-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <ListTodo size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Tamamlanan Görevler</div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {stats.completedTasks} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>/ {stats.totalTasks}</span>
             </div>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-            %{stats.overall_progress_percent}
-          </div>
-          <div className="progress-track" style={{ marginBottom: '10px' }}>
-            <div
-              className="progress-fill"
-              style={{ width: `${stats.overall_progress_percent}%` }}
-            />
-          </div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between' }}>
-            <span>{stats.completed_activities_count} / {stats.total_activities_count} Öğrenme Adımı</span>
-            <span>{stats.completed_topics_count} Tam Konu</span>
           </div>
         </div>
 
-        {/* Solved Questions & Accuracy */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Çözülen Sorular
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: 'var(--accent-emerald-subtle)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-emerald)',
-              }}
-            >
-              <CheckCircle2 size={18} />
+        <div className="glass-panel" style={{ padding: '20px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(239, 68, 68, 0.12)', color: '#ef4444', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <PlayCircle size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>İzlenen Ders Videoları</div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {stats.completedVideos} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>/ {stats.totalVideos}</span>
             </div>
-          </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-            {stats.solved_questions_count} <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-muted)' }}>Soru</span>
-          </div>
-          <div className="progress-track" style={{ marginBottom: '10px' }}>
-            <div
-              className="progress-fill progress-fill-emerald"
-              style={{ width: `${stats.accuracy_rate}%` }}
-            />
-          </div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between' }}>
-            <span style={{ color: '#34d399' }}>{stats.correct_answers_count} Doğru</span>
-            <span style={{ color: '#fb7185' }}>{stats.incorrect_answers_count} Yanlış</span>
-            <span>%{stats.accuracy_rate} Başarı</span>
           </div>
         </div>
 
-        {/* Mini Exams Completed */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Ünite Mini Sınavları
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: 'var(--accent-amber-subtle)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--accent-amber)',
-              }}
-            >
-              <FileText size={18} />
+        <div className="glass-panel" style={{ padding: '20px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(245, 158, 11, 0.12)', color: '#f59e0b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Award size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Çözülen Branş Denemeleri</div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-primary)' }}>
+              {stats.completedExams} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>/ {stats.totalExams}</span>
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-            {stats.completed_mini_exams_count} <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-muted)' }}>Mini Sınav</span>
-          </div>
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '16px' }}>
-            Ünite kazanım ve tarama testleri
-          </p>
         </div>
 
-        {/* Full Mock Exams Completed */}
-        <div className="card">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
-            <span style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
-              Genel AGS Denemeleri
-            </span>
-            <div
-              style={{
-                width: '32px',
-                height: '32px',
-                borderRadius: '8px',
-                background: 'rgba(139, 92, 246, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#a78bfa',
-              }}
-            >
-              <Award size={18} />
+        <div className="glass-panel" style={{ padding: '20px', borderRadius: '18px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+          <div style={{ width: '48px', height: '48px', borderRadius: '14px', backgroundColor: 'rgba(16, 185, 129, 0.12)', color: 'var(--color-success)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Target size={24} />
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-muted)' }}>Sınav Ağırlık Katkısı</div>
+            <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--color-success)' }}>
+              %{stats.weightedProgress} <span style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>/ %100</span>
             </div>
           </div>
-          <div style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-            {stats.completed_mock_exams_count} <span style={{ fontSize: '1rem', fontWeight: 500, color: 'var(--text-muted)' }}>Deneme</span>
-          </div>
-          <p style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '16px' }}>
-            4 Seviyeli resmi süreli AGS provaları
-          </p>
         </div>
       </div>
 
-      {/* Weak Topics Review System ("Tekrar Etmem Gerekenler") */}
-      {stats.weak_topics.length > 0 && (
+      {/* 3. 6 SUBJECT STUDY TRACKER CARDS (OFFICIAL AGS WEIGHTS) */}
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <div>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+              Ders Bazlı Çalışma ve Kontrol Listeleri
+            </h2>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', margin: '2px 0 0' }}>
+              Her dersin soru tiplerini, videolarını ve denemelerini tamamladıkça işaretleyin.
+            </p>
+          </div>
+          <button
+            onClick={() => onNavigate('curriculum')}
+            className="btn btn-ghost"
+            style={{ fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+          >
+            <span>Tüm Listeyi Gör</span>
+            <ArrowRight size={16} />
+          </button>
+        </div>
+
         <div
-          className="card"
           style={{
-            marginBottom: '28px',
-            backgroundColor: 'rgba(244, 63, 94, 0.04)',
-            borderColor: 'rgba(244, 63, 94, 0.25)',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+            gap: '18px',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertTriangle size={20} color="#fb7185" />
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#ffffff' }}>
-                Öncelikli Tekrar Edilmesi Gereken Konular
-              </h2>
-            </div>
-            <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
-              Çözülen sorular ve test sonuçlarınıza göre belirlenmiştir
-            </span>
-          </div>
+          {studyPlans.map((plan) => {
+            const sStat = stats.subjects.find((s) => s.subjectId === plan.subject_id);
+            const isFull = sStat && sStat.percentage === 100;
 
-          <div className="grid-2" style={{ gap: '12px' }}>
-            {stats.weak_topics.map((wt) => (
+            return (
               <div
-                key={wt.topic_id}
-                className="card"
+                key={plan.id}
+                className="glass-panel"
                 style={{
-                  padding: '16px',
-                  backgroundColor: 'var(--bg-input)',
-                  border: '1px solid var(--border-subtle)',
+                  padding: '22px',
+                  borderRadius: '20px',
+                  border: isFull ? '1px solid rgba(16, 185, 129, 0.4)' : '1px solid var(--border-subtle)',
                   display: 'flex',
+                  flexDirection: 'column',
                   justifyContent: 'space-between',
-                  alignItems: 'center',
+                  transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                  position: 'relative',
+                  overflow: 'hidden',
                 }}
               >
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: '#93c5fd', fontWeight: 600 }}>
-                    {wt.subject_title} &gt; {wt.unit_title}
+                  {/* Card Header */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <div
+                        style={{
+                          width: '42px',
+                          height: '42px',
+                          borderRadius: '12px',
+                          backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                          color: 'var(--color-primary)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        {getSubjectIcon(plan.icon)}
+                      </div>
+                      <div>
+                        <h3 style={{ fontSize: '1.08rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                          {plan.title}
+                        </h3>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>
+                          AGS Soru Sayısı: {plan.question_count_in_ags} Soru
+                        </div>
+                      </div>
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: '0.75rem',
+                        fontWeight: 700,
+                        padding: '4px 10px',
+                        borderRadius: '8px',
+                        backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                        color: 'var(--color-primary)',
+                      }}
+                    >
+                      Ağırlık: %{plan.weight_percentage}
+                    </span>
                   </div>
-                  <div style={{ fontWeight: 700, fontSize: '0.925rem', marginTop: '2px', marginBottom: '4px' }}>
-                    {wt.topic_title}
+
+                  {/* Progress Stats */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '6px', fontSize: '0.85rem' }}>
+                    <span style={{ color: 'var(--text-secondary)' }}>
+                      {sStat?.completedTasks || 0} / {sStat?.totalTasks || 0} Görev Tamamlandı
+                    </span>
+                    <span style={{ fontSize: '1.1rem', fontWeight: 800, color: isFull ? 'var(--color-success)' : 'var(--color-primary)' }}>
+                      %{sStat?.percentage || 0}
+                    </span>
                   </div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    {wt.incorrect_count > 0 ? (
-                      <span style={{ color: '#fb7185' }}>{wt.incorrect_count} Yanlış Yanıt ({wt.accuracy_rate}% Başarı)</span>
-                    ) : (
-                      <span style={{ color: '#fbbf24' }}>Öğrenme adımları henüz tamamlanmadı (%{wt.accuracy_rate})</span>
-                    )}
+
+                  {/* Progress Bar */}
+                  <div style={{ width: '100%', height: '8px', backgroundColor: 'rgba(0, 0, 0, 0.08)', borderRadius: '999px', overflow: 'hidden', marginBottom: '14px' }}>
+                    <div
+                      style={{
+                        width: `${sStat?.percentage || 0}%`,
+                        height: '100%',
+                        backgroundColor: isFull ? 'var(--color-success)' : 'var(--color-primary)',
+                        borderRadius: '999px',
+                        transition: 'width 0.5s ease',
+                      }}
+                    />
+                  </div>
+
+                  {/* Quick badges for sub-components */}
+                  <div style={{ display: 'flex', gap: '8px', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '16px' }}>
+                    <span>🎬 {sStat?.completedVideos || 0}/{sStat?.totalVideos || 0} Video</span>
+                    <span>•</span>
+                    <span>📝 {sStat?.completedExams || 0}/{sStat?.totalExams || 0} Deneme</span>
                   </div>
                 </div>
 
                 <button
-                  onClick={() =>
-                    onNavigate('topic-detail', {
-                      subjectId: wt.subject_id,
-                      unitId: wt.unit_id,
-                      topicId: wt.topic_id,
-                    })
-                  }
-                  className="btn btn-primary"
-                  style={{ padding: '6px 12px', fontSize: '0.78rem', whiteSpace: 'nowrap' }}
+                  onClick={() => onNavigate('curriculum', { subjectId: plan.subject_id })}
+                  className="btn btn-secondary"
+                  style={{
+                    width: '100%',
+                    padding: '8px 14px',
+                    fontSize: '0.85rem',
+                    fontWeight: 700,
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                  }}
                 >
-                  <RotateCcw size={13} />
-                  <span>Tekrar Et</span>
+                  <span>Çalışma Görevlerini Aç</span>
+                  <ChevronRight size={16} />
                 </button>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 4. UPCOMING UNCOMPLETED TASKS QUICK CHECKLIST */}
+      {upcomingTasks.length > 0 && (
+        <div className="glass-panel" style={{ padding: '24px', borderRadius: '20px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <ListTodo size={20} color="var(--color-primary)" />
+              <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Sıradaki Çalışma Görevleriniz
+              </h2>
+            </div>
+            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              Buradan doğrudan tamamlayabilirsiniz
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {upcomingTasks.map(({ task, subjectTitle, subjectId }) => (
+              <div
+                key={task.id}
+                onClick={() => handleToggleTask(task.id)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-subtle)',
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.15s ease',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div
+                    style={{
+                      width: '20px',
+                      height: '20px',
+                      borderRadius: '6px',
+                      border: '2px solid var(--border-medium)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                    {task.text}
+                  </span>
+                </div>
+
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    padding: '2px 8px',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                    color: 'var(--color-primary)',
+                    flexShrink: 0,
+                  }}
+                >
+                  {subjectTitle}
+                </span>
               </div>
             ))}
           </div>
         </div>
       )}
-
-      {/* Continue Studying Card & Quick Actions in 2 columns */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: '24px', marginBottom: '28px' }}>
-        {/* Continue Studying Highlight Box */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-            <BookOpen size={20} color="var(--primary)" />
-            <h2 style={{ fontSize: '1.15rem', fontWeight: 700 }}>Çalışmaya Devam Et</h2>
-          </div>
-
-          {stats.continue_topic ? (
-            <div
-              style={{
-                backgroundColor: 'var(--bg-input)',
-                border: '1px solid var(--border-medium)',
-                borderRadius: 'var(--radius-md)',
-                padding: '20px',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-              }}
-            >
-              <div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>
-                  {stats.continue_topic.subject_title} &gt; {stats.continue_topic.unit_title}
-                </div>
-                <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '10px' }}>
-                  {stats.continue_topic.topic_title}
-                </h3>
-                <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
-                  Bu konunun akademik anlatımı, karşılaştırma tabloları ve AGS'DE DİKKAT uyarıları sırada bekliyor.
-                </p>
-              </div>
-
-              <div style={{ marginTop: '20px', display: 'flex', gap: '10px' }}>
-                <button
-                  onClick={() =>
-                    onNavigate('topic-detail', {
-                      subjectId: stats.continue_topic?.subject_id,
-                      unitId: stats.continue_topic?.unit_id,
-                      topicId: stats.continue_topic?.topic_id,
-                    })
-                  }
-                  className="btn btn-primary"
-                  style={{ flex: 1 }}
-                >
-                  <span>Konuyu Çalış</span>
-                  <ChevronRight size={16} />
-                </button>
-                <button
-                  onClick={() => onNavigate('curriculum')}
-                  className="btn btn-secondary"
-                >
-                  Tüm Müfredat
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div
-              style={{
-                backgroundColor: 'var(--bg-input)',
-                border: '1px solid var(--border-subtle)',
-                borderRadius: 'var(--radius-md)',
-                padding: '30px',
-                textAlign: 'center',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <CheckCircle2 size={40} color="#10b981" style={{ marginBottom: '10px' }} />
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '6px' }}>
-                Tüm Konular Tamamlandı!
-              </h3>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>
-                Harika bir başarı! Şimdi Genel Denemeler ve Çıkmış Sorular ile netlerinizi zirveye taşıyın.
-              </p>
-              <button onClick={() => onNavigate('mock-exams')} className="btn btn-primary">
-                Genel Deneme Çöz
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Quick Actions Shortcuts */}
-        <div className="card">
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '16px' }}>
-            Hızlı Erişim & Alıştırmalar
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div
-              onClick={() => onNavigate('past-questions')}
-              className="card card-interactive"
-              style={{
-                padding: '14px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: 'var(--bg-input)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    background: 'rgba(59, 130, 246, 0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#60a5fa',
-                  }}
-                >
-                  <HelpCircle size={18} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>Çıkmış Sorular & Özgün Banka</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    ÖSYM referanslı ve AGS tarzı özgün sorular
-                  </div>
-                </div>
-              </div>
-              <ChevronRight size={18} color="var(--text-muted)" />
-            </div>
-
-            <div
-              onClick={() => onNavigate('mock-exams')}
-              className="card card-interactive"
-              style={{
-                padding: '14px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: 'var(--bg-input)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    background: 'rgba(245, 158, 11, 0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#fbbf24',
-                  }}
-                >
-                  <Award size={18} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>4 Seviyeli Genel Denemeler</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    Temel, Orta, Orta-Zor ve Zor seviye AGS provaları
-                  </div>
-                </div>
-              </div>
-              <ChevronRight size={18} color="var(--text-muted)" />
-            </div>
-
-            <div
-              onClick={() => onNavigate('progress')}
-              className="card card-interactive"
-              style={{
-                padding: '14px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: 'var(--bg-input)',
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div
-                  style={{
-                    width: '36px',
-                    height: '36px',
-                    borderRadius: '8px',
-                    background: 'rgba(16, 185, 129, 0.15)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: '#34d399',
-                  }}
-                >
-                  <TrendingUp size={18} />
-                </div>
-                <div>
-                  <div style={{ fontWeight: 600, fontSize: '0.9rem' }}>İlerlemem ve Gelişim Raporu</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                    7 derslik kazanım matrisi ve eksik analizi
-                  </div>
-                </div>
-              </div>
-              <ChevronRight size={18} color="var(--text-muted)" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* 7 Official Subjects Progress Grid */}
-      <div style={{ marginBottom: '28px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Resmi 7 Ders Bazlı Müfredat Durumu</h2>
-          <button onClick={() => onNavigate('curriculum')} className="btn btn-ghost" style={{ fontSize: '0.85rem' }}>
-            <span>Müfredatı İncele</span>
-            <ChevronRight size={16} />
-          </button>
-        </div>
-
-        <div className="grid-2">
-          {stats.subject_progress.map((subj) => (
-            <div
-              key={subj.subject_id}
-              className="card card-interactive"
-              onClick={() => onNavigate('curriculum')}
-              style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ fontWeight: 700, fontSize: '1.05rem' }}>{subj.subject_title}</div>
-                <span className={subj.percentage === 100 ? 'badge badge-emerald' : 'badge badge-blue'}>
-                  {subj.percentage === 100 ? 'Tamamlandı' : `%${subj.percentage}`}
-                </span>
-              </div>
-
-              <div className="progress-track">
-                <div
-                  className={`progress-fill ${subj.percentage === 100 ? 'progress-fill-emerald' : ''}`}
-                  style={{ width: `${subj.percentage}%` }}
-                />
-              </div>
-
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                <span>{subj.completed_topics} / {subj.total_topics} Konu Bitti</span>
-                <span>{subj.unit_count} Ünite</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Recent Activity / Attempts Table */}
-      <div className="card">
-        <h2 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '16px' }}>
-          Son Sınav & Deneme Girişimleri
-        </h2>
-        {stats.recent_attempts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-            Henüz tamamlanmış bir mini sınav veya genel deneme kaydınız bulunmuyor.
-          </div>
-        ) : (
-          <div style={{ overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-medium)', textAlign: 'left', color: 'var(--text-muted)' }}>
-                  <th style={{ padding: '10px 12px' }}>Sınav Türü</th>
-                  <th style={{ padding: '10px 12px' }}>Puan / Başarı</th>
-                  <th style={{ padding: '10px 12px' }}>Net</th>
-                  <th style={{ padding: '10px 12px' }}>D / Y / B</th>
-                  <th style={{ padding: '10px 12px' }}>Tarih</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stats.recent_attempts.map((att, idx) => (
-                  <tr
-                    key={idx}
-                    style={{
-                      borderBottom: '1px solid var(--border-subtle)',
-                      backgroundColor: idx % 2 === 0 ? 'transparent' : 'rgba(255, 255, 255, 0.02)',
-                    }}
-                  >
-                    <td style={{ padding: '12px' }}>
-                      <span className={att.exam_type === 'mock' ? 'badge badge-amber' : 'badge badge-blue'}>
-                        {att.exam_type === 'mock' ? 'Genel Deneme' : 'Ünite Mini Sınav'}
-                      </span>
-                    </td>
-                    <td style={{ padding: '12px', fontWeight: 700, color: '#fff' }}>
-                      %{att.score}
-                    </td>
-                    <td style={{ padding: '12px', color: '#34d399', fontWeight: 600 }}>
-                      {att.net_score} Net
-                    </td>
-                    <td style={{ padding: '12px' }}>
-                      <span style={{ color: '#34d399' }}>{att.correct_count}D</span> /{' '}
-                      <span style={{ color: '#fb7185' }}>{att.incorrect_count}Y</span> /{' '}
-                      <span style={{ color: 'var(--text-muted)' }}>{att.blank_count}B</span>
-                    </td>
-                    <td style={{ padding: '12px', color: 'var(--text-secondary)' }}>
-                      {new Date(att.created_at).toLocaleDateString('tr-TR')}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
     </div>
   );
 };

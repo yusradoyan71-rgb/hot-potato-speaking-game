@@ -1,417 +1,827 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { apiService } from '../services/apiService';
-import { Subject, Unit, Topic, TopicProgressDetail } from '../types/database';
+import { studyTrackerService, OverallTrackerStats, SubjectUserNote } from '../services/studyTrackerService';
+import { SubjectStudyPlan, StudySection, StudyTask, VideoResource, ExamTask } from '../types/database';
 import {
-  BookOpen,
   CheckCircle2,
   Circle,
-  Clock,
-  ChevronDown,
-  ChevronRight,
-  GraduationCap,
-  Scale,
-  Brain,
-  Globe,
-  FileQuestion,
-  PlayCircle,
+  BrainCircuit,
   TrendingUp,
+  Landmark,
+  Globe2,
+  GraduationCap,
+  ShieldCheck,
+  PlayCircle,
+  ExternalLink,
+  Award,
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
+  BookOpen,
+  Filter,
+  CheckCheck,
+  Target,
+  Edit3,
+  Save,
+  Check,
 } from 'lucide-react';
 import { NavigationTab } from '../components/Sidebar';
 
 interface CurriculumPageProps {
   onNavigate: (tab: NavigationTab, params?: any) => void;
+  initialSubjectId?: string;
 }
 
-export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) => {
+type ViewFilter = 'all' | 'tasks' | 'videos' | 'exams';
+
+export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate, initialSubjectId }) => {
   const { user } = useAuth();
-  const [subjects, setSubjects] = useState<Subject[]>([]);
-  const [unitsBySubject, setUnitsBySubject] = useState<Record<string, Unit[]>>({});
-  const [topicsByUnit, setTopicsByUnit] = useState<Record<string, Topic[]>>({});
-  const [progressMap, setProgressMap] = useState<Record<string, TopicProgressDetail>>({});
-  const [expandedUnits, setExpandedUnits] = useState<Record<string, boolean>>({});
-  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('egitim-bilimleri');
+  const userId = user?.id || 'guest';
+
+  const studyPlans = useMemo(() => studyTrackerService.getStudyPlans(), []);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>(
+    initialSubjectId || studyPlans[0]?.subject_id || 'sozel-yetenek'
+  );
+  const [completedTaskIds, setCompletedTaskIds] = useState<Set<string>>(new Set());
+  const [stats, setStats] = useState<OverallTrackerStats | null>(null);
+  const [activeFilter, setActiveFilter] = useState<ViewFilter>('all');
+  const [collapsedSections, setCollapsedSections] = useState<Record<string, boolean>>({});
+  const [userNote, setUserNote] = useState<SubjectUserNote>({
+    subjectId: selectedSubjectId,
+    note: '',
+    targetQuestions: 500,
+    solvedQuestions: 0,
+    updatedAt: '',
+  });
+  const [isSavingNote, setIsSavingNote] = useState(false);
+  const [noteSavedAlert, setNoteSavedAlert] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  // Load task state on mount or user change
+  useEffect(() => {
+    let isMounted = true;
+    const loadData = async () => {
+      setLoading(true);
+      const taskSet = await studyTrackerService.getCompletedTaskIds(userId);
+      if (isMounted) {
+        setCompletedTaskIds(taskSet);
+        setStats(studyTrackerService.calculateStats(taskSet));
+        setLoading(false);
+      }
+    };
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [userId]);
+
+  // Load notes when selected subject changes
+  useEffect(() => {
+    const noteData = studyTrackerService.getUserSubjectNote(userId, selectedSubjectId);
+    setUserNote(noteData);
+  }, [userId, selectedSubjectId]);
+
+  const currentPlan = useMemo(
+    () => studyPlans.find((p) => p.subject_id === selectedSubjectId) || studyPlans[0],
+    [studyPlans, selectedSubjectId]
+  );
+
+  const currentSubjectStats = useMemo(() => {
+    return stats?.subjects.find((s) => s.subjectId === selectedSubjectId) || null;
+  }, [stats, selectedSubjectId]);
+
+  // Toggle a single task
+  const handleToggleTask = async (taskId: string) => {
+    const isCompleted = completedTaskIds.has(taskId);
+    const updatedSet = await studyTrackerService.toggleTask(userId, taskId, !isCompleted);
+    setCompletedTaskIds(updatedSet);
+    setStats(studyTrackerService.calculateStats(updatedSet));
+  };
+
+  // Toggle all tasks in a section
+  const handleToggleSectionAll = async (section: StudySection) => {
+    const allCompleted = section.tasks.every((t) => completedTaskIds.has(t.id));
+    let nextSet = new Set(completedTaskIds);
+
+    for (const t of section.tasks) {
+      nextSet = await studyTrackerService.toggleTask(userId, t.id, !allCompleted);
+    }
+    setCompletedTaskIds(nextSet);
+    setStats(studyTrackerService.calculateStats(nextSet));
+  };
+
+  // Toggle section accordion collapse
+  const toggleCollapse = (sectionId: string) => {
+    setCollapsedSections((prev) => ({
+      ...prev,
+      [sectionId]: !prev[sectionId],
+    }));
+  };
+
+  // Save subject note
+  const handleSaveNote = () => {
+    setIsSavingNote(true);
+    studyTrackerService.saveUserSubjectNote(userId, userNote);
+    setTimeout(() => {
+      setIsSavingNote(false);
+      setNoteSavedAlert(true);
+      setTimeout(() => setNoteSavedAlert(false), 2500);
+    }, 300);
+  };
 
   const getSubjectIcon = (iconName: string) => {
     switch (iconName) {
-      case 'GraduationCap':
-        return <GraduationCap size={20} />;
-      case 'Brain':
-        return <Brain size={20} />;
-      case 'Globe':
-        return <Globe size={20} />;
-      case 'Scale':
-        return <Scale size={20} />;
+      case 'BrainCircuit':
+        return <BrainCircuit size={20} />;
       case 'TrendingUp':
         return <TrendingUp size={20} />;
+      case 'Landmark':
+        return <Landmark size={20} />;
+      case 'Globe2':
+        return <Globe2 size={20} />;
+      case 'GraduationCap':
+        return <GraduationCap size={20} />;
+      case 'ShieldCheck':
+        return <ShieldCheck size={20} />;
       default:
         return <BookOpen size={20} />;
     }
   };
 
-  useEffect(() => {
-    const loadCurriculum = async () => {
-      setLoading(true);
-      const subjs = await apiService.getSubjects();
-      setSubjects(subjs);
-      if (subjs.length > 0 && !subjs.find((s) => s.id === selectedSubjectId)) {
-        setSelectedSubjectId(subjs[0].id);
-      }
-
-      const uMap: Record<string, Unit[]> = {};
-      const tMap: Record<string, Topic[]> = {};
-      const expandMap: Record<string, boolean> = {};
-
-      for (const s of subjs) {
-        const uList = await apiService.getUnitsBySubject(s.id);
-        uMap[s.id] = uList;
-        for (const u of uList) {
-          const tList = await apiService.getTopicsByUnit(u.id);
-          tMap[u.id] = tList;
-          expandMap[u.id] = true;
-        }
-      }
-
-      setUnitsBySubject(uMap);
-      setTopicsByUnit(tMap);
-      setExpandedUnits(expandMap);
-
-      if (user) {
-        const prog = await apiService.getUserTopicProgress(user.id);
-        setProgressMap(prog);
-      }
-      setLoading(false);
-    };
-
-    loadCurriculum();
-  }, [user]);
-
-  const toggleUnit = (unitId: string) => {
-    setExpandedUnits((prev) => ({ ...prev, [unitId]: !prev[unitId] }));
-  };
-
-  if (loading) {
+  if (loading || !stats) {
     return (
-      <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)' }}>
-        <div>Müfredat ve konular yükleniyor...</div>
+      <div className="page-container" style={{ textAlign: 'center', padding: '60px 20px' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '16px' }}>📋</div>
+        <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>
+          Çalışma Takip Verileri Yükleniyor...
+        </h2>
       </div>
     );
   }
 
-  const currentUnits = unitsBySubject[selectedSubjectId] || [];
-
   return (
-    <div className="page-wrapper animate-fade-in">
-      {/* Page Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-          <BookOpen size={22} color="var(--primary)" />
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800 }}>Resmi AGS Müfredat Kataloğu</h1>
-        </div>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
-          Milli Eğitim Akademisi Giriş Sınavı resmi 7 dersi: Konu anlatımları, karşılaştırma tabloları, AGS uyarıları ve ünite tarama testleri.
-        </p>
-      </div>
-
-      {/* Subject Filter Tabs (7 Subjects) */}
+    <div className="page-container" style={{ maxWidth: '1280px', margin: '0 auto', paddingBottom: '80px' }}>
+      {/* 1. TOP HEADER & OVERALL AGS WEIGHTED PROGRESS */}
       <div
+        className="glass-panel"
         style={{
-          display: 'flex',
-          gap: '10px',
-          overflowX: 'auto',
-          paddingBottom: '12px',
-          marginBottom: '24px',
+          padding: '24px 28px',
+          borderRadius: '20px',
+          marginBottom: '28px',
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.05) 100%)',
+          border: '1px solid rgba(99, 102, 241, 0.2)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.08)',
         }}
       >
-        {subjects.map((s) => {
-          const isSelected = s.id === selectedSubjectId;
-          const units = unitsBySubject[s.id] || [];
-          let completedInSubj = 0;
-          let totalInSubj = 0;
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+              <span className="badge badge-primary" style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', padding: '4px 10px' }}>
+                <Sparkles size={12} />
+                AGS 2026 Resmî Çalışma & Self-Check Sistemi
+              </span>
+            </div>
+            <h1 style={{ fontSize: '1.65rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.02em' }}>
+              AGS Çalışma ve Görev Takip Merkezi
+            </h1>
+            <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+              Soru tiplerini, videoları ve denemeleri tamamladıkça işaretleyin; resmî sınav ağırlıklı ilerlemenizi anlık takip edin.
+            </p>
+          </div>
 
-          units.forEach((u) => {
-            const topics = topicsByUnit[u.id] || [];
-            totalInSubj += topics.length;
-            topics.forEach((t) => {
-              if (progressMap[t.id]?.percentage === 100) completedInSubj++;
-            });
-          });
+          {/* Overall Weighted Score Card */}
+          <div
+            style={{
+              padding: '12px 20px',
+              borderRadius: '16px',
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)',
+              textAlign: 'right',
+              minWidth: '200px',
+            }}
+          >
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>
+              Genel AGS Hazırlık İlerlemesi
+            </div>
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'flex-end', gap: '6px' }}>
+              <span style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--color-primary)' }}>
+                %{stats.weightedProgress}
+              </span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>/ 100</span>
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+              {stats.completedTasks} / {stats.totalTasks} Toplam Görev Tamamlandı
+            </div>
+          </div>
+        </div>
 
-          const pct = totalInSubj > 0 ? Math.round((completedInSubj / totalInSubj) * 100) : 0;
+        {/* Global Weighted Progress Bar */}
+        <div style={{ width: '100%', height: '10px', backgroundColor: 'rgba(0, 0, 0, 0.1)', borderRadius: '999px', overflow: 'hidden' }}>
+          <div
+            style={{
+              width: `${stats.weightedProgress}%`,
+              height: '100%',
+              background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #10b981 100%)',
+              borderRadius: '999px',
+              transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* 2. SUBJECT SELECTOR TABS */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+          gap: '12px',
+          marginBottom: '28px',
+        }}
+      >
+        {studyPlans.map((plan) => {
+          const sStat = stats.subjects.find((s) => s.subjectId === plan.subject_id);
+          const isSelected = plan.subject_id === selectedSubjectId;
+          const isFull = sStat && sStat.percentage === 100;
 
           return (
             <button
-              key={s.id}
-              onClick={() => setSelectedSubjectId(s.id)}
-              className="card"
+              key={plan.id}
+              onClick={() => setSelectedSubjectId(plan.subject_id)}
               style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: '12px 18px',
-                minWidth: '220px',
-                backgroundColor: isSelected ? 'var(--primary-subtle)' : 'var(--bg-card)',
-                borderColor: isSelected ? 'var(--border-highlight)' : 'var(--border-subtle)',
-                color: isSelected ? '#ffffff' : 'var(--text-secondary)',
-                boxShadow: isSelected ? 'var(--shadow-glow)' : 'var(--shadow-sm)',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                padding: '14px 16px',
+                borderRadius: '16px',
+                border: isSelected ? '2px solid var(--color-primary)' : '1px solid var(--border-subtle)',
+                background: isSelected ? 'var(--bg-card)' : 'rgba(255, 255, 255, 0.02)',
+                boxShadow: isSelected ? '0 4px 20px rgba(99, 102, 241, 0.15)' : 'none',
+                cursor: 'pointer',
                 textAlign: 'left',
+                transition: 'all 0.2s ease',
               }}
             >
-              <div
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: isSelected ? 'var(--primary)' : 'var(--bg-elevated)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: isSelected ? '#fff' : 'var(--text-muted)',
-                }}
-              >
-                {getSubjectIcon(s.icon)}
+              <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <div
+                  style={{
+                    width: '34px',
+                    height: '34px',
+                    borderRadius: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: isSelected ? 'var(--color-primary)' : 'rgba(99, 102, 241, 0.1)',
+                    color: isSelected ? '#ffffff' : 'var(--color-primary)',
+                  }}
+                >
+                  {getSubjectIcon(plan.icon)}
+                </div>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    padding: '2px 6px',
+                    borderRadius: '6px',
+                    backgroundColor: 'rgba(99, 102, 241, 0.12)',
+                    color: 'var(--color-primary)',
+                  }}
+                >
+                  %{plan.weight_percentage}
+                </span>
               </div>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '0.925rem', color: isSelected ? '#fff' : 'var(--text-primary)' }}>
-                  {s.title}
-                </div>
-                <div style={{ fontSize: '0.75rem', color: isSelected ? '#93c5fd' : 'var(--text-muted)' }}>
-                  {completedInSubj}/{totalInSubj} Konu (%{pct})
-                </div>
+
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>
+                {plan.short_title}
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                <span>{sStat?.completedTasks || 0}/{sStat?.totalTasks || 0} Görev</span>
+                <span style={{ fontWeight: 700, color: isFull ? 'var(--color-success)' : isSelected ? 'var(--color-primary)' : 'inherit' }}>
+                  %{sStat?.percentage || 0}
+                </span>
+              </div>
+
+              <div style={{ width: '100%', height: '4px', backgroundColor: 'rgba(0, 0, 0, 0.08)', borderRadius: '999px', marginTop: '8px', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    width: `${sStat?.percentage || 0}%`,
+                    height: '100%',
+                    backgroundColor: isFull ? 'var(--color-success)' : 'var(--color-primary)',
+                    borderRadius: '999px',
+                  }}
+                />
               </div>
             </button>
           );
         })}
       </div>
 
-      {/* Sözel Yetenek Beceri Odaklı Özel Bilgilendirme Kartı */}
-      {selectedSubjectId === 'sozel-yetenek' && (
-        <div
-          className="card"
-          style={{
-            marginBottom: '20px',
-            padding: '20px 24px',
-            background: 'linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(15, 23, 42, 0.4) 100%)',
-            borderColor: '#3b82f6',
-            borderLeft: '5px solid #3b82f6',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span className="badge badge-blue">🎯 2026 AGS SÖZEL YETENEK STRATEJİSİ</span>
-            <span className="badge badge-emerald">Ezber Değil, Beceri Odaklı</span>
+      {/* 3. ACTIVE SUBJECT HEADER & FILTER BAR */}
+      <div
+        className="glass-panel"
+        style={{
+          padding: '20px 24px',
+          borderRadius: '16px',
+          marginBottom: '20px',
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          gap: '16px',
+        }}
+      >
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <h2 style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+              {currentPlan.title}
+            </h2>
+            <span className="badge badge-primary" style={{ fontSize: '0.75rem' }}>
+              AGS Ağırlığı: %{currentPlan.weight_percentage} ({currentPlan.question_count_in_ags} Soru)
+            </span>
           </div>
-          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '4px 0 8px 0', color: '#93c5fd' }}>
-            Okuduğunu Anlama • Paragraf Mimarisi • Sözel Akıl Yürütme
-          </h3>
-          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-            Bu bölümde amaç klasik Türkçe kurallarını ezberlemek değil; uzun ve yoğun metinleri hızlı okuyup doğru yorumlamak, çıkarım yapmak, çeldirici seçenekleri elemek ve sözel mantık sorularını hatasız organize etmektir.
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: 0 }}>
+            {currentPlan.description}
           </p>
-          <div style={{ display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' }}>
-            <div style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: 'rgba(59, 130, 246, 0.15)', fontSize: '0.8rem', fontWeight: 600, color: '#bfdbfe' }}>
-              1. Okuduğunu Anlama: Ana Fikir, Bağlam, Çıkarım
-            </div>
-            <div style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: 'rgba(16, 185, 129, 0.15)', fontSize: '0.8rem', fontWeight: 600, color: '#a7f3d0' }}>
-              2. Paragraf: Yapı, Akış Bozma, Çeldirici Filtresi
-            </div>
-            <div style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: 'rgba(245, 158, 11, 0.15)', fontSize: '0.8rem', fontWeight: 600, color: '#fde68a' }}>
-              3. Sözel Mantık: Tablo Kurma, Sıralama, Koşullu Akıl Yürütme
-            </div>
-          </div>
         </div>
-      )}
 
-      {/* Units & Topics Accordion */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {currentUnits.length === 0 ? (
-          <div className="card" style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)' }}>
-            Bu derse ait ünite bulunmamaktadır.
-          </div>
-        ) : (
-          currentUnits.map((unit, uIndex) => {
-            const topics = topicsByUnit[unit.id] || [];
-            const isExpanded = expandedUnits[unit.id] ?? true;
-            const completedCount = topics.filter((t) => progressMap[t.id]?.percentage === 100).length;
-            const isUnitComplete = topics.length > 0 && completedCount === topics.length;
+        {/* Filter Buttons */}
+        <div style={{ display: 'flex', gap: '6px', background: 'rgba(0, 0, 0, 0.04)', padding: '4px', borderRadius: '12px' }}>
+          <button
+            onClick={() => setActiveFilter('all')}
+            className={`btn ${activeFilter === 'all' ? 'btn-primary' : 'btn-ghost'}`}
+            style={{ padding: '6px 14px', fontSize: '0.8rem', borderRadius: '8px' }}
+          >
+            Tümü ({currentSubjectStats?.totalTasks || 0})
+          </button>
+          <button
+            onClick={() => setActiveFilter('tasks')}
+            className={`btn ${activeFilter === 'tasks' ? 'btn-primary' : 'btn-ghost'}`}
+            style={{ padding: '6px 14px', fontSize: '0.8rem', borderRadius: '8px' }}
+          >
+            📋 Soru Tipleri ({currentPlan.sections.flatMap((s) => s.tasks).length})
+          </button>
+          <button
+            onClick={() => setActiveFilter('videos')}
+            className={`btn ${activeFilter === 'videos' ? 'btn-primary' : 'btn-ghost'}`}
+            style={{ padding: '6px 14px', fontSize: '0.8rem', borderRadius: '8px' }}
+          >
+            🎬 Videolar ({currentPlan.videos.length})
+          </button>
+          <button
+            onClick={() => setActiveFilter('exams')}
+            className={`btn ${activeFilter === 'exams' ? 'btn-primary' : 'btn-ghost'}`}
+            style={{ padding: '6px 14px', fontSize: '0.8rem', borderRadius: '8px' }}
+          >
+            📝 Denemeler ({currentPlan.exams.length})
+          </button>
+        </div>
+      </div>
 
-            return (
-              <div
-                key={unit.id}
-                className="card"
-                style={{
-                  padding: '0',
-                  overflow: 'hidden',
-                  borderColor: isUnitComplete ? 'rgba(16, 185, 129, 0.4)' : 'var(--border-subtle)',
-                }}
-              >
-                {/* Unit Header */}
+      {/* 4. MAIN CONTENT AREA */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '24px', alignItems: 'start' }}>
+        {/* Left Column: Sections, Videos, Exams */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* A) QUESTION TYPE & CONCEPT SECTIONS */}
+          {(activeFilter === 'all' || activeFilter === 'tasks') &&
+            currentPlan.sections.map((section, sIndex) => {
+              const totalSec = section.tasks.length;
+              const compSec = section.tasks.filter((t) => completedTaskIds.has(t.id)).length;
+              const isSecFull = totalSec > 0 && compSec === totalSec;
+              const isCollapsed = !!collapsedSections[section.id];
+
+              return (
                 <div
-                  onClick={() => toggleUnit(unit.id)}
+                  key={section.id}
+                  className="glass-panel"
                   style={{
-                    padding: '18px 24px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                    backgroundColor: isUnitComplete ? 'rgba(16, 185, 129, 0.05)' : 'var(--bg-card)',
-                    borderBottom: isExpanded ? '1px solid var(--border-subtle)' : 'none',
+                    borderRadius: '16px',
+                    border: isSecFull ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-subtle)',
+                    overflow: 'hidden',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                    <div
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        backgroundColor: isUnitComplete ? '#10b981' : 'var(--bg-elevated)',
-                        color: isUnitComplete ? '#fff' : 'var(--text-primary)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '0.85rem',
-                        fontWeight: 700,
-                      }}
-                    >
-                      {isUnitComplete ? <CheckCircle2 size={18} /> : uIndex + 1}
-                    </div>
-
-                    <div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <h2 style={{ fontSize: '1.1rem', fontWeight: 700 }}>{unit.title}</h2>
-                        {isUnitComplete && (
-                          <span className="badge badge-emerald">Ünite Tamamlandı</span>
+                  {/* Section Header */}
+                  <div
+                    style={{
+                      padding: '16px 20px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      background: isSecFull ? 'rgba(16, 185, 129, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+                      borderBottom: isCollapsed ? 'none' : '1px solid var(--border-subtle)',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => toggleCollapse(section.id)}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleSectionAll(section);
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          padding: 0,
+                          color: isSecFull ? 'var(--color-success)' : 'var(--text-muted)',
+                        }}
+                        title={isSecFull ? 'Tümünü Kaldır' : 'Tümünü Tamamla'}
+                      >
+                        {isSecFull ? <CheckCircle2 size={22} /> : <Circle size={22} />}
+                      </button>
+                      <div>
+                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                          {section.title}
+                        </h3>
+                        {section.description && (
+                          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            {section.description}
+                          </div>
                         )}
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                        {unit.description}
-                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span
+                        style={{
+                          fontSize: '0.78rem',
+                          fontWeight: 700,
+                          padding: '3px 8px',
+                          borderRadius: '8px',
+                          backgroundColor: isSecFull ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.1)',
+                          color: isSecFull ? 'var(--color-success)' : 'var(--color-primary)',
+                        }}
+                      >
+                        {compSec} / {totalSec} Görev
+                      </span>
+                      {isCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
                     </div>
                   </div>
 
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                    <div style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                      {completedCount} / {topics.length} Konu
-                    </div>
-                    <div
-                      style={{
-                        transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                        transition: 'transform var(--transition-fast)',
-                      }}
-                    >
-                      <ChevronDown size={20} color="var(--text-muted)" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Unit Topics & Mini Exam Actions */}
-                {isExpanded && (
-                  <div style={{ padding: '16px 24px', backgroundColor: 'rgba(10, 15, 29, 0.5)' }}>
-                    {/* Topics List */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
-                      {topics.map((topic) => {
-                        const pDetail = progressMap[topic.id];
-                        const isDone = pDetail?.percentage === 100;
-                        const pct = pDetail?.percentage || 0;
-
+                  {/* Section Tasks Checklist */}
+                  {!isCollapsed && (
+                    <div style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      {section.tasks.map((task) => {
+                        const isDone = completedTaskIds.has(task.id);
                         return (
                           <div
-                            key={topic.id}
-                            className="card card-interactive"
-                            onClick={() =>
-                              onNavigate('topic-detail', {
-                                subjectId: selectedSubjectId,
-                                unitId: unit.id,
-                                topicId: topic.id,
-                              })
-                            }
+                            key={task.id}
+                            onClick={() => handleToggleTask(task.id)}
                             style={{
-                              padding: '12px 18px',
                               display: 'flex',
-                              justifyContent: 'space-between',
                               alignItems: 'center',
-                              backgroundColor: isDone ? 'rgba(16, 185, 129, 0.04)' : 'var(--bg-input)',
-                              borderColor: isDone ? 'rgba(16, 185, 129, 0.25)' : 'var(--border-subtle)',
+                              gap: '12px',
+                              padding: '10px 12px',
+                              borderRadius: '10px',
+                              cursor: 'pointer',
+                              backgroundColor: isDone ? 'rgba(16, 185, 129, 0.05)' : 'transparent',
+                              transition: 'background-color 0.15s ease',
                             }}
                           >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                              {isDone ? (
-                                <CheckCircle2 size={20} color="#10b981" />
-                              ) : (
-                                <Circle size={20} color={pct > 0 ? '#38bdf8' : 'var(--text-muted)'} />
-                              )}
-                              <div>
-                                <div style={{ fontWeight: 600, fontSize: '0.925rem', color: isDone ? '#fff' : 'var(--text-primary)' }}>
-                                  {topic.title}
-                                </div>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                  <Clock size={12} />
-                                  <span>{topic.estimated_minutes} dakika</span>
-                                  <span>•</span>
-                                  <span style={{ color: pct > 0 ? '#60a5fa' : 'var(--text-muted)' }}>
-                                    %{pct} Tamamlandı
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-
-                            <button
-                              className={isDone ? 'btn btn-secondary' : 'btn btn-primary'}
-                              style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                            <div
+                              style={{
+                                width: '20px',
+                                height: '20px',
+                                borderRadius: '6px',
+                                border: isDone ? '2px solid var(--color-success)' : '2px solid var(--border-medium)',
+                                backgroundColor: isDone ? 'var(--color-success)' : 'transparent',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                color: '#ffffff',
+                                flexShrink: 0,
+                                transition: 'all 0.15s ease',
+                              }}
                             >
-                              <span>{isDone ? 'Tekrar İncele' : 'Konuyu Çalış'}</span>
-                              <ChevronRight size={15} />
-                            </button>
+                              {isDone && <Check size={14} strokeWidth={3} />}
+                            </div>
+                            <span
+                              style={{
+                                fontSize: '0.9rem',
+                                color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                                textDecoration: isDone ? 'line-through' : 'none',
+                                lineHeight: '1.4',
+                                userSelect: 'none',
+                              }}
+                            >
+                              {task.text}
+                            </span>
                           </div>
                         );
                       })}
                     </div>
+                  )}
+                </div>
+              );
+            })}
 
-                    {/* Unit Mini Exam Footer Card */}
+          {/* B) VIDEOS SECTION */}
+          {(activeFilter === 'all' || activeFilter === 'videos') && currentPlan.videos.length > 0 && (
+            <div className="glass-panel" style={{ borderRadius: '16px', padding: '20px 24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ color: 'var(--color-primary)' }}>
+                    <PlayCircle size={22} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                      İzlemen Gereken Videolar
+                    </h3>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      Videoyu izledikten sonra kutucuğu işaretleyerek ilerlemenize dahil edin.
+                    </div>
+                  </div>
+                </div>
+                <span className="badge badge-primary" style={{ fontSize: '0.75rem' }}>
+                  {currentPlan.videos.filter((v) => completedTaskIds.has(v.taskId)).length} / {currentPlan.videos.length} İzlenen
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {currentPlan.videos.map((video) => {
+                  const isDone = completedTaskIds.has(video.taskId);
+                  return (
                     <div
+                      key={video.id}
                       style={{
-                        padding: '14px 18px',
-                        borderRadius: 'var(--radius-md)',
-                        backgroundColor: 'rgba(59, 130, 246, 0.08)',
-                        border: '1px solid rgba(59, 130, 246, 0.25)',
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
                         flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '14px 16px',
+                        borderRadius: '12px',
+                        border: isDone ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-subtle)',
+                        background: isDone ? 'rgba(16, 185, 129, 0.04)' : 'rgba(255, 255, 255, 0.02)',
                         gap: '12px',
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                        <FileQuestion size={20} color="var(--primary)" />
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '240px' }}>
+                        <button
+                          onClick={() => handleToggleTask(video.taskId)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: 0,
+                            color: isDone ? 'var(--color-success)' : 'var(--text-muted)',
+                          }}
+                          title={isDone ? 'İzlenmedi olarak işaretle' : 'İzlendi olarak işaretle'}
+                        >
+                          {isDone ? <CheckCircle2 size={24} /> : <Circle size={24} />}
+                        </button>
                         <div>
-                          <div style={{ fontWeight: 700, fontSize: '0.875rem' }}>
-                            {unit.title} - Ünite Mini Sınavı
+                          <div
+                            style={{
+                              fontSize: '0.92rem',
+                              fontWeight: 700,
+                              color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                              textDecoration: isDone ? 'line-through' : 'none',
+                            }}
+                          >
+                            {video.title}
                           </div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                            Kazanım tarama testi ile bu ünitedeki bilginizi test edin.
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '8px', marginTop: '2px' }}>
+                            {video.duration && <span>⏱ {video.duration}</span>}
+                            {video.note && <span>• {video.note}</span>}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <a
+                          href={video.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="btn btn-secondary"
+                          style={{
+                            padding: '6px 12px',
+                            fontSize: '0.8rem',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <span>Videoyu İzle</span>
+                          <ExternalLink size={14} />
+                        </a>
+                        <button
+                          onClick={() => handleToggleTask(video.taskId)}
+                          className={`btn ${isDone ? 'btn-success' : 'btn-outline'}`}
+                          style={{ padding: '6px 12px', fontSize: '0.8rem' }}
+                        >
+                          {isDone ? '✓ İzledim' : '□ İzledim'}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* C) EXAMS SECTION */}
+          {(activeFilter === 'all' || activeFilter === 'exams') && currentPlan.exams.length > 0 && (
+            <div className="glass-panel" style={{ borderRadius: '16px', padding: '20px 24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <div style={{ color: 'var(--color-primary)' }}>
+                    <Award size={22} />
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                      Branş Denemeleri ve Mini Sınavlar
+                    </h3>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      Konu çalışmalarının ardından branş denemesi çözüp işaretleyin.
+                    </div>
+                  </div>
+                </div>
+                <span className="badge badge-primary" style={{ fontSize: '0.75rem' }}>
+                  {currentPlan.exams.filter((e) => completedTaskIds.has(e.taskId)).length} / {currentPlan.exams.length} Tamamlanan
+                </span>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {currentPlan.exams.map((exam) => {
+                  const isDone = completedTaskIds.has(exam.taskId);
+                  return (
+                    <div
+                      key={exam.id}
+                      style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '14px 16px',
+                        borderRadius: '12px',
+                        border: isDone ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-subtle)',
+                        background: isDone ? 'rgba(16, 185, 129, 0.04)' : 'rgba(255, 255, 255, 0.02)',
+                        gap: '12px',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flex: 1, minWidth: '240px' }}>
+                        <button
+                          onClick={() => handleToggleTask(exam.taskId)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: 0,
+                            color: isDone ? 'var(--color-success)' : 'var(--text-muted)',
+                          }}
+                          title={isDone ? 'Çözülmedi yap' : 'Çözüldü olarak işaretle'}
+                        >
+                          {isDone ? <CheckCircle2 size={24} /> : <Circle size={24} />}
+                        </button>
+                        <div>
+                          <div
+                            style={{
+                              fontSize: '0.92rem',
+                              fontWeight: 700,
+                              color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                              textDecoration: isDone ? 'line-through' : 'none',
+                            }}
+                          >
+                            {exam.title}
+                          </div>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', display: 'flex', gap: '8px', marginTop: '2px' }}>
+                            <span>📝 {exam.question_count} Soru</span>
+                            {exam.duration_mins && <span>• ⏱ {exam.duration_mins} Dakika</span>}
                           </div>
                         </div>
                       </div>
 
                       <button
-                        onClick={() =>
-                          onNavigate('mini-exam', {
-                            unitId: unit.id,
-                            unitTitle: unit.title,
-                          })
-                        }
-                        className="btn btn-primary"
-                        style={{ padding: '8px 18px', fontSize: '0.85rem' }}
+                        onClick={() => handleToggleTask(exam.taskId)}
+                        className={`btn ${isDone ? 'btn-success' : 'btn-outline'}`}
+                        style={{ padding: '6px 14px', fontSize: '0.8rem' }}
                       >
-                        <PlayCircle size={16} />
-                        <span>Mini Sınavı Başlat</span>
+                        {isDone ? '✓ Çözdüm' : '□ Çözdüm'}
                       </button>
                     </div>
-                  </div>
-                )}
+                  );
+                })}
               </div>
-            );
-          })
-        )}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Question Goal Tracker & Personal Notes */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          {/* Question Goal Widget */}
+          <div className="glass-panel" style={{ borderRadius: '16px', padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              <Target size={20} color="var(--color-primary)" />
+              <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                {currentPlan.short_title} Soru Hedefim
+              </h3>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                  Çözülen Soru Sayısı:
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  value={userNote.solvedQuestions}
+                  onChange={(e) => setUserNote({ ...userNote, solvedQuestions: parseInt(e.target.value) || 0 })}
+                  className="input-field"
+                  style={{ width: '100%', padding: '8px 12px', fontSize: '0.9rem', borderRadius: '8px' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                  Hedeflenen Soru Sayısı:
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  value={userNote.targetQuestions}
+                  onChange={(e) => setUserNote({ ...userNote, targetQuestions: parseInt(e.target.value) || 1 })}
+                  className="input-field"
+                  style={{ width: '100%', padding: '8px 12px', fontSize: '0.9rem', borderRadius: '8px' }}
+                />
+              </div>
+
+              {/* Solved / Target Progress */}
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '4px' }}>
+                  <span>Soru Tamamlama Oranı</span>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+                    %{Math.min(100, Math.round((userNote.solvedQuestions / (userNote.targetQuestions || 1)) * 100))}
+                  </span>
+                </div>
+                <div style={{ width: '100%', height: '6px', backgroundColor: 'rgba(0, 0, 0, 0.08)', borderRadius: '999px', overflow: 'hidden' }}>
+                  <div
+                    style={{
+                      width: `${Math.min(100, Math.round((userNote.solvedQuestions / (userNote.targetQuestions || 1)) * 100))}%`,
+                      height: '100%',
+                      backgroundColor: 'var(--color-primary)',
+                      borderRadius: '999px',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Personal Study Notepad Widget */}
+          <div className="glass-panel" style={{ borderRadius: '16px', padding: '20px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Edit3 size={18} color="var(--color-primary)" />
+                <h3 style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                  Çalışma Notlarım
+                </h3>
+              </div>
+              {noteSavedAlert && (
+                <span style={{ fontSize: '0.75rem', color: 'var(--color-success)', fontWeight: 700 }}>
+                  ✓ Kaydedildi
+                </span>
+              )}
+            </div>
+
+            <textarea
+              rows={6}
+              value={userNote.note}
+              onChange={(e) => setUserNote({ ...userNote, note: e.target.value })}
+              placeholder={`${currentPlan.short_title} için önemli formüller, unutulan kural ve soru stratejilerinizi buraya not edin...`}
+              className="input-field"
+              style={{
+                width: '100%',
+                padding: '10px',
+                fontSize: '0.85rem',
+                borderRadius: '10px',
+                resize: 'vertical',
+                lineHeight: '1.4',
+                marginBottom: '12px',
+              }}
+            />
+
+            <button
+              onClick={handleSaveNote}
+              disabled={isSavingNote}
+              className="btn btn-primary"
+              style={{
+                width: '100%',
+                padding: '8px 14px',
+                fontSize: '0.85rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                borderRadius: '8px',
+              }}
+            >
+              <Save size={14} />
+              {isSavingNote ? 'Kaydediliyor...' : 'Notlarımı Kaydet'}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

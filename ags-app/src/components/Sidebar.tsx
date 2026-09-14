@@ -46,9 +46,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
     },
     {
       id: 'curriculum' as NavigationTab,
-      label: 'Dersler ve Konular',
+      label: 'Çalışma & Görev Takibi',
       icon: BookOpen,
-      badge: 'Müfredat',
+      badge: 'Self-Check',
     },
     {
       id: 'past-questions' as NavigationTab,

@@ -243,3 +243,54 @@ export interface DashboardStats {
     topic_title: string;
   } | null;
 }
+
+export interface StudyTask {
+  id: string;
+  text: string;
+  category: 'question_type' | 'concept' | 'video' | 'exam' | 'custom';
+  description?: string;
+  video_url?: string;
+  tags?: string[];
+}
+
+export interface StudySection {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  tasks: StudyTask[];
+}
+
+export interface VideoResource {
+  id: string;
+  title: string;
+  channel?: string;
+  duration?: string;
+  url: string;
+  note?: string;
+  taskId: string;
+}
+
+export interface ExamTask {
+  id: string;
+  title: string;
+  question_count: number;
+  duration_mins?: number;
+  description?: string;
+  taskId: string;
+}
+
+export interface SubjectStudyPlan {
+  id: string;
+  subject_id: string;
+  title: string;
+  short_title: string;
+  icon: string;
+  weight_percentage: number; // e.g. 18.75, 7.5, 37.5, 10
+  question_count_in_ags: number;
+  description: string;
+  sections: StudySection[];
+  videos: VideoResource[];
+  exams: ExamTask[];
+}
+
