@@ -185,6 +185,42 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate }) =>
         })}
       </div>
 
+      {/* Sözel Yetenek Beceri Odaklı Özel Bilgilendirme Kartı */}
+      {selectedSubjectId === 'sozel-yetenek' && (
+        <div
+          className="card"
+          style={{
+            marginBottom: '20px',
+            padding: '20px 24px',
+            background: 'linear-gradient(135deg, rgba(30, 58, 138, 0.25) 0%, rgba(15, 23, 42, 0.4) 100%)',
+            borderColor: '#3b82f6',
+            borderLeft: '5px solid #3b82f6',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+            <span className="badge badge-blue">🎯 2026 AGS SÖZEL YETENEK STRATEJİSİ</span>
+            <span className="badge badge-emerald">Ezber Değil, Beceri Odaklı</span>
+          </div>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, margin: '4px 0 8px 0', color: '#93c5fd' }}>
+            Okuduğunu Anlama • Paragraf Mimarisi • Sözel Akıl Yürütme
+          </h3>
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+            Bu bölümde amaç klasik Türkçe kurallarını ezberlemek değil; uzun ve yoğun metinleri hızlı okuyup doğru yorumlamak, çıkarım yapmak, çeldirici seçenekleri elemek ve sözel mantık sorularını hatasız organize etmektir.
+          </p>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '14px', flexWrap: 'wrap' }}>
+            <div style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: 'rgba(59, 130, 246, 0.15)', fontSize: '0.8rem', fontWeight: 600, color: '#bfdbfe' }}>
+              1. Okuduğunu Anlama: Ana Fikir, Bağlam, Çıkarım
+            </div>
+            <div style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: 'rgba(16, 185, 129, 0.15)', fontSize: '0.8rem', fontWeight: 600, color: '#a7f3d0' }}>
+              2. Paragraf: Yapı, Akış Bozma, Çeldirici Filtresi
+            </div>
+            <div style={{ padding: '6px 12px', borderRadius: '8px', backgroundColor: 'rgba(245, 158, 11, 0.15)', fontSize: '0.8rem', fontWeight: 600, color: '#fde68a' }}>
+              3. Sözel Mantık: Tablo Kurma, Sıralama, Koşullu Akıl Yürütme
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Units & Topics Accordion */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         {currentUnits.length === 0 ? (

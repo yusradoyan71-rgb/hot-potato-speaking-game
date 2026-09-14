@@ -144,6 +144,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
   }
 
   const isFullyComplete = progressDetail.percentage === 100;
+  const isSozel = unitId?.startsWith('unit-sozel') || subjectId === 'sozel-yetenek';
 
   return (
     <div className="page-wrapper animate-fade-in" style={{ maxWidth: '1000px' }}>
@@ -212,7 +213,9 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
               <Square size={20} color="var(--text-muted)" />
             )}
             <div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>1. Konu Anlatımı</div>
+              <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                {isSozel ? '1. Çözüm Rehberi' : '1. Konu Anlatımı'}
+              </div>
               <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>%33 İlerleme</div>
             </div>
           </div>
@@ -351,7 +354,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <BookOpen size={20} color="#38bdf8" />
               <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: '#ffffff' }}>
-                Konu Anlatımı
+                {isSozel ? 'Bu Soru Tipini Nasıl Çözerim? (AGS Çözüm Stratejisi)' : 'Konu Anlatımı'}
               </h2>
             </div>
             {activeAccordion.core_explanation ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -382,7 +385,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Lightbulb size={20} color="#f59e0b" />
               <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: '#ffffff' }}>
-                Temel Kavramlar & Tanımlar
+                {isSozel ? 'Stratejik Kavramlar & Ayırt Edici Ölçütler' : 'Temel Kavramlar & Tanımlar'}
               </h2>
             </div>
             {activeAccordion.key_concepts ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -428,7 +431,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Layers size={20} color="#a78bfa" />
               <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: '#ffffff' }}>
-                Alt Başlıklar ve Süreç Analizi
+                {isSozel ? 'Çözüm Aşamaları & Taktik Rehberi' : 'Alt Başlıklar ve Süreç Analizi'}
               </h2>
             </div>
             {activeAccordion.subtopics ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -522,7 +525,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Split size={20} color="#38bdf8" />
               <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: '#ffffff' }}>
-                Karşılaştırma ve Ayırt Etme Tabloları
+                {isSozel ? 'Çeldirici Tuzaklar vs. Doğru AGS Yaklaşımı Tablosu' : 'Karşılaştırma ve Ayırt Etme Tabloları'}
               </h2>
             </div>
             {activeAccordion.comparison_tables ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -574,7 +577,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <AlertTriangle size={20} color="#f43f5e" />
               <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0, color: '#ffffff' }}>
-                Karıştırılan Noktalar & Doğru Ayrımlar
+                {isSozel ? 'Yanlış Analizi: Neden Hata Yapıldı? (En Sık Yapılan Hatalar)' : 'Karıştırılan Noktalar & Doğru Ayrımlar'}
               </h2>
             </div>
             {activeAccordion.common_confusions ? <ChevronDown size={18} /> : <ChevronRight size={18} />}
@@ -738,7 +741,7 @@ export const TopicDetailPage: React.FC<TopicDetailPageProps> = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
             <HelpCircle size={20} color="var(--primary)" />
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: 0 }}>
-              Kendini Dene (5 Pekiştirme Sorusu)
+              {isSozel ? 'Özgün AGS Tarzı Beceri Soruları & Ayrıntılı Çözümler' : 'Kendini Dene (5 Pekiştirme Sorusu)'}
             </h2>
           </div>
 
