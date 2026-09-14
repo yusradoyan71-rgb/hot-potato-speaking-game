@@ -267,7 +267,7 @@ export const MiniExamPage: React.FC<MiniExamPageProps> = ({
                   {attemptResult.score >= 60 ? 'Tebrikler, Sınavı Geçtiniz! 🎉' : 'Geliştirilebilir Performans'}
                 </h2>
                 <div style={{ fontSize: '0.825rem', color: 'var(--text-secondary)' }}>
-                  Sonuçlarınız veritabanına ve başarı raporunuza kaydedildi.
+                  Sonuçlarınız başarı analizinize ve veritabanına kaydedildi.
                 </div>
               </div>
             </div>
@@ -278,19 +278,19 @@ export const MiniExamPage: React.FC<MiniExamPageProps> = ({
                 <span>Tekrar Çöz</span>
               </button>
               <button onClick={() => onNavigate('curriculum')} className="btn btn-primary">
-                <span>Diğer Üniteye Geç</span>
+                <span>Müfredata Dön</span>
                 <ChevronRight size={16} />
               </button>
             </div>
           </div>
 
-          <div className="grid-4" style={{ gap: '12px' }}>
+          <div className="grid-4" style={{ gap: '12px', marginBottom: '20px' }}>
             <div style={{ backgroundColor: 'var(--bg-input)', padding: '12px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Başarı Puanı</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#ffffff' }}>%{attemptResult.score}</div>
             </div>
             <div style={{ backgroundColor: 'var(--bg-input)', padding: '12px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>AGS Neti</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>AGS Neti (D - Y/4)</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: '#34d399' }}>{attemptResult.net_score} Net</div>
             </div>
             <div style={{ backgroundColor: 'var(--bg-input)', padding: '12px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
@@ -301,10 +301,80 @@ export const MiniExamPage: React.FC<MiniExamPageProps> = ({
               </div>
             </div>
             <div style={{ backgroundColor: 'var(--bg-input)', padding: '12px', borderRadius: 'var(--radius-md)', textAlign: 'center' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Boş Soru</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Boş Bırakılan</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-muted)' }}>{attemptResult.blank_count}</div>
             </div>
           </div>
+
+          {/* Section 36: Dedicated "Yanlışlarım ve Konu Tekrarı" Box */}
+          {attemptResult.incorrect_count > 0 || attemptResult.blank_count > 0 ? (
+            <div style={{ borderTop: '1px solid var(--border-medium)', paddingTop: '16px' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 700, color: '#fbbf24', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <AlertCircle size={18} />
+                <span>Yanlışlarım & Öncelikli Konu Tekrarları ({attemptResult.incorrect_count + attemptResult.blank_count} Soru)</span>
+              </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                {questions
+                  .filter((q) => {
+                    const userSel = selectedAnswers[q.id];
+                    const correctOpt = q.options.find((o) => o.is_correct);
+                    return !userSel || userSel !== correctOpt?.option_key;
+                  })
+                  .map((wrongQ, wIdx) => {
+                    const userSel = selectedAnswers[wrongQ.id];
+                    const correctOpt = wrongQ.options.find((o) => o.is_correct);
+
+                    return (
+                      <div
+                        key={wIdx}
+                        style={{
+                          backgroundColor: 'var(--bg-input)',
+                          border: '1px solid rgba(244, 63, 94, 0.25)',
+                          borderRadius: 'var(--radius-md)',
+                          padding: '14px 18px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          flexWrap: 'wrap',
+                          gap: '12px',
+                        }}
+                      >
+                        <div style={{ flex: 1, minWidth: '240px' }}>
+                          <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>
+                            {wrongQ.question_text.length > 90 ? wrongQ.question_text.substring(0, 90) + '...' : wrongQ.question_text}
+                          </div>
+                          <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                            Senin Yanıtın: <strong style={{ color: userSel ? '#fb7185' : 'var(--text-muted)' }}>{userSel || 'Boş'}</strong> | Doğru Cevap: <strong style={{ color: '#34d399' }}>{correctOpt?.option_key}</strong>
+                          </div>
+                        </div>
+
+                        {wrongQ.topic_id && (
+                          <button
+                            onClick={() =>
+                              onNavigate('topic-detail', {
+                                subjectId: wrongQ.subject_id,
+                                unitId: wrongQ.unit_id || unitId,
+                                topicId: wrongQ.topic_id,
+                              })
+                            }
+                            className="btn btn-secondary"
+                            style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+                          >
+                            <span>Konuyu Tekrar Et</span>
+                            <ArrowRight size={14} />
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          ) : (
+            <div style={{ borderTop: '1px solid var(--border-medium)', paddingTop: '14px', color: '#34d399', fontSize: '0.875rem', fontWeight: 600 }}>
+              🎉 Harika! Bu sınavdaki tüm soruları doğru yanıtladınız.
+            </div>
+          )}
         </div>
       )}
 

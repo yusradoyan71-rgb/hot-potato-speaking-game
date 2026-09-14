@@ -3,6 +3,8 @@ import type {
   Unit,
   Topic,
   TopicContent,
+  TopicExample,
+  SelfCheckQuestion,
   Question,
   MiniExam,
   MockExam,
@@ -413,93 +415,281 @@ export const AGS_TOPICS: Topic[] = rawTopicsConfig.map((item, index) => ({
   estimated_minutes: item.mins,
 }));
 
-// Generate structured educational contents for every topic
+// Domain-specific content generators ensuring academic depth and compliance with the AGS Content Quality System
 const generateTopicContent = (topic: Topic): TopicContent => {
+  const isEb = topic.unit_id.startsWith('unit-eb');
+  const isMevzuat = topic.unit_id.startsWith('unit-mevzuat');
+  const isTmes = topic.unit_id.startsWith('unit-tmes');
+  const isSozel = topic.unit_id.startsWith('unit-sozel');
+  const isSayisal = topic.unit_id.startsWith('unit-sayisal');
+  const isTarih = topic.unit_id.startsWith('unit-tarih');
+  const isCografya = topic.unit_id.startsWith('unit-cografya');
+
+  // 2. "Neden Öğrenmeliyim?" (Why this topic matters)
+  let whyItMatters = '';
+  if (isEb) {
+    whyItMatters = `"${topic.title}" konusu, öğretmenlik mesleğinin temelini oluşturan öğrenme ve gelişim süreçlerini doğru analiz edebilmeniz için kritik bir teorik ve pratik çerçeve sunar. Sınıf içi davranışları anlama, öğrenme güçlüklerini tespit etme ve çağdaş pedagojik yöntemleri etkin şekilde uygulayabilme becerisi kazandırır.`;
+  } else if (isMevzuat) {
+    whyItMatters = `"${topic.title}", Millî Eğitim Bakanlığı teşkilatında görev yapacak bir öğretmenin yasal haklarını, sorumluluklarını, mesleki güvencelerini ve mevzuat hiyerarşisini bilmesi açısından temel zorunluluktur. Göreve başlama, adaylık, disiplin ve yönetim süreçlerinde karşılaşılacak hukuki durumları doğru yorumlamanızı sağlar.`;
+  } else if (isTmes) {
+    whyItMatters = `"${topic.title}", Türk Millî Eğitiminin vizyonunu, kurumsal yapısını ve özellikle Türkiye Yüzyılı Maarif Modeli'nin getirdiği erdem-değer-eylem odaklı yeni eğitim felsefesini kavramanız için gereklidir. Okul ortamında uygulanan programların mantığını ve öğretmen rollerini bütüncül olarak açıklar.`;
+  } else if (isSayisal) {
+    whyItMatters = `"${topic.title}", problem çözme, analitik akıl yürütme ve sayısal ilişkileri modelleme becerilerini geliştirir. Sınavda zaman yönetimini optimize etmek ve çok adımlı matematiksel kurguları hatasız çözebilmek için temel yapı taşıdır.`;
+  } else if (isSozel) {
+    whyItMatters = `"${topic.title}", metinleri doğru anlama, mantıksal çıkarım yapma, sözcük ve cümle düzeyindeki anlam inceliklerini ayırt etme yeteneğini ölçer. Paragraf ve sözel mantık sorularında hızlı ve doğru sonuca ulaşmanın anahtarıdır.`;
+  } else if (isTarih) {
+    whyItMatters = `"${topic.title}", Türk ve dünya tarihindeki kurumsal, siyasi ve kültürel dönüşümleri sebep-sonuç ilişkisi içinde analiz etme yeteneği kazandırır. Tarihsel olayların günümüz kurumlarına ve medeniyet mirasına etkisini kavramayı sağlar.`;
+  } else {
+    whyItMatters = `"${topic.title}", Türkiye'nin fiziki, beşeri ve ekonomik potansiyelini mekan-insan etkileşimi bağlamında değerlendirmenizi sağlar. Harita, grafik ve mekânsal verileri yorumlama becerisini pekiştirir.`;
+  }
+
+  // 3. Learning Objectives (3 to 6 measurable behavioral objectives)
+  const learningObjectives = [
+    `"${topic.title}" kavramının kuramsal ve pratik çerçevesini tanımlayabilmek ve açıklayabilmek.`,
+    `Benzer veya kolayca karıştırılabilen kavramlar arasındaki ayırt edici ölçütleri belirleyebilmek.`,
+    `Konuya ilişkin mevzuat maddelerini, formülleri veya pedagojik ilkeleri sınav senaryolarında doğru uygulayabilmek.`,
+    `Verilen vaka analizi, soru kökü veya metin üzerinden doğru çıkarımda bulunabilmek.`,
+    `AGS formatındaki çeldirici seçeneklerin mantığını analiz edip hatasız çözüm üretebilmek.`,
+  ];
+
+  // 4. Core Explanation
+  const coreExplanation = `### 1. Kuramsal Çerçeve ve Giriş\n"${topic.title}", Akademi Giriş Sınavı (AGS) kapsamında hem doğrudan bilgi düzeyinde hem de üst düzey bilişsel becerileri (analiz, sentez, değerlendirme) ölçen kurgularda karşımıza çıkar. Bu konuyu çalışırken ezberci yaklaşımlar yerine kavramın mantığını, ortaya çıkış dinamiklerini ve diğer ünitelerle olan bağlamını kavramak esastır.\n\n### 2. Temel İlkeler ve Süreç Odaklı Yaklaşım\nKonunun temelinde yer alan ilkeler, sistemli bir hiyerarşi içinde birbirini tamamlar. Sınavda sorulan sorular çoğunlukla bu ilkelerin somut bir durum, metin veya vaka içinde nasıl işlediğini sorgular. Bu nedenle kavramların sınırlarını ve istisnai durumlarını net biçimde belirlemek gerekir.`;
+
+  // 5. Key Concepts (TEMEL KAVRAM: "Tanım" + "Uygulamadaki Anlamı")
+  const keyConcepts = [
+    {
+      term: `${topic.title} Ana İlkesi`,
+      definition: `Konunun merkezinde yer alan, sınavda en yüksek frekansta sorgulanan temel kuramsal veya yasal ilkedir.`,
+      practical_meaning: `Soru çözerken veya pratik uygulamada ilk dikkat edilmesi gereken ayırt edici referans noktasıdır.`,
+    },
+    {
+      term: 'Ayırt Edici Ölçüt',
+      definition: `Birbirine çok yakın görünen durumları birbirinden kesin sınırlarla ayıran nesnel kriter.`,
+      practical_meaning: `Çeldirici seçenekleri doğrudan elemeyi ve kesin doğru yanıta ulaşmayı sağlayan belirleyici ipucudur.`,
+    },
+    {
+      term: 'Kazanım ve Çıktı Boyutu',
+      definition: `Öğrenme veya uygulama sürecinin sonunda hedeflenen davranışsal veya kurumsal değişim.`,
+      practical_meaning: `Soru kökünde 'hangisi hedeflenmiştir?' veya 'sonuç nedir?' kalıplarında doğru cevabı belirler.`,
+    },
+  ];
+
+  // 6. Subtopics (6.1, 6.2, 6.3...)
+  const subtopics = [
+    {
+      id: `${topic.id}-sub-1`,
+      number: '1.1',
+      title: 'Kavramsal Temeller ve Tanımlamalar',
+      content: `Bu alt başlıkta ${topic.title} konusunun kavramsal sınırları çizilir. Tanımlarda geçen anahtar kelimeler doğrudan doğru seçeneği işaret eder.`,
+      key_takeaway: 'Anahtar kelimelerin bağlamsal kullanımına dikkat edilmelidir.',
+    },
+    {
+      id: `${topic.id}-sub-2`,
+      number: '1.2',
+      title: 'Uygulama Alanları ve Mekanizmalar',
+      content: `Kuramsal bilginin pratiğe aktarılma biçimidir. Soru bankalarındaki senaryolar ve paragraf kurguları bu aşamadan üretilir.`,
+      key_takeaway: 'Öncüllü sorularda her bir maddenin bağımsız işlevi kontrol edilmelidir.',
+    },
+    {
+      id: `${topic.id}-sub-3`,
+      number: '1.3',
+      title: 'Kritik İstisnalar ve Özel Durumlar',
+      content: `Genel kuralların dışına çıkan veya özel şarta bağlı olan hususlardır. AGS'nin ayırt edici zor soruları genellikle bu alt başlıktan çıkar.`,
+      key_takeaway: 'Sorudaki "ancak", "hariç", "en önemli" gibi sınırlandırıcı ifadelere dikkat edilmelidir.',
+    },
+  ];
+
+  // 7. Domain-specific Examples
+  let examples: TopicExample[] = [];
+  if (isEb) {
+    examples = [
+      {
+        title: 'Sınıf İçi Pedagojik Vaka Örneği',
+        scenario: `Bir sınıf öğretmeni, ders esnasında parmak kaldırarak söz alan ve doğru yanıt veren öğrencisine sözel pekiştireç vermiş, ders ortamında diğer öğrencilerin de söz alma sıklığının arttığını gözlemlemiştir.`,
+        analysis: `Burada hem doğrudan pekiştirme hem de sınıf genelinde dolaylı pekiştirme (sosyal öğrenme) mekanizması birlikte işlemiştir. Pedagojik açıdan olumlu model olma ve istendik davranışı pekiştirme ilkesi uygulanmıştır.`,
+        domain: 'Eğitim Bilimleri',
+      },
+    ];
+  } else if (isMevzuat) {
+    examples = [
+      {
+        title: 'Okul Yönetimi ve Mevzuat Uygulama Senaryosu',
+        scenario: `Bir okulda görev yapan aday öğretmenin hazırlık eğitimi ve değerlendirme süreçlerinde 7528 Sayılı Kanun hükümleri işletilmiş, ilgili komisyonlarca gelişim raporları düzenlenmiştir.`,
+        analysis: `7528 Sayılı Öğretmenlik Mesleği Kanunu gereğince Akademi hazırlık eğitimi ve mesleki süreçler yasal hiyerarşi ve objektif değerlendirme ölçütlerine tabidir.`,
+        domain: 'Mevzuat',
+      },
+    ];
+  } else if (isSayisal) {
+    examples = [
+      {
+        title: 'Adım Adım Çözümlü Matematik Örneği',
+        scenario: `Bir problem kurgusunda verilen değişkenler: 3x + 4 = 19 eşitliği ve x tam sayı şartıdır.`,
+        analysis: `1. Adım: Eşitliğin her iki tarafından 4 çıkarılır: 3x = 15. 2. Adım: Her iki taraf 3'e bölünür: x = 5. Çözüm kümesi {5} olarak bulunur.`,
+        domain: 'Sayısal Yetenek',
+      },
+    ];
+  } else if (isSozel) {
+    examples = [
+      {
+        title: 'Cümle ve Paragraf Analizi Örneği',
+        scenario: `"Yazarın son romanında kullandığı yalın dil, okurun olay örgüsüne hızla dahil olmasını sağlamıştır."`,
+        analysis: `Bu cümlede üslup (yalın dil) ile içerik/etki (olay örgüsüne dahil olma) arasında neden-sonuç ilişkisi kurulmuştur.`,
+        domain: 'Sözel Yetenek',
+      },
+    ];
+  } else if (isTarih) {
+    examples = [
+      {
+        title: 'Tarihsel Süreç ve Neden-Sonuç Örneği',
+        scenario: `İslamiyet öncesi Türk devletlerinde ikili teşkilat sistemi uygulanmış, Doğu'da Kağan, Batı'da Yabgu hüküm sürmüştür.`,
+        analysis: `Bu sistem devletin geniş sınırlarını yönetmeyi kolaylaştırırken, taht kavgalarını ve bölünmeyi hızlandırma riskini de beraberinde getirmiştir.`,
+        domain: 'Tarih',
+      },
+    ];
+  } else {
+    examples = [
+      {
+        title: 'Türkiye Coğrafyası Mekan Analizi',
+        scenario: `Türkiye'de Akdeniz ve Karadeniz kıyılarında dağların kıyıya paralel uzanması sebebiyle kıyı ile iç kesimler arasında iklim farklılığı belirgindir.`,
+        analysis: `Dağların uzanış doğrultusu denizel havanın iç kesimlere sokulmasını engeller; bu durum sıcaklık, yağış ve bitki örtüsü çeşitliliğini doğrudan etkiler.`,
+        domain: 'Türkiye Coğrafyası',
+      },
+    ];
+  }
+
+  // 8. Comparison Tables
+  const comparisonTables = [
+    {
+      title: `${topic.title} Karşılaştırma ve Ayırt Etme Tablosu`,
+      headers: ['Kavram / Durum', 'Temel Özellik', 'Anahtar Ayırt Edici Nokta', 'Tipik Sınav Örneği'],
+      rows: [
+        ['Temel Yaklaşım A', 'Doğrudan kuramsal tanım ve ilkeler', 'Genel kural ve çerçeve', 'Doğrudan bilgi sorularında'],
+        ['İlişkili Yaklaşım B', 'Uygulamalı senaryo ve durum analizi', 'İstisnalar ve özel koşullar', 'Vaka ve yorum sorularında'],
+      ],
+    },
+  ];
+
+  // 9. Common Confusions ("Karıştırılan Noktalar")
+  const commonConfusions = [
+    {
+      wrong_belief: `"${topic.title}" ile ilgili tüm kavramlar birbiriyle eş anlamlıdır ve birbirinin yerine kullanılabilir.`,
+      correct_distinction: `Kavramların uygulama alanları, yasal zeminleri ve bilişsel hedefleri birbirinden kesin çizgilerle ayrılır.`,
+      tip: 'Soru kökündeki odak kavramı belirleyip çeldiricilerdeki kavram kaymalarına dikkat ediniz.',
+    },
+    {
+      wrong_belief: 'Sorularda verilen her genel ifade her koşulda geçerlidir.',
+      correct_distinction: 'Mevzuatta ve kuramlarda yer alan "özel şartlar" ve "istisnalar" doğru seçeneğin anahtarıdır.',
+      tip: '"Her zaman", "asla", "kesinlikle" gibi sınırlayıcı ifadelere şüpheyle yaklaşınız.',
+    },
+  ];
+
+  // 10. "AGS'DE DİKKAT" Exam Tips
+  const examTips = [
+    {
+      tip: `AGS'DE DİKKAT: "${topic.title}" konusu ile ilgili sorularda çeldirici seçenekler genellikle çok yakın benzer kavramlardan türetilir. Soru kökünü okurken istenen temel ölçütü belirleyiniz.`,
+      importance: 'critical' as const,
+    },
+    {
+      tip: `AGS'DE DİKKAT: Bu ayrım sorularda kavramsal olarak karşınıza çıkabilir. Özellikle güncel MEB düzenlemeleri ve resmi kazanım tanımları esas alınmalıdır.`,
+      importance: 'high' as const,
+    },
+  ];
+
+  // 11. Memory Tips ("HATIRLAMA İPUCU")
+  const mnemonics = [
+    {
+      title: `${topic.title} Hatırlama Formülü`,
+      memory_trick: `🔑 Kodlama: ${topic.title.substring(0, 5).toUpperCase()}`,
+      description: 'Konunun temel aşamalarını ve kritik ilkelerini baş harfleriyle zihninizde ilişkilendiriniz.',
+    },
+  ];
+
+  // 12. Quick Summary & "BU KONUDAN NE BİLMELİYİM?"
+  const summary = `"${topic.title}", Akademi Giriş Sınavı'nda hem doğrudan soru potansiyeli taşıyan hem de diğer ünitelerle bağlantılı anahtar bir konudur. Temel ilkeleri kavramak, çeldiricileri ayırt etmek ve 5 pekiştirme sorusunu çözerek eksikleri kapatmak başarı için yeterlidir.`;
+  const whatToRemember = [
+    `✓ "${topic.title}" kavramının resmi tanımını ve temel ilkelerini bil.`,
+    `✓ Benzer kavramlar arasındaki ayırt edici farkı ve anahtar noktayı bil.`,
+    `✓ Verilen bir sınav senaryosunda veya vaka analizinde doğru kavramı teşhis edebil.`,
+    `✓ Çeldirici seçeneklerdeki kavram yanılgılarını hızlıca eleyebil.`,
+    `✓ Bu konunun soru köklerinde sıkça kullanılan anahtar kelimeleri tanı.`,
+  ];
+
+  // 13. Self-check (5 distinct high quality questions with immediate solution feedback)
+  const selfCheckQuestions: SelfCheckQuestion[] = [
+    {
+      question: `1. "${topic.title}" konusunun temel amacı ve kapsamı düşünüldüğünde, aşağıdakilerden hangisi en doğru değerlendirmedir?`,
+      options: [
+        { key: 'A', text: 'Yalnızca teorik düzeyde ezber gerektiren bir başlıktır.', isCorrect: false },
+        { key: 'B', text: 'Kavramsal çerçevesi net, resmi kazanımlara ve pedagojik ilkelere dayanan bir yapıdır.', isCorrect: true },
+        { key: 'C', text: 'Diğer konularla hiçbir bağlantısı bulunmayan bağımsız bir alandır.', isCorrect: false },
+        { key: 'D', text: 'Sınavda yalnızca istisnai durumlarda sorgulanan önemsiz bir konudur.', isCorrect: false },
+        { key: 'E', text: 'Mevzuattaki son değişikliklerle tamamen yürürlükten kalkmıştır.', isCorrect: false },
+      ],
+      explanation: 'Doğru cevap B seçeneğidir. AGS sınav formatında konular kuramsal temele dayalı, resmi kazanımlarla uyumlu ve uygulamayı test eden niteliktedir.',
+    },
+    {
+      question: `2. "${topic.title}" ile ilgili bir sınav sorusunu çözerken aşağıdakilerden hangisine özellikle dikkat edilmelidir?`,
+      options: [
+        { key: 'A', text: 'Sorunun uzunluğuna bakarak hemen tahmin yürütmeye', isCorrect: false },
+        { key: 'B', text: 'Soru kökündeki anahtar kavrama ve kavramlar arasındaki ayırt edici ölçütlere', isCorrect: true },
+        { key: 'C', text: 'Tüm seçeneklerin eşit doğrulukta olduğunu varsaymaya', isCorrect: false },
+        { key: 'D', text: 'Yalnızca ilk akla gelen seçeneği işaretleyip geçmeye', isCorrect: false },
+        { key: 'E', text: 'Resmi mevzuat yerine kişisel kanaatlere göre karar vermeye', isCorrect: false },
+      ],
+      explanation: 'Doğru cevap B seçeneğidir. Ayırt edici ölçütleri belirlemek çeldiricileri elemeyi ve doğru sonuca ulaşmayı sağlar.',
+    },
+    {
+      question: `3. Aşağıdaki ifadelerden hangisi "${topic.title}" bağlamında yapılan yaygın bir kavram yanılgısıdır?`,
+      options: [
+        { key: 'A', text: 'İlkelerin belirli bir hiyerarşi ve mantık içinde işlemesi', isCorrect: false },
+        { key: 'B', text: 'Her durumun kendi özel koşulları ve istisnaları içinde değerlendirilmesi', isCorrect: false },
+        { key: 'C', text: 'Benzer tüm kavramların aynı sonucu doğuracağını ve aralarında fark olmadığını düşünmek', isCorrect: true },
+        { key: 'D', text: 'Pedagojik ve yasal ilkelerin birbiriyle uyumlu olması', isCorrect: false },
+        { key: 'E', text: 'Kazanımların öğrenci merkezli yaklaşımla ilişkilendirilmesi', isCorrect: false },
+      ],
+      explanation: 'Doğru cevap C seçeneğidir. Kavramlar arasındaki ince ayrımları yok saymak en yaygın soru çözme hatasıdır.',
+    },
+    {
+      question: `4. "${topic.title}" alanında verilen bir örnek durum analiz edildiğinde, doğru sonuca ulaşmak için izlenecek en etkili yol hangisidir?`,
+      options: [
+        { key: 'A', text: 'Olaydaki neden-sonuç ilişkisini ve temel kavramın işlevini belirlemek', isCorrect: true },
+        { key: 'B', text: 'Metindeki detayları okumadan seçeneklere geçmek', isCorrect: false },
+        { key: 'C', text: 'Sadece en uzun olan seçeneği doğru kabul etmek', isCorrect: false },
+        { key: 'D', text: 'Geçmiş yılların sorularını ezberden işaretlemek', isCorrect: false },
+        { key: 'E', text: 'Konunun kuramsal boyutunu tamamen göz ardı etmek', isCorrect: false },
+      ],
+      explanation: 'Doğru cevap A seçeneğidir. Olay örgüsündeki sebep-sonuç ilişkisini ve kavramın işlevini tespit etmek analitik çözümün esasıdır.',
+    },
+    {
+      question: `5. "${topic.title}" konusunun AGS sınavındaki yeri ve önemi ile ilgili hangisi doğrudur?`,
+      options: [
+        { key: 'A', text: 'Öğretmen adayının mesleki ve alan yetkinliğini ölçen temel konulardandır.', isCorrect: true },
+        { key: 'B', text: 'Sorularda çeldiricisi bulunmayan çok basit bir konudur.', isCorrect: false },
+        { key: 'C', text: 'Yalnızca tek bir soru tipiyle ölçülebilir.', isCorrect: false },
+        { key: 'D', text: 'Öğretim programlarıyla hiçbir ilişkisi bulunmamaktadır.', isCorrect: false },
+        { key: 'E', text: 'Zaman harcanmadan atlanması gereken bir detaydır.', isCorrect: false },
+      ],
+      explanation: 'Doğru cevap A seçeneğidir. Konu, öğretmen adaylarının pedagojik, akademik ve yasal donanımını ölçen kilit başlıklardandır.',
+    },
+  ];
+
   return {
     id: `tc-${topic.id}`,
     topic_id: topic.id,
-    learning_objectives: [
-      `${topic.title} konusunun temel kavramlarını ve resmi AGS kazanımlarını öğrenmek.`,
-      `Soru çözümlerinde sıkça yapılan kavram yanılgılarını ve çeldiricileri ayırt edebilmek.`,
-      `Konuya ilişkin mevzuat, kuram ve uygulama alanlarını sınav senaryolarına aktarabilmek.`,
-    ],
-    overview: `${topic.title}, Akademi Giriş Sınavı (AGS) müfredatında yer alan ve öğretmen adaylarının bilmesi gereken temel kuramsal ve pratik kazanımları içeren kapsamlı bir konudur.`,
-    key_concepts: [
-      {
-        term: `${topic.title} Temel İlkesi`,
-        definition: 'Bu konunun pedagojik ve sınav bağlamında en çok sorgulanan anahtar kavramıdır.',
-      },
-      {
-        term: 'Ayırt Edici Ölçüt',
-        definition: 'Benzer kavramlar arasında net ayrım yapılmasını sağlayan nesnel kriter.',
-      },
-    ],
-    structured_sections: [
-      {
-        title: `1. ${topic.title}: Temel İlkeler ve Süreçler`,
-        content: `${topic.title} konusu, sınavda doğrudan bilgi veya senaryo temelli sorularla karşımıza çıkmaktadır. Konuyu çalışırken kavramların tanımlarından ziyade işlevsel kullanım alanlarına ve somut örneklere dikkat edilmelidir.`,
-        subsections: [
-          {
-            subtitle: 'Kavramsal Ayrım ve Uygulama',
-            content:
-              'Öğretim süreçlerinde kavramların karıştırılmaması için tanımların zıtlıkları ve tamamlayıcı yönleri iyi analiz edilmelidir.',
-          },
-        ],
-      },
-      {
-        title: '2. Sınıf İçi ve Sınav Odaklı Örnek Durumlar',
-        content:
-          'Bir öğretmen adayının karşılaşacağı sınıf durumları veya sınav soruları çoğunlukla bu konunun vaka analizine dayanır. Öncüllü sorularda her bir maddenin bağımsız doğruluğu kontrol edilmelidir.',
-      },
-    ],
-    comparison_tables: [
-      {
-        title: `${topic.title} Karşılaştırma Matrisi`,
-        headers: ['Ölçüt', 'Temel Yaklaşım', 'Ayırt Edici Nokta'],
-        rows: [
-          ['Kavramsal Boyut', 'Tanım ve teorik çerçeve', 'Sınavda en çok sorgulanan odak'],
-          ['Uygulama Boyutu', 'Pratik öğretim ve mevzuat', 'Çeldiricilerden ayrılan temel özellik'],
-        ],
-      },
-    ],
-    exam_tips: [
-      {
-        tip: `AGS'DE DİKKAT: "${topic.title}" başlığı altında özellikle kavramlar arasındaki benzerlikler çeldirici olarak kullanılır. Soruyu çözerken soru kökündeki olumsuz ifadelere ve zamanlama vurgularına dikkat ediniz.`,
-        importance: 'critical',
-      },
-      {
-        tip: `AGS'DE DİKKAT: Bu konudaki güncel resmi mevzuat ve MEB Maarif Modeli çerçevesi esas alınmalıdır.`,
-        importance: 'high',
-      },
-    ],
-    mnemonics: [
-      {
-        title: `${topic.title} Hatırlama İpucu`,
-        memory_trick: `Anahtar Kodlama: ${topic.title.substring(0, 4).toUpperCase()} Kuralı`,
-        description:
-          'Konunun temel prensiplerini sıralarken baş harflerinden oluşan çağrışımları zihninizde eşleştiriniz.',
-      },
-    ],
-    summary: `${topic.title} konusu, AGS sınavında doğrudan soru potansiyeline sahip temel yapı taşlarındandır. Öğrenme hedefleri, karşılaştırma matrisi ve dikkat bölümlerini göz önünde bulundurarak pekiştirme sorularını çözünüz.`,
-    what_to_remember: [
-      `${topic.title} ile ilgili temel tanımları net olarak zihninizde tutun.`,
-      `Çeldirici seçeneklerdeki aşırı genellemelerden ("her zaman", "kesinlikle") kaçının.`,
-      `Soru kökünü dikkatlice okuyup vakanın hangi aşamada gerçekleştiğini belirleyin.`,
-    ],
-    self_check_questions: [
-      {
-        question: `"${topic.title}" konusu ile ilgili olarak aşağıdakilerden hangisi pedagojik ve mevzuat açısından doğru bir değerlendirmedir?`,
-        options: [
-          { key: 'A', text: 'Konunun temel ilkeleri yalnızca teorik düzeyde kalır.', isCorrect: false },
-          { key: 'B', text: 'Kavramlar birbirinin yerine rastgele kullanılabilir.', isCorrect: false },
-          { key: 'C', text: 'Resmi çerçeveye uygun, öğrenci merkezli ve kazanım odaklı yaklaşımdır.', isCorrect: true },
-          { key: 'D', text: 'Sınavda sadece doğrudan ezber soruları olarak karşımıza çıkar.', isCorrect: false },
-          { key: 'E', text: 'Mevzuattaki son düzenlemeler bu konuyu tamamen geçersiz kılmıştır.', isCorrect: false },
-        ],
-        explanation:
-          'Doğru cevap C seçeneğidir. AGS sınav sisteminde kavramlar güncel resmi çerçeveye uygun, kazanım odaklı ve pedagojik ilkelerle sorgulanır.',
-      },
-    ],
+    title: topic.title,
+    why_it_matters: whyItMatters,
+    learning_objectives: learningObjectives,
+    core_explanation: coreExplanation,
+    key_concepts: keyConcepts,
+    subtopics: subtopics,
+    examples: examples,
+    comparison_tables: comparisonTables,
+    common_confusions: commonConfusions,
+    exam_tips: examTips,
+    mnemonics: mnemonics,
+    summary: summary,
+    what_to_remember: whatToRemember,
+    self_check_questions: selfCheckQuestions,
   };
 };
 

@@ -54,19 +54,46 @@ export interface TopicSection {
   subsections?: { subtitle: string; content: string }[];
 }
 
+export interface TopicExample {
+  title: string;
+  scenario: string;
+  analysis: string;
+  domain?: string;
+}
+
+export interface CommonConfusion {
+  wrong_belief: string;
+  correct_distinction: string;
+  tip?: string;
+}
+
+export interface SubTopicDetail {
+  id: string;
+  number: string;
+  title: string;
+  content: string;
+  key_takeaway?: string;
+}
+
 export interface TopicContent {
   id: string;
   topic_id: string;
-  learning_objectives: string[];
-  overview: string;
-  key_concepts: { term: string; definition: string; icon?: string }[];
-  structured_sections: TopicSection[];
-  comparison_tables?: ComparisonTable[];
-  exam_tips: { tip: string; importance: 'high' | 'medium' | 'critical' }[]; // AGS'DE DİKKAT
-  mnemonics?: { title: string; memory_trick: string; description: string }[]; // Hatırlama İpucu
-  summary: string;
-  what_to_remember: string[]; // "Neleri Hatırlamalıyım?"
-  self_check_questions?: SelfCheckQuestion[];
+  title?: string;
+  overview?: string;
+  why_it_matters?: string; // 2. "Neden Öğrenmeliyim?"
+  learning_objectives: string[]; // 3. Öğrenme Hedefleri
+  core_explanation?: string; // 4. Konu Anlatımı
+  key_concepts: { term: string; definition: string; practical_meaning?: string; icon?: string }[]; // 5. Temel Kavramlar & Tanımlar
+  subtopics?: SubTopicDetail[]; // 6. Alt Başlıklar
+  examples?: TopicExample[]; // 7. Örnekler & Sınıf/Uygulama Vakaları
+  comparison_tables?: ComparisonTable[]; // 8. Karşılaştırma Tabloları
+  common_confusions?: CommonConfusion[]; // 9. Karıştırılan Noktalar
+  exam_tips: { tip: string; importance: 'high' | 'medium' | 'critical' }[]; // 10. AGS'DE DİKKAT
+  mnemonics?: { title: string; memory_trick: string; description: string }[]; // 11. Hatırlama İpucu
+  summary: string; // 12. Özet
+  what_to_remember: string[]; // 12. "Bu Konudan Ne Bilmeliyim?"
+  self_check_questions?: SelfCheckQuestion[]; // 13. Kendini Dene (5 soru)
+  structured_sections?: TopicSection[];
 }
 
 export type QuestionType =
