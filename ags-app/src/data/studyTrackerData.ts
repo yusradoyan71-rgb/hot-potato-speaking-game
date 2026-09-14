@@ -90,6 +90,15 @@ export const AGS_STUDY_PLANS: SubjectStudyPlan[] = [
         note: 'Denklem kurma, grafik okuma ve mantık sorularında pratik yaklaşım',
         taskId: 'task-vid-say-2',
       },
+      {
+        id: 'vid-say-3',
+        title: 'Tablo ve Grafik Yorumlama',
+        channel: 'AGS Hazırlık Akademisi',
+        duration: '45 dk',
+        url: 'https://www.youtube.com/results?search_query=ags+tablo+ve+grafik+yorumlama',
+        note: 'Konu anlatım videosu — Daire, sütun ve çizgi grafik analizleri',
+        taskId: 'task-vid-say-3',
+      },
     ],
     exams: [
       { id: 'ex-say-1', title: 'Sayısal Yetenek Branş Denemesi (15 Soru)', question_count: 15, duration_mins: 25, taskId: 'task-ex-say-1' },
