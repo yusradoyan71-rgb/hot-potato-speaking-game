@@ -184,7 +184,7 @@ export const AGS_STUDY_PLANS: SubjectStudyPlan[] = [
     ],
   },
 
-  // 4. TÜRKİYE COĞRAFYASI (%7.5)
+  // 4. TÜRKİYE COĞRAFYASI (%7.5 - 2 ANA BAŞLIK)
   {
     id: 'plan-cografya',
     subject_id: 'cografya',
@@ -193,36 +193,15 @@ export const AGS_STUDY_PLANS: SubjectStudyPlan[] = [
     icon: 'Globe2',
     weight_percentage: 7.5,
     question_count_in_ags: 6,
-    description: 'Fiziki, beşeri ve ekonomik coğrafya, harita yorumlama ve kalkınma projeleri çalışma görevleri.',
+    description: 'Türkiye Coğrafyası 2 ana konu çalışma ve takip listesi.',
     sections: [
       {
-        id: 'sec-cog-1',
-        title: '1. Türkiye\'nin Fiziki Coğrafyası',
-        description: 'Konum, yer şekilleri, iklim, su varlığı ve doğal afetler',
+        id: 'sec-cog-main',
+        title: 'Coğrafya Konu Çalışmaları',
+        description: 'Çalışmanızı tamamladığınız konuyu işaretleyin (2 Görev = %100)',
         tasks: [
-          { id: 'st-cg-1-1', text: 'Türkiye\'nin Matematiksel (Mutlak) Konumu ve Enlem Etkileri sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-2', text: 'Türkiye\'nin Özel (Göreceli) ve Jeopolitik Konumu sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-3', text: 'Türkiye\'nin Yer Şekilleri (Dağlar, Platolar, Ovalar) sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-4', text: 'Türkiye\'nin Akarsuları, Gölleri ve Barajları sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-5', text: 'Dış Kuvvetler (Rüzgarlar, Karstik Şekiller, Buzullar, Dalga-Kıyı Tipleri) sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-6', text: 'Türkiye\'de İklim Elemanları (Sıcaklık, Basınç, Rüzgar, Nem, Yağış) sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-7', text: 'Türkiye\'nin İklim Tipleri ve Bitki Örtüsü Dağılışı sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-1-8', text: 'Türkiye\'de Toprak Türleri, Erozyon ve Doğal Afetler sorularını çözdüm', category: 'concept' },
-        ],
-      },
-      {
-        id: 'sec-cog-2',
-        title: '2. Beşeri ve Ekonomik Coğrafya',
-        description: 'Nüfus, göç, tarım, hayvancılık, madenler, sanayi ve kalkınma projeleri',
-        tasks: [
-          { id: 'st-cg-2-1', text: 'Türkiye\'de Nüfusun Dağılışı, Yoğunluğu ve Nüfus Piramidi sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-2', text: 'Türkiye\'de Göç Hareketleri ve Şehirleşme Özellikleri sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-3', text: 'Türkiye\'de Tarım (Tarım Ürünlerinin Bölgesel Dağılışı) ve Sulama sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-4', text: 'Türkiye\'de Hayvancılık Türleri ve Ormancılık Faaliyetleri sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-5', text: 'Türkiye\'nin Madenleri ve Enerji Kaynakları (Yenilenebilir/Fosil) sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-6', text: 'Türkiye\'de Sanayi Kollarının Dağılışı ve Kuruluş Faktörleri sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-7', text: 'Türkiye\'de Ulaşım, Ticaret, Limanlar ve Turizm Değerleri sorularını çözdüm', category: 'concept' },
-          { id: 'st-cg-2-8', text: 'Bölgesel Kalkınma Projeleri (GAP, DOKAP, DAP, KOP, ZBK) sorularını çözdüm', category: 'concept' },
+          { id: 'st-cg-1', text: 'Türkiye Fiziki Coğrafyası', category: 'concept' },
+          { id: 'st-cg-2', text: 'Türkiye Beşerî ve Ekonomik Coğrafyası', category: 'concept' },
         ],
       },
     ],
