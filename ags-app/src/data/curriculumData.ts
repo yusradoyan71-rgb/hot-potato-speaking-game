@@ -415,12 +415,446 @@ export const AGS_TOPICS: Topic[] = rawTopicsConfig.map((item, index) => ({
   estimated_minutes: item.mins,
 }));
 
+// Dedicated AGS Sözel Yetenek Content Engine (KAVRAM → CÜMLE → PARAGRAF → YORUM → ÇIKARIM → SORU ÇÖZME)
+const generateSozelTopicContent = (topic: Topic): TopicContent => {
+  if (topic.id === 'topic-sozel-1-1' || topic.title === 'Sözcükte Anlam') {
+    return {
+      id: `tc-${topic.id}`,
+      topic_id: topic.id,
+      title: 'Sözcükte Anlam',
+      why_it_matters: 'Sözcükte Anlam, tek başına bir ezber konusu değil; AGS Türkçe, paragraf yorumu ve sözel akıl yürütmenin temel taşıdır. Bir sözcüğün anlamını cümledeki bağlamından kopararak tek başına sözlük anlamıyla yorumlamak, cümlenin ve nihayetinde tüm paragrafın ana düşüncesini yanlış anlamaya yol açar. Bu konu, sözcüklerin metin içinde yüklendiği anlam katmanlarını ve bağlamsal incelikleri tespit etmenizi sağlar.',
+      learning_objectives: [
+        'Bir sözcüğün tek başına değil, cümle ve metin bağlamı içinde kazandığı anlamı doğru tespit edebilmek.',
+        'Aynı sözcüğün farklı cümle bağlamlarında kazandığı anlam değişikliklerini (somut, soyut, mecazi) ayırt edebilmek.',
+        'Sözcüğün anlamını doğru belirleyerek cümle ve paragraf düzeyinde doğru çıkarım yapabilmek.',
+        'Sınav sorularında sözcüğün sözlük anlamı ile bağlamsal anlamı arasındaki çeldirici farkları eleyebilmek.',
+        'Metindeki örtülü anlamları ve sözcük seçiminin paragrafa kattığı anlatım zenginliğini analiz edebilmek.',
+      ],
+      core_explanation: `## 1. Sözcüğün Anlamını Belirleme: Bağlamın Gücü
+Bir sözcüğün anlamı sözlükteki tek bir tanıma hapsedilemez. Sözcük; içinde yer aldığı cümle, yanındaki diğer sözcükler ve metnin genel atmosferi ile anlam kazanır. Bir sözcük tek başına düşünüldüğünde akla ilk gelen anlamıyla (temel anlam) sınırlı kalırken, cümle içinde yepyeni anlam alanlarına genişleyebilir.
+
+Örnek İnceleme: "İnce" sözcüğü:
+* "İnce bir dalı eline aldı." → Boyutça dar, kalın karşıtı (Gerçek / Temel Anlam)
+* "Tören boyunca çok ince bir davranış sergiledi." → Nazik, kibar, düşünceli (Mecaz Anlam)
+* "Gelecek ayı kurtarmak için ince bir hesap yaptı." → Ayrıntılı, titiz, derinlemesine (Mecaz / Yan Anlam)
+
+## 2. Gerçek, Mecaz ve Terim Anlamın Bağlamsal İşlevi
+Bu kavramları bağımsız ezber kuralları olarak değil, cümlenin iletisini belirleyen işlevsel araçlar olarak görmek gerekir:
+* Gerçek (Temel) Anlam: Sözcüğün zihinde canlanan ilk, nesnel ve somut karşılığıdır.
+* Mecaz Anlam: Sözcüğün temel anlamından tamamen uzaklaşarak soyut, duygusal veya yeni bir anlam kazanmasıdır.
+* Terim Anlam: Belirli bir bilim, sanat, felsefe veya meslek dalına özgü kavramlaşmış kullanımdır. (Örn: "Öğretmen ders programında hedeflenen kazanımları açıkladı." - Pedagoji terimi).
+
+## 3. Sözcüğün Bağlamdaki Anlamı ve Çıkarım Becerisi
+AGS sorularında bir sözcüğün altı çizildiğinde yapılan en büyük hata, cümleyi okumadan sözcüğün ilk anlamını seçeneklerde aramaktır. Oysa yazar, o sözcüğü parçanın ana fikrine hizmet edecek özel bir anlam yükleyerek kullanmıştır.
+
+Örnek İnceleme: "Savunmak" sözcüğü:
+* "Bu düşünceyi savunmak için güçlü kanıtlar sundu." → Bir görüşü desteklemek, arkasında durmak, doğruluğunu iddia etmek
+* "Sınır boyundaki kaleyi savunmak için askerler görevlendirildi." → Düşman saldırısına karşı korumak, muhafaza etmek
+
+## 4. Sözcükten Cümleye ve Paragrafa Geçiş: Bu Konuyu Neden Öğrendik?
+Sözcük anlamı ile paragraf soruları doğrudan bağlantılıdır:
+1. Sözcüğün anlamını yanlış belirlemek → Cümlenin anlamını yanlış yorumlamaya yol açar.
+2. Cümlenin anlamını yanlış yorumlamak → Paragrafın ana düşüncesini ve yazarın bakış açısını yanlış saptamaya neden olur.
+3. Bu nedenle sözcük analizi, paragraf sorularında seçenekleri hızla eleyebilmenin ve çeldiricilere düşmemenin en güçlü anahtarıdır.`,
+      key_concepts: [
+        {
+          term: 'Bağlamsal Anlam',
+          definition: 'Sözcüğün cümledeki diğer sözcüklerle oluşturduğu anlam örgüsü içindeki gerçek karşılığıdır.',
+          practical_meaning: 'Sözcüğü cümleden çıkarmadan, tüm cümlenin akışına göre anlamlandırma becerisidir.',
+        },
+        {
+          term: 'Mecazi Anlam Kayması',
+          definition: 'Sözcüğün temel anlamından sıyrılarak metnin duygusal veya düşünsel iletisine göre yeni bir boyut kazanmasıdır.',
+          practical_meaning: 'Soyut fikirlerin somut sözcüklerle anlatılmasını sağlayan ve sorularda sıkça yoklanan anlam zenginliğidir.',
+        },
+        {
+          term: 'Anlamca Karşılık (Yerine Koyma)',
+          definition: 'Cümledeki sözcüğün yerine konulduğunda anlamın bütünlüğünü ve iletisini bozmayan ifadedir.',
+          practical_meaning: 'Soru çözerken şıktaki anlamı sözcüğün yerine koyup okuma testidir.',
+        },
+      ],
+      subtopics: [
+        {
+          id: `${topic.id}-sub-1`,
+          number: '1.1',
+          title: 'Sözcüğün Bağlamdaki Anlamını Belirleme',
+          content: 'Sözcüğün yüklemle, özneyle ve cümlenin genel iletisiyle kurduğu ilişki analiz edilir.',
+          key_takeaway: 'Cümleyi baştan sona okumadan altı çizili sözcüğe karar verilmez.',
+        },
+        {
+          id: `${topic.id}-sub-2`,
+          number: '1.2',
+          title: 'Aynı Sözcüğün Çok Anlamlılığı',
+          content: 'Türkçede bir sözcük bağlama göre onlarca farklı anlam kazanabilir. Şıklardaki sözlük anlamları çeldirici olarak kullanılır.',
+          key_takeaway: 'İlk akla gelen anlam değil, cümlenin ihtiyacı olan anlam esastır.',
+        },
+        {
+          id: `${topic.id}-sub-3`,
+          number: '1.3',
+          title: 'Sözcükten Paragraf Yorumuna Geçiş',
+          content: 'Paragraftaki anahtar sözcüklerin anlamını doğru yakalamak, ana düşünceyi ve yazarın tutumunu doğrudan ortaya çıkarır.',
+          key_takeaway: 'Ana düşünce sorularının çözümü doğru sözcük yorumundan geçer.',
+        },
+      ],
+      examples: [
+        {
+          title: 'Kısa Paragrafta Bağlam İncelemesi',
+          scenario: 'Bir yazarın dili, yalnızca kullandığı sözcüklerden ibaret değildir. Sözcüklerin bağlam içinde kazandığı anlamlar, yazarın anlatım biçimini ve okuyucuda oluşturduğu etkiyi belirler. Kimi zaman sıradan bir sözcük, ustalıklı bir kurguda okuru derinden sarsan bir anlam genişlemesine uğrar.',
+          analysis: 'Bu parçada "anlam genişlemesi" sözüyle anlatılmak istenen; sözcüklerin sözlükteki kuru tanımlarını aşarak metnin duygu ve düşünce evreninde yeni çağrışımlar üretmesidir.',
+          domain: 'Sözel Yetenek & Paragraf',
+        },
+      ],
+      comparison_tables: [
+        {
+          title: 'Sözcüklerin Bağlama Göre Anlam Değişim Tablosu',
+          headers: ['Sözcük', 'Örnek Cümle', 'Bağlamda Kazandığı Anlam', 'Soru Çözüm İpucu'],
+          rows: [
+            ['Açmak', 'Pencereyi sonuna kadar açtı.', 'Kapalı durumu sonlandırmak', 'Gerçek / Temel Anlam'],
+            ['Açmak', 'Bu açık renk ceket seni çok açtı.', 'Yakışmak, ferah ve canlı göstermek', 'Bağlamsal Mecaz'],
+            ['Açmak', 'Konuyu biraz daha açar mısınız?', 'Ayrıntılandırmak, anlaşılır kılmak', 'Soyutlama / Mecaz'],
+            ['Açmak', 'Yürüyüşten sonra içim açıldı.', 'Ferahlamak, rahatlamak, neşelenmek', 'Deyimleşmiş Anlam'],
+          ],
+        },
+      ],
+      common_confusions: [
+        {
+          wrong_belief: 'Altı çizili bir sözcük gördüğümde en çok bildiğim sözlük tanımını şıklarda işaretleyip geçerim.',
+          correct_distinction: 'Sözcüğün anlamı ancak içinde geçtiği cümlenin tamamı ve metnin bütünü incelenerek kesinleşir.',
+          tip: 'Şıktaki ifadeyi sözcüğün yerine koyup cümleyi tekrar okuyunuz.',
+        },
+        {
+          wrong_belief: 'Mecaz anlam yalnızca edebi sanatlarda ve şiirlerde bulunur.',
+          correct_distinction: 'Düşünce yazılarında, makalelerde ve günlük anlatımlarda da soyut kavramlar mecaz yoluyla somutlaştırılır.',
+          tip: 'Soyutlama ve anlam genişlemelerine dikkat ediniz.',
+        },
+      ],
+      exam_tips: [
+        {
+          tip: "AGS'DE DİKKAT: 'Bu parçadaki altı çizili sözcükle anlatılmak istenen...' sorularında, sözcüğün sözlükteki ilk anlamı güçlü bir çeldirici olarak A veya B seçeneğine konur. Metindeki bağlamsal vurguyu bulmadan işaretleme yapmayınız.",
+          importance: 'critical',
+        },
+        {
+          tip: "AGS'DE DİKKAT: Cümledeki bir sözcüğün anlamını doğru belirlemek, o cümlenin ana fikrini ve dolayısıyla paragraf sorusunun doğru yanıtını doğrudan belirler.",
+          importance: 'high',
+        },
+      ],
+      mnemonics: [
+        {
+          title: 'Cümle-İçi Yerine Koyma Metodu',
+          memory_trick: '🔑 YÖNTEM: Şıktaki Anlamı Cümleye Yerleştir',
+          description: 'Seçenekte verilen anlamı altı çizili sözcüğün yerine koyun; cümlenin mantığı ve bağlamı bozulmuyorsa doğru yanıttır.',
+        },
+      ],
+      summary: 'Sözcükte Anlam; kelimelerin tekil tanımlarından ziyade cümle ve paragraf bağlamında kazandığı işlevi kavramaktır. Bu beceri doğrudan cümle yorumu ve paragraf ana düşüncesi sorularının temelini oluşturur.',
+      what_to_remember: [
+        '✓ Bir sözcüğün anlamının cümleye ve bağlama göre değiştiğini bil.',
+        '✓ Sözcüğü tek başına değil, cümlenin tümüyle birlikte değerlendir.',
+        '✓ Yerine koyma yöntemini kullanarak şıkları metinle test et.',
+        '✓ Sözcükteki anlam inceliğinin paragrafın ana fikrini nasıl etkilediğini fark et.',
+        '✓ Günlük ilk anlamı içeren güçlü çeldiricilere karşı uyanık ol.',
+      ],
+      self_check_questions: [
+        {
+          question: '1. "Yazar, toplumsal meseleleri ele alırken dili bir süs eşyası gibi değil, gerçeğe tutulan yalın bir ayna gibi kullanmıştır."\n\nBu cümledeki "ayna gibi kullanmak" sözüyle anlatılmak istenen aşağıdakilerden hangisidir?',
+          options: [
+            { key: 'A', text: 'Olayları kendi hayal dünyasında yeniden kurgulamak', isCorrect: false },
+            { key: 'B', text: 'Gerçekleri değiştirmeden, olduğu gibi ve tarafsızca yansıtmak', isCorrect: true },
+            { key: 'C', text: 'Sanatlı ve süslü anlatımlarla okuru etkilemeye çalışmak', isCorrect: false },
+            { key: 'D', text: 'Sadece bireysel duyguları ve iç dünyayı dile getirmek', isCorrect: false },
+            { key: 'E', text: 'Geçmişte yaşanan olayları geleceğe aktarmaktan kaçınmak', isCorrect: false },
+          ],
+          explanation: 'Doğru cevap B seçeneğidir. "Ayna gibi kullanmak", aynanın nesneleri olduğu gibi yansıtma özelliğinden hareketle gerçekleri değiştirmeden, tarafsız ve yalın bir biçimde aktarmak anlamına gelir.',
+        },
+        {
+          question: '2. "Eleştirmen, genç şairin son kitabında kendi sesini bulduğunu ve taklit tuzaklarına düşmediğini vurguladı."\n\nBu cümledeki "kendi sesini bulmak" ifadesinin bağlamsal karşılığı aşağıdakilerden hangisidir?',
+          options: [
+            { key: 'A', text: 'Şiirlerini sesli olarak okumaktan zevk almak', isCorrect: false },
+            { key: 'B', text: 'Özgün bir üsluba ve kendine has bir anlatım tarzına ulaşmak', isCorrect: true },
+            { key: 'C', text: 'Geleneksel şiir formlarını eksiksiz tekrarlamak', isCorrect: false },
+            { key: 'D', text: 'Toplumun beklentilerine göre şiir yazmaya başlamak', isCorrect: false },
+            { key: 'E', text: 'Şiirlerinde müzikal ögelere daha fazla yer vermek', isCorrect: false },
+          ],
+          explanation: 'Doğru cevap B seçeneğidir. "Kendi sesini bulmak", sanatçının başkalarını taklit etmekten kurtulup kendine özgü, orijinal bir anlatım biçimi yakalamasını ifade eder.',
+        },
+        {
+          question: '3. "Eski dostunun bu zor gününde kendisine soğuk davranması, aralarındaki bağların ne denli zayıfladığını gösteriyordu."\n\nBu cümledeki "soğuk davranmak" ifadesi hangi anlam ilişkisine dayanmaktadır?',
+          options: [
+            { key: 'A', text: 'Düşük sıcaklığı bildiren gerçek anlam', isCorrect: false },
+            { key: 'B', text: 'İlgisiz, mesafeli ve sevgiden yoksun tutum bildiren mecaz anlam', isCorrect: true },
+            { key: 'C', text: 'Tıp ve fizik alanına ait bir terim anlam', isCorrect: false },
+            { key: 'D', text: 'Sadece hava durumuna bağlı bir benzetme', isCorrect: false },
+            { key: 'E', text: 'Teknik bir mesleki kavram', isCorrect: false },
+          ],
+          explanation: 'Doğru cevap B seçeneğidir. "Soğuk" sözcüğü sıcaklık anlamından uzaklaşarak ilgi ve yakınlığın azalması durumunu belirten mecaz bir anlam kazanmıştır.',
+        },
+        {
+          question: '4. (I) Bilim insanları doğadaki dengenin bozulmaması için sürekli uyarılarda bulunuyor. (II) Ancak tüketim alışkanlıklarımız bu uyarıların önüne geçiyor. (III) Doğaya verilen her zarar, geleceğimizi ipotek altına almaktadır. (IV) Bu nedenle acil eylem planlarının devreye sokulması zorunludur.\n\nBu parçadaki "ipotek altına almak" sözüyle anlatılmak istenen aşağıdakilerden hangisidir?',
+          options: [
+            { key: 'A', text: 'Maddi bir teminat karşılığında borçlanmak', isCorrect: false },
+            { key: 'B', text: 'Geleceği tehlikeye atmak, belirsiz ve riskli kılmak', isCorrect: true },
+            { key: 'C', text: 'Yasal süreçleri hızlandırmak', isCorrect: false },
+            { key: 'D', text: 'Tüm yatırımları gayrimenkule yönlendirmek', isCorrect: false },
+            { key: 'E', text: 'Uluslararası anlaşmaları askıya almak', isCorrect: false },
+          ],
+          explanation: 'Doğru cevap B seçeneğidir. Parçadaki bağlamda "ipotek altına almak", geleceğin güvencesini yok etmek ve onu riskli/tehlikeli bir duruma sokmak anlamında mecazi olarak kullanılmıştır.',
+        },
+        {
+          question: '5. Bir sözcüğün anlamını cümle ve paragraf bağlamında değerlendirmenin AGS sorularındaki en kritik faydası hangisidir?',
+          options: [
+            { key: 'A', text: 'Sözcüğün sözlükteki ilk tanımını ezberlemeyi kolaylaştırması', isCorrect: false },
+            { key: 'B', text: 'Cümlenin asıl iletisini doğru anlayarak paragraf ana düşüncesine hatasız ulaşmayı sağlaması', isCorrect: true },
+            { key: 'C', text: 'Sadece dil bilgisi ve imla kurallarını kontrol etmeye yaraması', isCorrect: false },
+            { key: 'D', text: 'Tüm paragrafları okumadan doğrudan soru çözdürmesi', isCorrect: false },
+            { key: 'E', text: 'Metindeki tüm yabancı kökenli sözcükleri tespit etmesi', isCorrect: false },
+          ],
+          explanation: 'Doğru cevap B seçeneğidir. Sözcüğü bağlamında okumak, cümlenin iletisini ve paragrafın ana fikrini eksiksiz kavrayıp çeldiricileri elemeyi sağlar.',
+        },
+      ],
+    };
+  }
+
+  // General Sözel Yetenek & Paragraf / Sözel Mantık generator
+  const isParagraf = topic.unit_id === 'unit-sozel-2';
+  const isSozelMantik = topic.title.includes('Mantık') || topic.title.includes('Sıralama') || topic.title.includes('Koşullu') || topic.title.includes('Tablo');
+
+  let whyItMatters = '';
+  let coreExplanation = '';
+  let keyConceptTerm = '';
+  let keyConceptDef = '';
+  let examTip = '';
+  let mnemonic = '';
+  let q1Text = '';
+  let q1Ans = '';
+  let q1OptA = '';
+  let q1OptB = '';
+  let q1OptC = '';
+  let q1Exp = '';
+
+  if (isSozelMantik) {
+    whyItMatters = `"${topic.title}", AGS Sözel Yetenek testinin en belirleyici ve zaman kazandırıcı bölümüdür. Ezber değil; verilen ipuçlarını tabloya dökmek, kesin bilgileri olasılıklardan ayırmak ve sistematik akıl yürütme becerisi gerektirir.`;
+    coreExplanation = `## 1. Sözel Mantıkta Temel Strateji: Tablo Oluşturma
+Sözel mantık soruları zihinden çözülemez. Soruda verilen değişkenleri (kişiler, günler, sıralar, mekanlar) doğru kurgulanmış bir tabloya yerleştirmek çözümün %80'idir.
+
+## 2. Kesin Bilgi vs. Olasılık Ayrımı
+* Kesin Bilgiler: Tabloya doğrudan yazılan, yeri değişmeyen verilerdir. (Örn: "Ahmet 3. sıradadır.")
+* Olasılıklar / Koşullar: Birden fazla ihtimali olan durumlardır. (Örn: "Elif, Burak'tan hemen önceki sıradadır.")
+
+## 3. Soru Köklerine Göre Çözüm
+* "Kesinlikle doğrudur/yanlıştır": Olasılıklara bağlı olmayan, her senaryoda değişmeyen sonucu arayın.
+* "Hangisi olabilir": İhtimal dahilinde olan, kurallarla çelişmeyen seçeneği arayın.`;
+    keyConceptTerm = 'Değişkenler Tablosu';
+    keyConceptDef = 'Sorudaki sabit ve hareketli unsurları görselleştirerek olasılıkları netleştiren şablon.';
+    examTip = "AGS'DE DİKKAT: Sözel mantıkta önce kesin öncülleri yerleştirin, olumsuz ('...değildir') ifadeleri tablonun kenarına not edin.";
+    mnemonic = '🔑 Kural: KESİN OLANLARI YAZ, OLASILIKLARI ÇATALLANDIR';
+    q1Text = 'Bir sözel mantık sorusunda "Ahmet ve Burak farklı günlerde nöbet tutmuştur." öncülü verildiğinde izlenecek en doğru yaklaşım hangisidir?';
+    q1OptA = 'Ahmet ve Burak’ın nöbet günlerinin asla aynı sütuna yazılamayacağını belirleyip olasılıkları buna göre elemek';
+    q1OptB = 'Ahmet’i rastgele ilk güne yazıp Burak’ı unutmak';
+    q1OptC = 'Bu öncülün hiçbir anlam ifade etmediğini varsaymak';
+    q1Ans = 'A';
+    q1Exp = 'Farklı günlerde olma koşulu, iki kişinin aynı zaman diliminde kesişemeyeceğini gösteren kesin bir kısıtlamadır.';
+  } else if (isParagraf) {
+    whyItMatters = `"${topic.title}", paragraf sorularında metnin iletmek istediği asıl düşünceyi yakalama, yapıyı çözme ve çeldirici seçenekleri hızla eleme becerisi kazandırır. AGS'de zamanı doğru kullanmanın ve netleri artırmanın merkezindedir.`;
+    coreExplanation = `## 1. Paragrafı Anlama ve Soru Kökü Analizi
+Paragraf sorularında önce soru kökü okunmalı, metinden ne istendiği (ana fikir, konu, yardımcı fikir, akış bozma) netleştirilmelidir.
+
+## 2. Ana Düşünceyi Bulma ve Çeldiricileri Eleme
+* Ana Düşünce: Yazarın okura vermek istediği asıl mesaj, metnin yazılış amacıdır.
+* Çeldirici Tuzakları:
+  - Aşırı Genelleme: Parçada sadece bir grup için söylenen sözün tüm evrene genellenmesi.
+  - Kapsam Daraltma: Parçanın sadece bir cümlesini doğru yansıtıp bütünü kapsamaması.
+  - Metin Dışı Yorum: Mantıklı görünse de paragrafta hiç değinilmemiş bilginin şıkta yer alması.
+
+## 3. Paragrafın Yapısı ve Akış
+Giriş, gelişme ve sonuç cümleleri mantıksal bir zincirle birbirine bağlanır. Bağlantı ögeleri ('bu nedenle', 'oysa', 'nitekim') düşüncenin yönünü belirler.`;
+    keyConceptTerm = 'Ana Düşünce Filtresi';
+    keyConceptDef = 'Metnin tamamını kucaklayan, yazarın asıl savunmak istediği temel tez.';
+    examTip = "AGS'DE DİKKAT: Seçenek doğru bir bilgi içerse bile, paragrafın tamamını kapsamıyorsa ana düşünce olamaz.";
+    mnemonic = '🔑 Kural: METNİN DIŞINA ÇIKMA, YAZARIN YERİNE DÜŞÜN';
+    q1Text = 'Bir paragrafın ana düşüncesi aranırken seçeneklerden hangisi doğrudan elenmelidir?';
+    q1OptA = 'Parçanın sadece tek bir örneğini özetleyen dar kapsamlı seçenek';
+    q1OptB = 'Metnin bütününde savunulan genel yargıyı veren seçenek';
+    q1OptC = 'Yazarın vurgulamak istediği temel sonucu yansıtan seçenek';
+    q1Ans = 'A';
+    q1Exp = 'Yalnızca tek bir örneği veya yardımcı düşünceyi içeren seçenekler ana düşünce olamaz; kapsamı dar olduğu için elenmelidir.';
+  } else {
+    whyItMatters = `"${topic.title}", cümle düzeyinde anlam ilişkilerini (neden-sonuç, amaç-sonuç, karşılaştırma, kesinlik-olasılık) doğru kavramak ve paragraf sorularındaki anlamsal geçişleri hatasız okumak için temeldir.`;
+    coreExplanation = `## 1. Cümlede Anlam İlişkileri ve Yargı Analizi
+Cümle, bir duyguyu veya düşünceyi eksiksiz aktaran birimdir. Cümledeki ekler ve bağlaçlar anlam ilişkisinin türünü belirler.
+
+## 2. Neden-Sonuç vs. Amaç-Sonuç Ayrımı
+* Neden-Sonuç (Gerekçe): Eylem gerçekleşmiştir, bir nedene bağlıdır. (-dığı için, sebebiyle)
+* Amaç-Sonuç (Gaye): Hedeflenen durum henüz gerçekleşmemiştir, bir gaye vardır. (-mak amacıyla, diye)
+* Koşul-Sonuç (Şart): Bir durumun gerçekleşmesi başka bir şarta bağlıdır. (-se/-sa, şartıyla)
+
+## 3. Cümlenin Yorumu ve Örtülü Anlam
+Cümlede açıkça yazılmayan ancak kullanılan sözcüklerden zorunlu olarak çıkarılan anlamlara "örtülü anlam" denir. (Örn: "Ahmet yine birinci oldu." → Daha önce de birinci olmuştur.)`;
+    keyConceptTerm = 'Örtülü Anlam ve Çıkarım';
+    keyConceptDef = 'Cümlenin doğrudan söylemediği ancak mantıksal olarak kesinlikle doğru olan yan anlam.';
+    examTip = "AGS'DE DİKKAT: Amaç-sonuç cümlelerinde 'amacıyla' ifadesini yerine koyduğunuzda anlam bozulmaz.";
+    mnemonic = '🔑 Kural: NEDEN = GERÇEKLEŞMİŞ / AMAÇ = HEDEFLENEN';
+    q1Text = 'Aşağıdaki cümlelerin hangisinde amaç-sonuç ilişkisi vardır?';
+    q1OptA = 'Sınavda başarılı olmak amacıyla her gün düzenli paragraf çözüyordu.';
+    q1OptB = 'Yağmur şiddetlendiği için eve dönmek zorunda kaldılar.';
+    q1OptC = 'Uykusunu alamadığından gün boyu yorgun hissetti.';
+    q1Ans = 'A';
+    q1Exp = 'A seçeneğinde düzenli soru çözme eylemi "başarılı olma gayesine" yöneliktir (-mak amacıyla).';
+  }
+
+  return {
+    id: `tc-${topic.id}`,
+    topic_id: topic.id,
+    title: topic.title,
+    why_it_matters: whyItMatters,
+    learning_objectives: [
+      `"${topic.title}" konusunun sınavda ölçülen beceri ve mantık kurallarını kavramak.`,
+      'Metin, cümle ve seçenekler arasındaki anlamsal ilişkileri hızlıca çözümleyebilmek.',
+      'Aşırı genelleme, kapsam daraltma ve metin dışı bilgi içeren çeldiricileri eleyebilmek.',
+      'Sözel akıl yürütme adımlarını uygulayarak kesin doğru yanıta ulaşabilmek.',
+    ],
+    core_explanation: coreExplanation,
+    key_concepts: [
+      {
+        term: keyConceptTerm,
+        definition: keyConceptDef,
+        practical_meaning: 'Soru çözerken şıkları elemede kullanılan temel ayırt edici ölçüttür.',
+      },
+      {
+        term: 'Bağlamsal Çıkarım',
+        definition: 'Metindeki ipuçlarından hareketle kesin ve mantıklı yargıya ulaşma sürecidir.',
+        practical_meaning: 'Kişisel yorum katmadan yalnızca metne sadık kalarak sonuca ulaşmaktır.',
+      },
+    ],
+    subtopics: [
+      {
+        id: `${topic.id}-sub-1`,
+        number: '1.1',
+        title: 'Kavramsal Mantık ve Soru Kökü Analizi',
+        content: `Bu başlık altında ${topic.title} konusunun soru kökü kurgusu ve metin analizi incelenir.`,
+        key_takeaway: 'Önce soru kökünü oku, ardından metindeki anahtar ipuçlarını yakala.',
+      },
+      {
+        id: `${topic.id}-sub-2`,
+        number: '1.2',
+        title: 'Çeldirici Eleme ve Seçenek Analizi',
+        content: 'Seçeneklerdeki kelime oyunları, anlam kaymaları ve eksik vurgular incelenir.',
+        key_takeaway: 'Metinde geçmeyen genel geçer doğrulara kanma.',
+      },
+    ],
+    examples: [
+      {
+        title: `${topic.title} Örnek Soru Analizi`,
+        scenario: 'Metin: "Eleştiri, bir eserin eksiklerini yüzüne vurmak değil; onun sanatsal değerini ortaya çıkaracak gizli yolları aydınlatmaktır."',
+        analysis: 'Bu cümlede eleştirinin yıkıcı bir kusur bulma aracı değil, eseri anlamlandıran ve yol gösteren yapıcı bir kılavuz olduğu vurgulanmıştır.',
+        domain: 'Sözel Yetenek',
+      },
+    ],
+    comparison_tables: [
+      {
+        title: `${topic.title} Ayırt Etme Tablosu`,
+        headers: ['Ölçüt', 'Doğru Yaklaşım', 'Çeldirici Tuzak'],
+        rows: [
+          ['Metne Bağlılık', 'Yalnızca parçada verilen bilgiyi esas almak', 'Kendi kişisel fikrini veya genel kültürünü katmak'],
+          ['Kapsam', 'Metnin tamamını kucaklayan seçeneği bulmak', 'Sadece tek bir örneğe odaklanan dar şıkkı seçmek'],
+        ],
+      },
+    ],
+    common_confusions: [
+      {
+        wrong_belief: 'Seçenekteki cümle mantıklı ve doğru bir bilgi içeriyorsa kesinlikle doğru cevaptır.',
+        correct_distinction: 'Seçenek ne kadar doğru olursa olsun, metinde geçmiyorsa veya metnin odağı değilse YANLIŞTIR.',
+        tip: 'Şıktaki her kelimenin metindeki karşılığını arayınız.',
+      },
+    ],
+    exam_tips: [
+      {
+        tip: examTip,
+        importance: 'critical',
+      },
+    ],
+    mnemonics: [
+      {
+        title: `${topic.title} Çözüm İlkesi`,
+        memory_trick: mnemonic,
+        description: 'Soru çözerken bu zihinsel kuralı uygulayarak çeldiricileri hızla eleyin.',
+      },
+    ],
+    summary: `${topic.title} konusu, AGS Sözel Yetenek testinde okuduğunu anlama, bağlamdan çıkarım yapma ve çeldiricileri eleme becerisini ölçer.`,
+    what_to_remember: [
+      `✓ ${topic.title} ile ilgili soru kökünün ne istediğini net belirle.`,
+      '✓ Metnin dışına çıkmadan yalnızca verilen ipuçlarını değerlendir.',
+      '✓ Aşırı genelleme ve kapsam daraltması yapan şıkları doğrudan ele.',
+      '✓ Seçenekleri birbiriyle değil, doğrudan metinle karşılaştır.',
+    ],
+    self_check_questions: [
+      {
+        question: `1. ${q1Text}`,
+        options: [
+          { key: 'A', text: q1OptA, isCorrect: q1Ans === 'A' },
+          { key: 'B', text: q1OptB, isCorrect: q1Ans === 'B' },
+          { key: 'C', text: q1OptC, isCorrect: q1Ans === 'C' },
+          { key: 'D', text: 'Sorunun çözümünü tamamen şansa bırakmak', isCorrect: false },
+          { key: 'E', text: 'Tüm seçeneklerin aynı anda doğru olduğunu varsaymak', isCorrect: false },
+        ],
+        explanation: `Doğru cevap ${q1Ans} seçeneğidir. ${q1Exp}`,
+      },
+      {
+        question: `2. "${topic.title}" konusunda bir AGS sorusunu çözerken aşağıdakilerden hangisi en sık yapılan soru çözme hatasıdır?`,
+        options: [
+          { key: 'A', text: 'Metne bağlı kalıp sadece metinde yer alan yargıları değerlendirmek', isCorrect: false },
+          { key: 'B', text: 'Kendi kişisel kanaatlerini ve metinde geçmeyen bilgileri doğru seçenek gibi düşünmek', isCorrect: true },
+          { key: 'C', text: 'Soru kökündeki olumsuz ifadelere dikkat etmek', isCorrect: false },
+          { key: 'D', text: 'Şıkları metinle tek tek eşleştirmek', isCorrect: false },
+          { key: 'E', text: 'Anahtar kelimelerin altını çizerek ilerlemek', isCorrect: false },
+        ],
+        explanation: 'Doğru cevap B seçeneğidir. Sözel yetenek ve paragraf sorularında metin dışı bilgi veya kişisel yorum katmak en temel hata kaynağıdır.',
+      },
+      {
+        question: '3. Paragraf ve sözel akıl yürütme sorularında çeldirici seçeneklerin en belirgin özelliği hangisidir?',
+        options: [
+          { key: 'A', text: 'Metnin ana fikrini doğrudan ve eksiksiz yansıtması', isCorrect: false },
+          { key: 'B', text: 'Metindeki tek bir ayrıntıyı öne çıkarıp parçanın bütününü kapsamaması ya da aşırı genelleme yapması', isCorrect: true },
+          { key: 'C', text: 'Her zaman en kısa cümlelerden oluşması', isCorrect: false },
+          { key: 'D', text: 'Soru kökündeki kelimeleri hiç içermemesi', isCorrect: false },
+          { key: 'E', text: 'Yazım kurallarına aykırı olması', isCorrect: false },
+        ],
+        explanation: 'Doğru cevap B seçeneğidir. Çeldiriciler genellikle doğru gibi görünen ancak kapsamı daraltılmış ya da aşırı genelleştirilmiş ifadelerden kurulur.',
+      },
+      {
+        question: '4. Sözel mantık ve akıl yürütme sorularında hız ve doğruluk kazanmanın en etkili yolu nedir?',
+        options: [
+          { key: 'A', text: 'Tüm ihtimalleri zihinde tutmaya çalışmak', isCorrect: false },
+          { key: 'B', text: 'Öncülleri şematize eden net bir tablo kurup kesin bilgilerle olasılıkları ayrıştırmak', isCorrect: true },
+          { key: 'C', text: 'Sadece ilk öncülü okuyup hemen şıklara geçmek', isCorrect: false },
+          { key: 'D', text: 'Metni birden fazla kez okumadan rastgele işaretleme yapmak', isCorrect: false },
+          { key: 'E', text: 'Olumsuz öncülleri görmezden gelmek', isCorrect: false },
+        ],
+        explanation: 'Doğru cevap B seçeneğidir. Görsel bir tablo kurmak ve kesin verileri yerleştirmek karmaşık sözel mantık sorularını hatasız çözmenin yoludur.',
+      },
+      {
+        question: '5. Bir metinde geçen anahtar sözcüklerin bağlamsal anlamını doğru saptamak aşağıdakilerden hangisini doğrudan kolaylaştırır?',
+        options: [
+          { key: 'A', text: 'Paragrafın ana düşüncesini ve yazarın temel iletisini eksiksiz kavramayı', isCorrect: true },
+          { key: 'B', text: 'Yalnızca sözcük sayısını hesaplamayı', isCorrect: false },
+          { key: 'C', text: 'Metnin yazıldığı yılı kesin olarak tahmin etmeyi', isCorrect: false },
+          { key: 'D', text: 'Yazarın biyografisini ezberlemeyi', isCorrect: false },
+          { key: 'E', text: 'Soru kökünü okumadan cevaplamayı', isCorrect: false },
+        ],
+        explanation: 'Doğru cevap A seçeneğidir. Sözcüklerin bağlamdaki anlamını yakalamak, paragrafın ana iletisini ve kurgusunu çözmenin temelidir.',
+      },
+    ],
+  };
+};
+
 // Domain-specific content generators ensuring academic depth and compliance with the AGS Content Quality System
 const generateTopicContent = (topic: Topic): TopicContent => {
+  const isSozel = topic.unit_id.startsWith('unit-sozel');
+  if (isSozel) {
+    return generateSozelTopicContent(topic);
+  }
+
   const isEb = topic.unit_id.startsWith('unit-eb');
   const isMevzuat = topic.unit_id.startsWith('unit-mevzuat');
   const isTmes = topic.unit_id.startsWith('unit-tmes');
-  const isSozel = topic.unit_id.startsWith('unit-sozel');
   const isSayisal = topic.unit_id.startsWith('unit-sayisal');
   const isTarih = topic.unit_id.startsWith('unit-tarih');
   const isCografya = topic.unit_id.startsWith('unit-cografya');
@@ -435,15 +869,13 @@ const generateTopicContent = (topic: Topic): TopicContent => {
     whyItMatters = `"${topic.title}", Türk Millî Eğitiminin vizyonunu, kurumsal yapısını ve özellikle Türkiye Yüzyılı Maarif Modeli'nin getirdiği erdem-değer-eylem odaklı yeni eğitim felsefesini kavramanız için gereklidir. Okul ortamında uygulanan programların mantığını ve öğretmen rollerini bütüncül olarak açıklar.`;
   } else if (isSayisal) {
     whyItMatters = `"${topic.title}", problem çözme, analitik akıl yürütme ve sayısal ilişkileri modelleme becerilerini geliştirir. Sınavda zaman yönetimini optimize etmek ve çok adımlı matematiksel kurguları hatasız çözebilmek için temel yapı taşıdır.`;
-  } else if (isSozel) {
-    whyItMatters = `"${topic.title}", metinleri doğru anlama, mantıksal çıkarım yapma, sözcük ve cümle düzeyindeki anlam inceliklerini ayırt etme yeteneğini ölçer. Paragraf ve sözel mantık sorularında hızlı ve doğru sonuca ulaşmanın anahtarıdır.`;
   } else if (isTarih) {
     whyItMatters = `"${topic.title}", Türk ve dünya tarihindeki kurumsal, siyasi ve kültürel dönüşümleri sebep-sonuç ilişkisi içinde analiz etme yeteneği kazandırır. Tarihsel olayların günümüz kurumlarına ve medeniyet mirasına etkisini kavramayı sağlar.`;
   } else {
     whyItMatters = `"${topic.title}", Türkiye'nin fiziki, beşeri ve ekonomik potansiyelini mekan-insan etkileşimi bağlamında değerlendirmenizi sağlar. Harita, grafik ve mekânsal verileri yorumlama becerisini pekiştirir.`;
   }
 
-  // 3. Learning Objectives (3 to 6 measurable behavioral objectives)
+  // 3. Learning Objectives
   const learningObjectives = [
     `"${topic.title}" kavramının kuramsal ve pratik çerçevesini tanımlayabilmek ve açıklayabilmek.`,
     `Benzer veya kolayca karıştırılabilen kavramlar arasındaki ayırt edici ölçütleri belirleyebilmek.`,
@@ -453,49 +885,37 @@ const generateTopicContent = (topic: Topic): TopicContent => {
   ];
 
   // 4. Core Explanation
-  const coreExplanation = `### 1. Kuramsal Çerçeve ve Giriş\n"${topic.title}", Akademi Giriş Sınavı (AGS) kapsamında hem doğrudan bilgi düzeyinde hem de üst düzey bilişsel becerileri (analiz, sentez, değerlendirme) ölçen kurgularda karşımıza çıkar. Bu konuyu çalışırken ezberci yaklaşımlar yerine kavramın mantığını, ortaya çıkış dinamiklerini ve diğer ünitelerle olan bağlamını kavramak esastır.\n\n### 2. Temel İlkeler ve Süreç Odaklı Yaklaşım\nKonunun temelinde yer alan ilkeler, sistemli bir hiyerarşi içinde birbirini tamamlar. Sınavda sorulan sorular çoğunlukla bu ilkelerin somut bir durum, metin veya vaka içinde nasıl işlediğini sorgular. Bu nedenle kavramların sınırlarını ve istisnai durumlarını net biçimde belirlemek gerekir.`;
+  const coreExplanation = `### 1. Temel Esaslar ve Giriş\n"${topic.title}", Akademi Giriş Sınavı (AGS) kapsamında hem doğrudan bilgi düzeyinde hem de üst düzey muhakeme ve uygulama becerilerini ölçen kurgularda karşımıza çıkar. Bu konuyu çalışırken ezberci yaklaşımlar yerine kavramın mantığını ve diğer ünitelerle olan bağlamını kavramak esastır.\n\n### 2. İlkeler ve Uygulama\nKonunun temelinde yer alan ilkeler, sistemli bir hiyerarşi içinde birbirini tamamlar. Sınavda sorulan sorular çoğunlukla bu ilkelerin somut bir durum veya vaka içinde nasıl işlediğini sorgular.`;
 
-  // 5. Key Concepts (TEMEL KAVRAM: "Tanım" + "Uygulamadaki Anlamı")
+  // 5. Key Concepts
   const keyConcepts = [
     {
       term: `${topic.title} Ana İlkesi`,
-      definition: `Konunun merkezinde yer alan, sınavda en yüksek frekansta sorgulanan temel kuramsal veya yasal ilkedir.`,
-      practical_meaning: `Soru çözerken veya pratik uygulamada ilk dikkat edilmesi gereken ayırt edici referans noktasıdır.`,
+      definition: `Konunun merkezinde yer alan, sınavda en yüksek frekansta sorgulanan temel kavram veya yasal ilkedir.`,
+      practical_meaning: `Soru çözerken ilk dikkat edilmesi gereken ayırt edici referans noktasıdır.`,
     },
     {
       term: 'Ayırt Edici Ölçüt',
       definition: `Birbirine çok yakın görünen durumları birbirinden kesin sınırlarla ayıran nesnel kriter.`,
       practical_meaning: `Çeldirici seçenekleri doğrudan elemeyi ve kesin doğru yanıta ulaşmayı sağlayan belirleyici ipucudur.`,
     },
-    {
-      term: 'Kazanım ve Çıktı Boyutu',
-      definition: `Öğrenme veya uygulama sürecinin sonunda hedeflenen davranışsal veya kurumsal değişim.`,
-      practical_meaning: `Soru kökünde 'hangisi hedeflenmiştir?' veya 'sonuç nedir?' kalıplarında doğru cevabı belirler.`,
-    },
   ];
 
-  // 6. Subtopics (6.1, 6.2, 6.3...)
+  // 6. Subtopics
   const subtopics = [
     {
       id: `${topic.id}-sub-1`,
       number: '1.1',
-      title: 'Kavramsal Temeller ve Tanımlamalar',
-      content: `Bu alt başlıkta ${topic.title} konusunun kavramsal sınırları çizilir. Tanımlarda geçen anahtar kelimeler doğrudan doğru seçeneği işaret eder.`,
+      title: 'Kavramsal Temeller ve Analiz',
+      content: `Bu alt başlıkta ${topic.title} konusunun kavramsal sınırları ve anahtar noktaları çizilir.`,
       key_takeaway: 'Anahtar kelimelerin bağlamsal kullanımına dikkat edilmelidir.',
     },
     {
       id: `${topic.id}-sub-2`,
       number: '1.2',
-      title: 'Uygulama Alanları ve Mekanizmalar',
-      content: `Kuramsal bilginin pratiğe aktarılma biçimidir. Soru bankalarındaki senaryolar ve paragraf kurguları bu aşamadan üretilir.`,
+      title: 'Uygulama ve Çözüm Yolları',
+      content: `Bilginin pratiğe aktarılma biçimidir. Soru bankalarındaki senaryolar bu aşamadan üretilir.`,
       key_takeaway: 'Öncüllü sorularda her bir maddenin bağımsız işlevi kontrol edilmelidir.',
-    },
-    {
-      id: `${topic.id}-sub-3`,
-      number: '1.3',
-      title: 'Kritik İstisnalar ve Özel Durumlar',
-      content: `Genel kuralların dışına çıkan veya özel şarta bağlı olan hususlardır. AGS'nin ayırt edici zor soruları genellikle bu alt başlıktan çıkar.`,
-      key_takeaway: 'Sorudaki "ancak", "hariç", "en önemli" gibi sınırlandırıcı ifadelere dikkat edilmelidir.',
     },
   ];
 
@@ -506,7 +926,7 @@ const generateTopicContent = (topic: Topic): TopicContent => {
       {
         title: 'Sınıf İçi Pedagojik Vaka Örneği',
         scenario: `Bir sınıf öğretmeni, ders esnasında parmak kaldırarak söz alan ve doğru yanıt veren öğrencisine sözel pekiştireç vermiş, ders ortamında diğer öğrencilerin de söz alma sıklığının arttığını gözlemlemiştir.`,
-        analysis: `Burada hem doğrudan pekiştirme hem de sınıf genelinde dolaylı pekiştirme (sosyal öğrenme) mekanizması birlikte işlemiştir. Pedagojik açıdan olumlu model olma ve istendik davranışı pekiştirme ilkesi uygulanmıştır.`,
+        analysis: `Burada hem doğrudan pekiştirme hem de sınıf genelinde dolaylı pekiştirme (sosyal öğrenme) mekanizması birlikte işlemiştir.`,
         domain: 'Eğitim Bilimleri',
       },
     ];
@@ -514,8 +934,8 @@ const generateTopicContent = (topic: Topic): TopicContent => {
     examples = [
       {
         title: 'Okul Yönetimi ve Mevzuat Uygulama Senaryosu',
-        scenario: `Bir okulda görev yapan aday öğretmenin hazırlık eğitimi ve değerlendirme süreçlerinde 7528 Sayılı Kanun hükümleri işletilmiş, ilgili komisyonlarca gelişim raporları düzenlenmiştir.`,
-        analysis: `7528 Sayılı Öğretmenlik Mesleği Kanunu gereğince Akademi hazırlık eğitimi ve mesleki süreçler yasal hiyerarşi ve objektif değerlendirme ölçütlerine tabidir.`,
+        scenario: `Bir okulda görev yapan aday öğretmenin hazırlık eğitimi ve değerlendirme süreçlerinde 7528 Sayılı Kanun hükümleri işletilmiştir.`,
+        analysis: `7528 Sayılı Öğretmenlik Mesleği Kanunu gereğince Akademi hazırlık eğitimi objektif değerlendirme ölçütlerine tabidir.`,
         domain: 'Mevzuat',
       },
     ];
@@ -528,21 +948,12 @@ const generateTopicContent = (topic: Topic): TopicContent => {
         domain: 'Sayısal Yetenek',
       },
     ];
-  } else if (isSozel) {
-    examples = [
-      {
-        title: 'Cümle ve Paragraf Analizi Örneği',
-        scenario: `"Yazarın son romanında kullandığı yalın dil, okurun olay örgüsüne hızla dahil olmasını sağlamıştır."`,
-        analysis: `Bu cümlede üslup (yalın dil) ile içerik/etki (olay örgüsüne dahil olma) arasında neden-sonuç ilişkisi kurulmuştur.`,
-        domain: 'Sözel Yetenek',
-      },
-    ];
   } else if (isTarih) {
     examples = [
       {
         title: 'Tarihsel Süreç ve Neden-Sonuç Örneği',
         scenario: `İslamiyet öncesi Türk devletlerinde ikili teşkilat sistemi uygulanmış, Doğu'da Kağan, Batı'da Yabgu hüküm sürmüştür.`,
-        analysis: `Bu sistem devletin geniş sınırlarını yönetmeyi kolaylaştırırken, taht kavgalarını ve bölünmeyi hızlandırma riskini de beraberinde getirmiştir.`,
+        analysis: `Bu sistem devletin geniş sınırlarını yönetmeyi kolaylaştırırken, bölünmeyi hızlandırma riskini de beraberinde getirmiştir.`,
         domain: 'Tarih',
       },
     ];
@@ -551,7 +962,7 @@ const generateTopicContent = (topic: Topic): TopicContent => {
       {
         title: 'Türkiye Coğrafyası Mekan Analizi',
         scenario: `Türkiye'de Akdeniz ve Karadeniz kıyılarında dağların kıyıya paralel uzanması sebebiyle kıyı ile iç kesimler arasında iklim farklılığı belirgindir.`,
-        analysis: `Dağların uzanış doğrultusu denizel havanın iç kesimlere sokulmasını engeller; bu durum sıcaklık, yağış ve bitki örtüsü çeşitliliğini doğrudan etkiler.`,
+        analysis: `Dağların uzanış doğrultusu denizel havanın iç kesimlere sokulmasını engeller.`,
         domain: 'Türkiye Coğrafyası',
       },
     ];
@@ -560,8 +971,8 @@ const generateTopicContent = (topic: Topic): TopicContent => {
   // 8. Comparison Tables
   const comparisonTables = [
     {
-      title: `${topic.title} Karşılaştırma ve Ayırt Etme Tablosu`,
-      headers: ['Kavram / Durum', 'Temel Özellik', 'Anahtar Ayırt Edici Nokta', 'Tipik Sınav Örneği'],
+      title: `${topic.title} Karşılaştırma Tablosu`,
+      headers: ['Kavram / Durum', 'Temel Özellik', 'Ayırt Edici Nokta', 'Soru Çözüm İpucu'],
       rows: [
         ['Temel Yaklaşım A', 'Doğrudan kuramsal tanım ve ilkeler', 'Genel kural ve çerçeve', 'Doğrudan bilgi sorularında'],
         ['İlişkili Yaklaşım B', 'Uygulamalı senaryo ve durum analizi', 'İstisnalar ve özel koşullar', 'Vaka ve yorum sorularında'],
@@ -569,52 +980,41 @@ const generateTopicContent = (topic: Topic): TopicContent => {
     },
   ];
 
-  // 9. Common Confusions ("Karıştırılan Noktalar")
+  // 9. Common Confusions
   const commonConfusions = [
     {
       wrong_belief: `"${topic.title}" ile ilgili tüm kavramlar birbiriyle eş anlamlıdır ve birbirinin yerine kullanılabilir.`,
       correct_distinction: `Kavramların uygulama alanları, yasal zeminleri ve bilişsel hedefleri birbirinden kesin çizgilerle ayrılır.`,
       tip: 'Soru kökündeki odak kavramı belirleyip çeldiricilerdeki kavram kaymalarına dikkat ediniz.',
     },
-    {
-      wrong_belief: 'Sorularda verilen her genel ifade her koşulda geçerlidir.',
-      correct_distinction: 'Mevzuatta ve kuramlarda yer alan "özel şartlar" ve "istisnalar" doğru seçeneğin anahtarıdır.',
-      tip: '"Her zaman", "asla", "kesinlikle" gibi sınırlayıcı ifadelere şüpheyle yaklaşınız.',
-    },
   ];
 
-  // 10. "AGS'DE DİKKAT" Exam Tips
+  // 10. Exam Tips
   const examTips = [
     {
       tip: `AGS'DE DİKKAT: "${topic.title}" konusu ile ilgili sorularda çeldirici seçenekler genellikle çok yakın benzer kavramlardan türetilir. Soru kökünü okurken istenen temel ölçütü belirleyiniz.`,
       importance: 'critical' as const,
     },
-    {
-      tip: `AGS'DE DİKKAT: Bu ayrım sorularda kavramsal olarak karşınıza çıkabilir. Özellikle güncel MEB düzenlemeleri ve resmi kazanım tanımları esas alınmalıdır.`,
-      importance: 'high' as const,
-    },
   ];
 
-  // 11. Memory Tips ("HATIRLAMA İPUCU")
+  // 11. Mnemonics
   const mnemonics = [
     {
       title: `${topic.title} Hatırlama Formülü`,
       memory_trick: `🔑 Kodlama: ${topic.title.substring(0, 5).toUpperCase()}`,
-      description: 'Konunun temel aşamalarını ve kritik ilkelerini baş harfleriyle zihninizde ilişkilendiriniz.',
+      description: 'Konunun temel aşamalarını ve kritik ilkelerini zihninizde eşleştiriniz.',
     },
   ];
 
-  // 12. Quick Summary & "BU KONUDAN NE BİLMELİYİM?"
-  const summary = `"${topic.title}", Akademi Giriş Sınavı'nda hem doğrudan soru potansiyeli taşıyan hem de diğer ünitelerle bağlantılı anahtar bir konudur. Temel ilkeleri kavramak, çeldiricileri ayırt etmek ve 5 pekiştirme sorusunu çözerek eksikleri kapatmak başarı için yeterlidir.`;
+  // 12. Summary
+  const summary = `"${topic.title}", AGS sınavında doğrudan soru potansiyeline sahip temel konulardandır.`;
   const whatToRemember = [
     `✓ "${topic.title}" kavramının resmi tanımını ve temel ilkelerini bil.`,
     `✓ Benzer kavramlar arasındaki ayırt edici farkı ve anahtar noktayı bil.`,
-    `✓ Verilen bir sınav senaryosunda veya vaka analizinde doğru kavramı teşhis edebil.`,
-    `✓ Çeldirici seçeneklerdeki kavram yanılgılarını hızlıca eleyebil.`,
-    `✓ Bu konunun soru köklerinde sıkça kullanılan anahtar kelimeleri tanı.`,
+    `✓ Verilen bir sınav senaryosunda doğru kavramı teşhis edebil.`,
   ];
 
-  // 13. Self-check (5 distinct high quality questions with immediate solution feedback)
+  // 13. Self-check
   const selfCheckQuestions: SelfCheckQuestion[] = [
     {
       question: `1. "${topic.title}" konusunun temel amacı ve kapsamı düşünüldüğünde, aşağıdakilerden hangisi en doğru değerlendirmedir?`,
