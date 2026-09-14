@@ -80,19 +80,19 @@ export interface TopicContent {
   topic_id: string;
   title?: string;
   overview?: string;
-  why_it_matters?: string; // 2. "Neden Öğrenmeliyim?"
-  learning_objectives: string[]; // 3. Öğrenme Hedefleri
-  core_explanation?: string; // 4. Konu Anlatımı
-  key_concepts: { term: string; definition: string; practical_meaning?: string; icon?: string }[]; // 5. Temel Kavramlar & Tanımlar
-  subtopics?: SubTopicDetail[]; // 6. Alt Başlıklar
-  examples?: TopicExample[]; // 7. Örnekler & Sınıf/Uygulama Vakaları
-  comparison_tables?: ComparisonTable[]; // 8. Karşılaştırma Tabloları
-  common_confusions?: CommonConfusion[]; // 9. Karıştırılan Noktalar
-  exam_tips: { tip: string; importance: 'high' | 'medium' | 'critical' }[]; // 10. AGS'DE DİKKAT
-  mnemonics?: { title: string; memory_trick: string; description: string }[]; // 11. Hatırlama İpucu
-  summary: string; // 12. Özet
-  what_to_remember: string[]; // 12. "Bu Konudan Ne Bilmeliyim?"
-  self_check_questions?: SelfCheckQuestion[]; // 13. Kendini Dene (5 soru)
+  why_it_matters?: string;
+  learning_objectives?: string[];
+  core_explanation?: string;
+  key_concepts?: { term: string; definition: string; practical_meaning?: string; icon?: string }[];
+  subtopics?: SubTopicDetail[];
+  examples?: TopicExample[];
+  comparison_tables?: ComparisonTable[];
+  common_confusions?: CommonConfusion[];
+  exam_tips?: { tip: string; importance: 'high' | 'medium' | 'critical' }[];
+  mnemonics?: { title: string; memory_trick: string; description: string }[];
+  summary?: string;
+  what_to_remember?: string[];
+  self_check_questions?: SelfCheckQuestion[];
   structured_sections?: TopicSection[];
 }
 
