@@ -306,7 +306,7 @@ export const AGS_STUDY_PLANS: SubjectStudyPlan[] = [
     ],
   },
 
-  // 6. MEVZUAT (%10)
+  // 6. MEVZUAT (%10 - 5 ANA BAŞLIK)
   {
     id: 'plan-mevzuat',
     subject_id: 'mevzuat',
@@ -315,42 +315,39 @@ export const AGS_STUDY_PLANS: SubjectStudyPlan[] = [
     icon: 'ShieldCheck',
     weight_percentage: 10.0,
     question_count_in_ags: 8,
-    description: '7528 Sayılı ÖMK, Millî Eğitim Akademisi, Anayasa eğitim maddeleri ve 657 Sayılı DMK görevleri.',
+    description: 'Mevzuat 5 ana konu çalışma ve soru takip listesi.',
     sections: [
       {
-        id: 'sec-mev-1',
-        title: '1. 7528 Sayılı Öğretmenlik Mesleği Kanunu (ÖMK)',
-        description: 'Milli Eğitim Akademisi, hazırlık eğitimi, kariyer basamakları ve disiplin',
+        id: 'sec-mev-main',
+        title: 'Mevzuat Konu Çalışmaları',
+        description: 'Çalışmanızı tamamladığınız konuyu işaretleyin (5 Görev = %100)',
         tasks: [
-          { id: 'st-mv-1-1', text: 'Millî Eğitim Akademisinin Kuruluşu, Görevleri ve Organları konusunu çalıştım ve sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-1-2', text: 'Akademiye Kabul Şartları ve AGS Puan Üstünlüğü Kuralları sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-1-3', text: 'Akademi Hazırlık Eğitimi Süresi, Değerlendirmesi ve Başarısızlık Hükümleri sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-1-4', text: 'Öğretmenliğe Atama, Sözleşmeli Öğretmenlik ve Kadroya Geçiş Süreci sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-1-5', text: 'Öğretmenlik Kariyer Basamakları (Öğretmen, Uzman Öğretmen, Başöğretmen) Şartları sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-1-6', text: 'Öğretmenlerin Hakları, Ödevleri, Yasaklar ve Özel Disiplin Cezaları (7528 ÖMK) sorularını çözdüm', category: 'concept' },
-        ],
-      },
-      {
-        id: 'sec-mev-2',
-        title: '2. T.C. Anayasası (Eğitim ve İdare Hükümleri)',
-        description: 'Anayasal ilkeler, Madde 42 ve kamu hizmeti ilkeleri',
-        tasks: [
-          { id: 'st-mv-2-1', text: 'Cumhuriyetin Temel Nitelikleri ve Anayasanın Başlangıç İlkeleri sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-2-2', text: 'Anayasa Madde 42 (Eğitim ve Öğrenim Hakkı ve Ödevi) Detaylarını çalıştım ve sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-2-3', text: 'Temel Hak ve Hürriyetlerin Sınırlandırılması ve Kötüye Kullanılamaması sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-2-4', text: 'Yasama, Yürütme ve Yargı Organlarının Görev ve Yetkileri sorularını çözdüm', category: 'concept' },
-        ],
-      },
-      {
-        id: 'sec-mev-3',
-        title: '3. 657 Sayılı Devlet Memurları Kanunu',
-        description: 'Memuriyet ilkeleri, haklar, yükümlülükler ve disiplin cezaları',
-        tasks: [
-          { id: 'st-mv-3-1', text: '657 Temel İlkeleri (Sınıflandırma, Kariyer, Liyakat) sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-3-2', text: 'Memurların Genel Hakları, Ödevleri ve Yasakları sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-3-3', text: 'İstihdam Türleri (Memur, Sözleşmeli Personel, İşçi) sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-3-4', text: 'Adaylık Dönemi, Asaletin Tasdiki ve Derece/Kademe İlerlemesi sorularını çözdüm', category: 'concept' },
-          { id: 'st-mv-3-5', text: 'Disiplin Cezaları (Uyarma, Kınama, Aylıktan Kesme, Kademe Durdurma, İhraç) ve İtiraz Süreleri sorularını çözdüm', category: 'concept' },
+          {
+            id: 'st-mv-1',
+            text: 'Türkiye Cumhuriyeti Anayasası',
+            description: 'Kanun Numarası: 2709 | Kabul Tarihi: 18/10/1982',
+            category: 'concept',
+          },
+          {
+            id: 'st-mv-2',
+            text: 'İnsan Hakları Hukuku',
+            category: 'concept',
+          },
+          {
+            id: 'st-mv-3',
+            text: '1739 sayılı Millî Eğitim Temel Kanunu',
+            category: 'concept',
+          },
+          {
+            id: 'st-mv-4',
+            text: '222 sayılı İlköğretim ve Eğitim Kanunu',
+            category: 'concept',
+          },
+          {
+            id: 'st-mv-5',
+            text: '7528 sayılı Öğretmenlik Mesleği Kanunu',
+            category: 'concept',
+          },
         ],
       },
     ],
