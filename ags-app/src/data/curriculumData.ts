@@ -63,27 +63,41 @@ export const AGS_SUBJECTS: Subject[] = [
 ];
 
 export const AGS_UNITS: Unit[] = [
-  // 1. SÖZEL YETENEK (3 Beceri Alanı)
+  // 1. SÖZEL YETENEK (5 Temel Başlık)
   {
     id: 'unit-sozel-1',
     subject_id: 'sozel-yetenek',
-    title: 'ÜNİTE 1 — OKUDUĞUNU ANLAMA VE BAĞLAMSAL ÇIKARIM',
-    description: 'Metnin ana ve yardımcı düşünceleri, bağlamdan anlam çıkarma, çıkarım yapma, örtülü anlam ve yazarın amacı.',
+    title: 'ÜNİTE 1 — SÖZCÜKTE ANLAM',
+    description: 'Sözcüğün bağlama göre anlamı, gerçek/mecaz anlam, sözcükler arası anlam ilişkileri ve yakın anlamlı ifadeleri ayırt etme.',
     order_index: 1,
   },
   {
     id: 'unit-sozel-2',
     subject_id: 'sozel-yetenek',
-    title: 'ÜNİTE 2 — PARAGRAF VE METİN MİMARİSİ',
-    description: 'Paragrafta ana fikir ve kapsam filtresi, tamamlama, akışı bozan cümle, cümle sıralama, anlatım biçimleri ve çeldirici eleme.',
+    title: 'ÜNİTE 2 — CÜMLEDE ANLAM',
+    description: 'Cümleden çıkarılabilecek/çıkarılamayacak yargılar, neden-sonuç, amaç-sonuç, koşul, karşılaştırma, kesinlik ve olasılık.',
     order_index: 2,
   },
   {
     id: 'unit-sozel-3',
     subject_id: 'sozel-yetenek',
-    title: 'ÜNİTE 3 — SÖZEL AKIL YÜRÜTME VE MANTIK',
-    description: 'Sıralama, yerleştirme, eşleştirme, koşullu akıl yürütme, değişkenler tablosu ve şema yorumlama.',
+    title: 'ÜNİTE 3 — ANLATIMIN OLUŞMASI',
+    description: 'Cümle sıralama, paragraf tamamlama, giriş/sonuç belirleme, cümle yerleştirme ve akışı bozan cümleyi tespit etme.',
     order_index: 3,
+  },
+  {
+    id: 'unit-sozel-4',
+    subject_id: 'sozel-yetenek',
+    title: 'ÜNİTE 4 — PARAGRAFTA ANLAM',
+    description: 'Ana düşünce, yardımcı düşünceler, kapsam filtresi, yazarın amacı/tutumu, çıkarım yapma ve çeldirici eleme stratejileri.',
+    order_index: 4,
+  },
+  {
+    id: 'unit-sozel-5',
+    subject_id: 'sozel-yetenek',
+    title: 'ÜNİTE 5 — SÖZEL MANTIK',
+    description: 'Sıralama, yerleştirme, eşleştirme, koşullu akıl yürütme, değişkenler tablosu ve çoklu koşullardan kesin yargı çıkarma.',
+    order_index: 5,
   },
 
   // 2. SAYISAL YETENEK
@@ -185,33 +199,12 @@ export const AGS_UNITS: Unit[] = [
 
 // Helper to create full topic list matching exact user request
 const rawTopicsConfig = [
-  // 1. SÖZEL YETENEK - ÜNİTE 1: OKUDUĞUNU ANLAMA VE BAĞLAMSAL ÇIKARIM (8 Topics)
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-1', title: 'Ana Düşünceyi Bulma ve Temel İletiyi Belirleme', mins: 25 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-2', title: 'Metnin Konusunu ve Kapsamını Saptama', mins: 20 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-3', title: 'Yardımcı Düşünceler ve Seçenek Eşleştirme', mins: 25 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-4', title: 'Metinden Çıkarım Yapma ve Örtülü Anlamı Yakalama', mins: 25 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-5', title: 'Bağlamdan Anlam Çıkarma (Sözcük ve İfadelerin Metindeki İşlevi)', mins: 25 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-6', title: 'Cümleler Arası Anlam İlişkileri (Neden, Amaç, Koşul, Karşılaştırma)', mins: 25 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-7', title: 'Yazarın Amacı, Tutumu ve Bakış Açısını Belirleme', mins: 20 },
-  { unitId: 'unit-sozel-1', id: 'topic-sozel-1-8', title: 'Metin Bilgisi ile Seçenekleri Karşılaştırma ve Eleme Stratejisi', mins: 25 },
-
-  // 1. SÖZEL YETENEK - ÜNİTE 2: PARAGRAF VE METİN MİMARİSİ (8 Topics)
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-1', title: 'Paragrafta Ana Düşünce ve Çeldirici Eleme Yöntemi', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-2', title: 'Paragraf Tamamlama (Giriş, Gelişme, Sonuç Bağlantıları)', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-3', title: 'Akışı Bozan Cümleyi Belirleme (Düşünce Yönü ve Konu Sapması)', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-4', title: 'Cümlelerin Yerini Belirleme ve Mantıksal Sıralama', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-5', title: 'Paragrafın Yapısı ve Bölümleri Arasındaki Bağlar', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-6', title: 'Anlatım Biçimleri ve Düşünceyi Geliştirme Yolları', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-7', title: 'Çoklu ve Karşılaştırmalı Metin Analizi', mins: 25 },
-  { unitId: 'unit-sozel-2', id: 'topic-sozel-2-8', title: 'Yoğun ve Çeldiricisi Güçlü AGS Metinlerini Çözme Stratejisi', mins: 30 },
-
-  // 1. SÖZEL YETENEK - ÜNİTE 3: SÖZEL AKIL YÜRÜTME VE MANTIK (6 Topics)
-  { unitId: 'unit-sozel-3', id: 'topic-sozel-3-1', title: 'Sıralama ve Konumlandırma Problemleri', mins: 30 },
-  { unitId: 'unit-sozel-3', id: 'topic-sozel-3-2', title: 'Değişkenler Tablosu Kurma ve Yerleştirme', mins: 30 },
-  { unitId: 'unit-sozel-3', id: 'topic-sozel-3-3', title: 'Eşleştirme ve Grup İlişkileri Analizi', mins: 30 },
-  { unitId: 'unit-sozel-3', id: 'topic-sozel-3-4', title: 'Koşullu Akıl Yürütme ve Kesişim Kuralları', mins: 30 },
-  { unitId: 'unit-sozel-3', id: 'topic-sozel-3-5', title: 'Tablo ve Şema Yorumlama', mins: 25 },
-  { unitId: 'unit-sozel-3', id: 'topic-sozel-3-6', title: 'Çoklu Koşullardan Kesin Yargı ve Olasılık Çıkarma', mins: 35 },
+  // 1. SÖZEL YETENEK (Tam olarak 5 Resmi Başlık)
+  { unitId: 'unit-sozel-1', id: 'topic-sozel-1', title: 'Sözcükte Anlam', mins: 25 },
+  { unitId: 'unit-sozel-2', id: 'topic-sozel-2', title: 'Cümlede Anlam', mins: 25 },
+  { unitId: 'unit-sozel-3', id: 'topic-sozel-3', title: 'Anlatımın Oluşması', mins: 30 },
+  { unitId: 'unit-sozel-4', id: 'topic-sozel-4', title: 'Paragrafta Anlam', mins: 30 },
+  { unitId: 'unit-sozel-5', id: 'topic-sozel-5', title: 'Sözel Mantık', mins: 35 },
 
   // 2. SAYISAL YETENEK - ÜNİTE 1 (15 Topics)
   { unitId: 'unit-sayisal-1', id: 'topic-sayisal-1-1', title: 'Temel Kavramlar', mins: 25 },
@@ -417,799 +410,6 @@ export const AGS_TOPICS: Topic[] = rawTopicsConfig.map((item, index) => ({
   estimated_minutes: item.mins,
 }));
 
-// Dedicated AGS Sözel Yetenek Content Engine (KAVRAM → CÜMLE → PARAGRAF → YORUM → ÇIKARIM → SORU ÇÖZME)
-const generateSozelTopicContent = (topic: Topic): TopicContent => {
-  const isUnit1 = topic.unit_id === 'unit-sozel-1';
-  const isUnit2 = topic.unit_id === 'unit-sozel-2';
-  const isUnit3 = topic.unit_id === 'unit-sozel-3';
-
-  // 1. UNIT 1: OKUDUĞUNU ANLAMA VE BAĞLAMSAL ÇIKARIM
-  if (isUnit1) {
-    if (topic.id === 'topic-sozel-1-1' || topic.title.includes('Ana Düşünceyi Bulma')) {
-      return {
-        id: `tc-${topic.id}`,
-        topic_id: topic.id,
-        title: topic.title,
-        why_it_matters: 'AGS Sözel Yetenek testinin omurgası ana düşünceyi yakalamaktır. Yazarın metni yazma amacını ve savunulan temel tezi tek bir cümleye indirgeyebilmek; çeldirici seçeneklerdeki "aşırı genelleme", "kapsam daraltma" ve "metin dışı yorum" tuzaklarına düşmeden 30-40 saniyede net cevaba ulaşmanızı sağlar.',
-        learning_objectives: [
-          'Paragrafın bütününe hâkim olarak yazarın okuyucuya iletmek istediği asıl mesajı saptayabilmek.',
-          'Örnekleme, tanık gösterme gibi yardımcı unsurları ana düşünceden ayırt edebilmek.',
-          'Seçeneklerdeki aşırı genelleme (tüm, hep, kesinlikle) veya kapsam daraltma (parçanın tek bir cümlesini özetleyen) tuzaklarını eleyebilmek.',
-          'Metnin ilk ve son cümlelerindeki yönlendirici yargıları analiz edebilmek.',
-        ],
-        core_explanation: `## 1. Bu Soru Tipini Nasıl Çözerim? (Adım Adım Strateji)
-1. **Soru Kökünü Okuyun:** "Bu parçada asıl vurgulanmak istenen...", "Yazarın bu parçadaki temel düşüncesi..." gibi kökler doğrudan ana düşünceyi sorar.
-2. **Metnin Tamamını Bütüncül Okuyun:** Parçanın sadece tek bir cümlesine odaklanmayın. Metni okurken zihninizde şu soruyu sorun: *"Yazar bu yazıyı hangi cümleyi ispatlamak veya okura kabul ettirmek için kaleme aldı?"*
-3. **Giriş ve Sonuç Cümlelerine Dikkat Edin:** Düşünce yazılarında ana düşünce genellikle son cümlede ("Kısacası, bu nedenle, özetle, aslında") veya ilk cümlede verilir.
-4. **Örnekleri Ana Düşünce Sanmayın:** Metinde geçen bilimsel araştırmalar, tarihi olaylar veya yazarın anlattığı bir anı ana düşünce değil, onu destekleyen **araçlardır**.
-5. **Seçenekleri Filtreleyin:** Metnin tamamını kucaklamayan, sadece tek bir yardımcı fikri aktaran şıkları derhal eleyin.
-
-## 2. Çeldiriciler Nasıl Hazırlanır? (ÖSYM Tuzakları)
-* **Kapsam Daraltması Tuzağı:** Metinde gerçekten geçen ve doğru olan bir bilgiyi verir ancak bu bilgi parçanın yalnızca %20'sini kapsar. Aday *"Bu metinde yazıyordu"* diyerek işaretler ve yanılır.
-* **Aşırı Genelleme Tuzağı:** Metinde yalnızca belirli bir grup (örneğin *"günümüz roman yazarları"*) eleştirilirken seçenekte *"tüm sanatçılar"* denilerek evren genişletilir.
-* **Metin Dışı Doğruluk Tuzağı:** Günlük hayatta kesinlikle doğru olan genel kültür bilgisi şıkka konur ancak metinde yazar bundan hiç bahsetmemiştir.
-
-## 3. Yanlış Analizi: Neden Hata Yapıldı?
-* *Hata 1:* Parçada geçen bir sözcüğü aynen gördüğüm şıkkı işaretledim → **Teşhis:** Kelime eşleştirme tuzağına düştünüz; kelimenin geçtiği cümle ana fikir değil yan yargıdır.
-* *Hata 2:* "Bence bu çok doğru bir fikir" diyerek işaretledim → **Teşhis:** Kendi fikrinizi yazarın fikrinin önüne geçirdiniz.`,
-        key_concepts: [
-          {
-            term: 'Ana Düşünce Filtresi',
-            definition: 'Metnin tamamını şemsiye gibi örten ve tüm yardımcı düşünceleri birbirine bağlayan temel tezdir.',
-            practical_meaning: 'Doğru seçenek, parçadaki tüm örneklerin varoluş sebebini açıklar.',
-          },
-          {
-            term: 'Kapsam Uyumu',
-            definition: 'Seçenekteki yargının genişliğinin metnin sınırlarıyla birebir örtüşmesi durumudur.',
-            practical_meaning: 'Ne metinden daha dar ne de metinden daha geniş olan seçenek doğru yanıttır.',
-          },
-        ],
-        subtopics: [
-          {
-            id: `${topic.id}-sub-1`,
-            number: '1.1',
-            title: 'Paragrafı Özetleme ve Anahtar Yargıyı Ayıklama',
-            content: 'Metni okuduktan sonra 3-4 kelimeyle "Yazar ne demek istiyor?" özetini çıkararak seçeneklerle karşılaştırın.',
-            key_takeaway: 'Örnekleri çıkarıp attığınızda geriye kalan yalın cümle ana düşüncedir.',
-          },
-          {
-            id: `${topic.id}-sub-2`,
-            number: '1.2',
-            title: 'Çeldirici Seçenekleri Eleme Matrisi',
-            content: 'Aşırı genelleme, kapsam daraltma ve öznel yorum içeren seçenekleri eleyerek tek bir sağlam şıkka ulaşın.',
-            key_takeaway: 'Metinde geçmeyen doğru bilgi, yanlış seçenektir.',
-          },
-        ],
-        examples: [
-          {
-            title: 'Ana Düşünce Soru ve Çeldirici Analizi',
-            scenario: 'Metin: "Gerçek bir sanat eseri, okurunu yalnızca eğlendirip hoşça vakit geçirtmekle yetinmez. O, okurun zihninde derin yarıklar açar, kurulu düzenini sorgulatır ve onu bildiklerinin ötesine taşır. Bir romanı bitirdiğinizde dünyaya başladığınız anki gözlerle bakıyorsanız o roman size hiçbir şey katmamıştır."',
-            analysis: 'Bu parçada yazar; sanat eserinin eğlendirme fonksiyonunun yetersiz olduğunu, asıl görevinin okurun düşünce dünyasını dönüştürmek ve sorgulatmak olduğunu vurgulamaktadır. Doğru cevap doğrudan "Sanat yapıtının temel işlevi okuru zihinsel bir dönüşüme uğratmaktır" yargısıdır.',
-            domain: 'Sözel Yetenek & Okuduğunu Anlama',
-          },
-        ],
-        comparison_tables: [
-          {
-            title: 'Ana Düşünce Seçenek Analiz Tablosu',
-            headers: ['Seçenek Türü', 'Örnek Seçenek İfadesi', 'Eleme / Doğruluk Nedeni'],
-            rows: [
-              ['Doğru Seçenek', 'Nitelikli eserler okuyucunun bakış açısını köklü biçimde dönüştürür.', 'Parçanın bütününde savunulan ana mesajdır.'],
-              ['Kapsam Daraltan Çeldirici', 'Romanlar insanları eğlendirmek amacıyla okunmalıdır.', 'Parçadaki karşı çıkılan yardımcı unsura takılmıştır.'],
-              ['Aşırı Genelleme Çeldiricisi', 'Tüm edebi metinler okuyucuyu hayattan koparmayı hedefler.', 'Metinde olmayan aşırı ve yanlış bir genellemedir.'],
-              ['Metin Dışı Yorum Çeldiricisi', 'Yazarlar geçim kaygısı nedeniyle popüler kitaplar yazmaktadır.', 'Mantıklı görünse de parçada bu konuya hiç değinilmemiştir.'],
-            ],
-          },
-        ],
-        common_confusions: [
-          {
-            wrong_belief: 'Paragraftaki en uzun ve en süslü cümle ana düşüncedir.',
-            correct_distinction: 'Ana düşünce süslü olmak zorunda değildir; yazarın vermek istediği en yalın ve kapsayıcı mesajdır.',
-            tip: 'Cümlenin uzunluğuna değil, metnin tamamını karşılayıp karşılamadığına odaklanın.',
-          },
-        ],
-        exam_tips: [
-          {
-            tip: "AGS'DE DİKKAT: Ana düşünce sorularında 'Hangisi parçadan çıkarılamaz?' değil, 'Yazarın asıl anlatmak istediği nedir?' sorulur. Parçada geçen her doğru bilgiye atlamayın.",
-            importance: 'critical',
-          },
-        ],
-        mnemonics: [
-          {
-            title: 'Ana Düşünce Pusulası',
-            memory_trick: '🔑 Kural: ŞEMSİYE SEÇENEĞİ BUL, PARÇALARI ALTI TOPLA',
-            description: 'Diğer tüm cümleler o seçeneği ispatlamak için yazılmış gibi duruyorsa doğru cevaptır.',
-          },
-        ],
-        summary: 'Ana düşünce, metnin yazılış gayesidir. Yardımcı düşünceler, örnekler ve açıklamalar bu ana tezi ayakta tutan sütunlardır.',
-        what_to_remember: [
-          '✓ Soru kökünü dikkatle oku: "Asıl anlatılmak istenen" ana düşüncedir.',
-          '✓ Parçanın tamamını oku, tek bir cümleye bağlanıp kalma.',
-          '✓ Yalnızca tek bir örneği anlatan şıkları kapsam darlığından ele.',
-          '✓ Metinde geçmeyen genel kültür bilgilerini kesinlikle kabul etme.',
-          '✓ Aşırı genelleme yapan iddialı sözcüklere (asla, daima, tüm) karşı uyanık ol.',
-        ],
-        self_check_questions: [
-          {
-            question: '1. "Eğitimde dijital teknolojilerin yaygınlaşması elbette öğrenme süreçlerini hızlandırmıştır. Ancak ekran karşısında saatler geçiren bir öğrencinin eleştirel düşünme, empati kurma ve derinleşme becerileri körelmektedir. Bilgiyi hızlıca tüketmek, onu içselleştirdiğimiz anlamına gelmez. Gerçek öğrenme; bilgiyi sindirmek, üzerine düşünmek ve hayatla bağ kurmakla mümkündür."\n\nBu parçada asıl vurgulanmak istenen düşünce aşağıdakilerden hangisidir?',
-            options: [
-              { key: 'A', text: 'Teknoloji kullanımının öğrenme hızına katkı sağladığı', isCorrect: false },
-              { key: 'B', text: 'Okullarda bilgisayar kullanımının tamamen yasaklanması gerektiği', isCorrect: false },
-              { key: 'C', text: 'Nitelikli öğrenmenin, bilginin hızla tüketilmesinden ziyade derinlemesine sindirilmesiyle gerçekleştiği', isCorrect: true },
-              { key: 'D', text: 'Öğrencilerin ekrandan okuma yaparken daha az yorulduğu', isCorrect: false },
-              { key: 'E', text: 'Geleneksel eğitim yöntemlerinin artık hiçbir işe yaramadığı', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap C seçeneğidir. Parçanın ilk cümlesi (A şıkkı) sadece bir giriş tespitidir. Yazarın asıl savunmak istediği tez son iki cümlede belirtilen "bilginin sindirilmesi ve derinlemesine işlenmesi" gerektiğidir. [Yanlış Analizi: A seçeneğini işaretleyenler yardımcı düşünceye takılmış; B ve E seçeneğini işaretleyenler aşırı genelleme yapmıştır.]',
-          },
-          {
-            question: '2. "Bir eleştirmen, değerlendirdiği esere kendi zevklerinin ve önyargılarının penceresinden bakıyorsa o inceleme eleştiri değil, sadece kişisel bir günlüktür. Eleştirmenin asıl görevi, eserin kendi iç tutarlılığını ve sanatsal değerini nesnel ölçütlerle ortaya koymaktır."\n\nBu parçaya göre eleştirmenin temel sorumluluğu nedir?',
-            options: [
-              { key: 'A', text: 'Okuyucuların beklentilerine göre kitap tavsiyesinde bulunmak', isCorrect: false },
-              { key: 'B', text: 'Eseri kişisel beğenilerin ötesinde nesnel ölçütlerle analiz etmek', isCorrect: true },
-              { key: 'C', text: 'Yazarın özel hayatını ve dünya görüşünü irdelemek', isCorrect: false },
-              { key: 'D', text: 'Kendi edebi tarzını okuyucuya empoze etmek', isCorrect: false },
-              { key: 'E', text: 'Popüler olan eserleri daha fazla öne çıkarmak', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. Parça açıkça eleştirinin tarafsız ve nesnel ölçütlerle yapılması gerektiğini vurgulamaktadır.',
-          },
-          {
-            question: '3. Paragraf ana düşünce sorularında adayın "metinde yer almasına rağmen" bir seçeneği elemesi gereken durum hangisidir?',
-            options: [
-              { key: 'A', text: 'Seçeneğin yalnızca tek bir yardımcı düşünceyi veya örneği içermesi', isCorrect: true },
-              { key: 'B', text: 'Seçeneğin metnin tamamını kucaklaması', isCorrect: false },
-              { key: 'C', text: 'Seçenekte yazarın temel iletisinin özetlenmesi', isCorrect: false },
-              { key: 'D', text: 'Seçeneğin soru köküyle doğrudan uyumlu olması', isCorrect: false },
-              { key: 'E', text: 'Seçeneğin nesnel bir dille yazılmış olması', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap A seçeneğidir. Bir yargı metinde kelimesi kelimesine geçse bile, yalnızca bir alt detayı veya örneği yansıtıyorsa ana düşünce olamaz; kapsamı dar olduğu için elenmelidir.',
-          },
-          {
-            question: '4. "Şehirlerin betonlaşması yalnızca yeşil alanları yok etmekle kalmıyor; insanların birbirleriyle olan bağlarını, mahalle kültürünü ve ortak yaşam sevincini de kurutuyor. Yüksek duvarların arkasına çekilen modern insan, kalabalıklar içinde giderek daha da yalnızlaşıyor."\n\nBu parçadan çıkarılacak en kapsamlı yargı hangisidir?',
-            options: [
-              { key: 'A', text: 'Çarpık kentleşme ve betonlaşma, insanların toplumsal ve insani bağlarını zayıflatmaktadır.', isCorrect: true },
-              { key: 'B', text: 'Şehirlerde yaşayan herkes mutsuz ve yalnızdır.', isCorrect: false },
-              { key: 'C', text: 'Yüksek katlı binaların inşası tamamen durdurulmalıdır.', isCorrect: false },
-              { key: 'D', text: 'Köy hayatı şehir hayatından her zaman daha ekonomiktir.', isCorrect: false },
-              { key: 'E', text: 'İnsanlar yeşil alanları korumak için köylere taşınmaktadır.', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap A seçeneğidir. Parça, kentleşmenin fiziki zararından çok insani ve toplumsal ilişkiler üzerindeki yıkıcı etkisini (yalnızlaşma, mahalle kültürünün yok oluşu) ele almaktadır. B seçeneğinde aşırı genelleme ("herkes") yapılmıştır.',
-          },
-          {
-            question: '5. Bir metinde ana düşünce aranırken aşağıdaki adımlardan hangisi kesinlikle yapılmamalıdır?',
-            options: [
-              { key: 'A', text: 'Yazarın savunduğu temel tezi belirlemek', isCorrect: false },
-              { key: 'B', text: 'Kişisel doğruları yazarın metnindeki düşüncenin önüne koyup ona göre şık seçmek', isCorrect: true },
-              { key: 'C', text: 'Aşırı genelleme içeren iddialı seçenekleri elemek', isCorrect: false },
-              { key: 'D', text: 'Metnin ilk ve son cümlelerindeki yönlendiricilere dikkat etmek', isCorrect: false },
-              { key: 'E', text: 'Parçadaki örneklerin neyi ispatlamaya çalıştığını analiz etmek', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. AGS sorularında adayın kendi dünya görüşü veya doğruları değil, yalnızca ve sadece metindeki yazarın savunduğu düşünce esas alınmalıdır.',
-          },
-        ],
-      };
-    }
-
-    if (topic.id === 'topic-sozel-1-5' || topic.title.includes('Bağlamdan Anlam')) {
-      return {
-        id: `tc-${topic.id}`,
-        topic_id: topic.id,
-        title: topic.title,
-        why_it_matters: 'AGS Sözel Yetenek sorularında sözcükler sözlükteki kuru tanımlarıyla değil, metnin bütününde yüklendikleri anlamsal işlevle ölçülür. Bir sözcüğün altı çizildiğinde sözlükteki ilk anlamına aldanmadan cümlenin atmosferindeki gerçek karşılığını bulmak, paragraf yorumlama hızınızı ve doğruluğunuzu doğrudan artırır.',
-        learning_objectives: [
-          'Sözcüğün cümle ve metin içindeki bağlamsal anlamını doğru tespit edebilmek.',
-          'Sözlükteki ilk anlamın çeldirici olarak seçeneklere yerleştirilme taktiğini fark edip eleyebilmek.',
-          'Seçenekteki ifadeyi metindeki sözcüğün yerine koyarak sağlamasını yapabilmek (Cümle-İçi Yerine Koyma Metodu).',
-          'Sözcüğün cümleye kattığı mecazi, somutlaştırıcı veya ironik anlamları çözümleyebilmek.',
-        ],
-        core_explanation: `## 1. Bu Soru Tipini Nasıl Çözerim? (Adım Adım Strateji)
-1. **Sözcüğü Cümleden Koparmayın:** Asla sadece altı çizili sözcüğe bakıp hemen şıklara inmeyin. Önce cümlenin tamamını, gerekirse önceki ve sonraki cümleyi okuyun.
-2. **"Cümle-İçi Yerine Koyma" Metodunu Uygulayın:** Doğru olduğunu düşündüğünüz seçenekteki kelime grubunu metindeki sözcüğün yerine koyun. Cümlenin anlam bütünlüğü ve yazarın kastettiği duygu bozulmuyorsa doğru cevaptır.
-3. **Sözlük Anlamı Çeldiricisine Dikkat Edin:** Soru hazırlayıcılar adayın aceleciliğini bildikleri için sözcüğün en bilinen sözlük anlamını A veya B seçeneğine koyarlar. Metindeki bağlamsal mecazı yakalamadan işaretlemeyin.
-4. **Kelimelerin Duygu Değerini İnceleyin:** Yazar o sözcüğü överek mi, yermek amacıyla mı yoksa nötr bir tespit için mi kullanmış? Bu ipucu yanlış şıkları hemen eler.
-
-## 2. Çeldiriciler Nasıl Hazırlanır? (ÖSYM Tuzakları)
-* **Sözlükteki İlk Anlam Tuzağı:** "Bu yazar dili çok *ağır* kullanıyor" cümlesinde "ağır" için şıklara "kütlesi fazla olan" ya da "yavaş hareket eden" konur.
-* **Ses Benzerliği Tuzağı:** Sözcüğün kökteş veya sesteş başka bir kullanım alanı şıklara serpiştirilir.
-* **Yakın Anlam Kayması:** Tam olarak karşılamayan ama benzer tınısı olan bir kelime seçilerek adayın dikkati test edilir.
-
-## 3. Yanlış Analizi: Neden Hata Yapıldı?
-* *Hata:* Altı çizili sözcüğü okur okumaz ilk aklıma gelen anlamı şıklarda aradım → **Teşhis:** Cümleyi ve bağlamı yok sayarak ezbere işaretleme yaptınız.
-* *Hata:* Seçeneği yerine koyduğumda cümle anlamsızlaştı ama yine de işaretledim → **Teşhis:** Yerine koyma testinin sonucunu dikkate almadınız.`,
-        key_concepts: [
-          {
-            term: 'Bağlamsal Anlam (Kontekst)',
-            definition: 'Bir sözcüğün metin içindeki diğer sözcüklerle girdiği ilişki sonucu kazandığı özel anlamdır.',
-            practical_meaning: 'Sözcüğün sözlükteki anlamı değil, o metindeki geçerli rolüdür.',
-          },
-          {
-            term: 'Yerine Koyma Testi',
-            definition: 'Şıkta verilen anlamı metindeki ifadenin yerine koyup cümlenin akışını test etme yöntemidir.',
-            practical_meaning: 'Cümlede anlam kırılması veya mantık hatası oluşturmayan seçenek doğrudur.',
-          },
-        ],
-        subtopics: [
-          {
-            id: `${topic.id}-sub-1`,
-            number: '1.1',
-            title: 'Sözcüklerin Cümlede Anlam Genişlemesi',
-            content: 'Temel anlamdan soyutlamaya ve mecaza geçiş süreçlerini metin içinde analiz edin.',
-            key_takeaway: 'Her sözcük bulunduğu cümlenin rengini alır.',
-          },
-          {
-            id: `${topic.id}-sub-2`,
-            number: '1.2',
-            title: 'Deyimleşmiş ve Kalıplaşmış İfadelerin Tahlili',
-            content: 'Metinde geçen "kendi sesini bulmak", "ayna tutmak", "köprü kurmak" gibi kalıpların bağlamsal karşılığını saptayın.',
-            key_takeaway: 'Mecazlı kalıpların arkasındaki ana düşünceyi yakalayın.',
-          },
-        ],
-        examples: [
-          {
-            title: 'Bağlamdan Anlam Çıkarma Örnek Soru Analizi',
-            scenario: 'Cümle: "Genç romancı, ilk eserinde popüler akımların rüzgârına kapılmak yerine, kendi dar patikasında inatla yürümeyi seçmiştir."\n\nSoru: Bu cümledeki "kendi dar patikasında inatla yürümek" sözüyle anlatılmak istenen nedir?',
-            analysis: 'Çözüm Adımı: "Popüler akımlara kapılmamak" ifadesi ipucudur. Demek ki yazar herkesin gittiği ana yoldan (genel beğeniden) değil, kendine has, özgün ve az kişinin tercih ettiği zorlu bir yoldan (kendi tarzından) gitmiştir. Doğru yanıt: "Özgün ve bağımsız bir sanat çizgisi sürdürmek"tir.',
-            domain: 'Sözel Yetenek & Bağlamsal Analiz',
-          },
-        ],
-        comparison_tables: [
-          {
-            title: 'Sözcüklerin Bağlama Göre Anlam Değişim Tablosu',
-            headers: ['Sözcük / Kalıp', 'Örnek Cümle', 'Bağlamdaki Karşılığı', 'Çeldirici Tuzak'],
-            rows: [
-              ['Açmak', 'Konuyu biraz daha açar mısınız?', 'Ayrıntılandırmak, anlaşılır kılmak', 'Kapıyı açmak (gerçek anlam)'],
-              ['Beslemek', 'İçinde ona karşı gizli bir kin besliyordu.', 'Duyguyu zihinde sürekli yaşatmak', 'Yemek yedirmek (temel anlam)'],
-              ['Ayna Tutmak', 'Romanında taşra insanının dramına ayna tuttu.', 'Gerçekleri olduğu gibi, tarafsızca yansıtmak', 'Cam eşya kullanmak'],
-              ['Ses Getirmek', 'Yayımlanan son rapor bilim dünyasında ses getirdi.', 'Büyük yankı uyandırmak, ilgi çekmek', 'Gürültü yapmak'],
-            ],
-          },
-        ],
-        common_confusions: [
-          {
-            wrong_belief: 'Altı çizili ifadenin anlamı daima ilk cümlededir.',
-            correct_distinction: 'İfade parçanın ortasında veya sonunda olabilir; anlamı parçanın tüm kurgusu belirler.',
-            tip: 'Metnin ana fikrini aklınızda tutarak sözcüğün amacını belirleyin.',
-          },
-        ],
-        exam_tips: [
-          {
-            tip: "AGS'DE DİKKAT: 'Altı çizili sözle anlatılmak istenen...' sorularında şıkkı yerine koyduğunuzda cümlenin grameri ve anlamı pürüzsüz olmalıdır.",
-            importance: 'critical',
-          },
-        ],
-        mnemonics: [
-          {
-            title: 'Yerine Koyma Kuralı',
-            memory_trick: '🔑 Kural: ŞIKTAKİ İFADEYİ AL, METİNDEKİ SÖZCÜĞÜN YERİNE KOY',
-            description: 'Metin akıcı ve yazarın mesajıyla uyumlu kalıyorsa cevap odur.',
-          },
-        ],
-        summary: 'Bağlam, sözcüğün metin içindeki gerçek kimliğidir. Sözlük ezberi değil, metindeki işlevi doğru yanıtı verir.',
-        what_to_remember: [
-          '✓ Altı çizili sözcüğü asla cümleden bağımsız okuma.',
-          '✓ Sözlükteki ilk anlam güçlü bir çeldiricidir, uyanık ol.',
-          '✓ Yerine koyma yöntemini mutlaka test et.',
-          '✓ Kalıplaşmış mecaz ifadelerin ardındaki somut karşılığı bul.',
-        ],
-        self_check_questions: [
-          {
-            question: '1. "Usta yönetmen, yeni filminde izleyiciyi şaşırtacak ucuz numaralara başvurmamış; hayatın olağan akışını tüm çıplaklığıyla perdeye aktarmıştır."\n\nBu parçadaki "ucuz numaralara başvurmamak" sözüyle anlatılmak istenen aşağıdakilerden hangisidir?',
-            options: [
-              { key: 'A', text: 'Düşük bütçeli prodüksiyonlardan kaçınmak', isCorrect: false },
-              { key: 'B', text: 'Seyirciyi etkilemek için basit ve yapay hilelere tevessül etmemek', isCorrect: true },
-              { key: 'C', text: 'Bilet fiyatlarını makul seviyede tutmak', isCorrect: false },
-              { key: 'D', text: 'Yalnızca tanınmış oyuncularla çalışmak', isCorrect: false },
-              { key: 'E', text: 'Geleneksel sinema tekniklerini tamamen terk etmek', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. "Ucuz numara", mecazi olarak sanatsal derinliği olmayan, kolay yoldan dikkat çekmeyi amaçlayan yapay yöntemleri ifade eder. [A and C seçenekleri sözcüğün maddi/parasal ilk anlamına dayanan çeldiricilerdir.]',
-          },
-          {
-            question: '2. "Yazar, ele aldığı tarihi dönemi anlatırken kendi çağından kopmamış; geçmiş ile bugün arasında sağlam köprüler kurmuştur."\n\nBu cümledeki "köprüler kurmak" ifadesinin bağlamsal anlamı aşağıdakilerden hangisidir?',
-            options: [
-              { key: 'A', text: 'Mimari yapılara ilişkin tarihi belgeleri incelemek', isCorrect: false },
-              { key: 'B', text: 'Geçmiş olaylar ile günümüz arasında anlamlı bağlar ve ilişkiler tesis etmek', isCorrect: true },
-              { key: 'C', text: 'İki farklı şehir arasındaki ulaşımı kolaylaştırmak', isCorrect: false },
-              { key: 'D', text: 'Eski dille yazılmış metinleri günümüz Türkçesine çevirmek', isCorrect: false },
-              { key: 'E', text: 'Tarihi roman yazmayı diğer türlerden üstün görmek', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. "Köprü kurmak", iki farklı unsur (geçmiş ile bugün) arasında ilişki ve bağ oluşturmak anlamında kullanılmıştır.',
-          },
-          {
-            question: '3. "Bilimsel çalışmalarda tarafsızlık iddiasında bulunan bir araştırmacının, elde ettiği verileri kendi peşin fikirlerinin kalıbına dökmesi affedilemez bir yanılgıdır."\n\nBu cümledeki "kendi peşin fikirlerinin kalıbına dökmek" sözüyle anlatılmak istenen nedir?',
-            options: [
-              { key: 'A', text: 'Verileri önceden sahip olduğu önyargılara uydurmaya çalışmak', isCorrect: true },
-              { key: 'B', text: 'Araştırma sonuçlarını grafiklerle somutlaştırmak', isCorrect: false },
-              { key: 'C', text: 'Bilimsel deneyleri laboratuvar ortamında tekrarlamak', isCorrect: false },
-              { key: 'D', text: 'Daha önce yayımlanmış makaleleri aynen kopyalamak', isCorrect: false },
-              { key: 'E', text: 'Araştırma bütçesini titizlikle yönetmek', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap A seçeneğidir. "Peşin fikirlerin kalıbına dökmek", nesnel gerçekleri önyargılara uydurarak çarpıtmak anlamına gelir.',
-          },
-          {
-            question: '4. Bir AGS sorusunda altı çizili sözün anlamı belirlenirken adayın izlemesi gereken en sağlıklı yöntem hangisidir?',
-            options: [
-              { key: 'A', text: 'Sözcüğün sözlükteki ilk ve en yaygın anlamını doğrudan işaretlemek', isCorrect: false },
-              { key: 'B', text: 'Seçeneklerdeki anlam karşılığını cümleye yerleştirip bağlam uyumunu test etmek', isCorrect: true },
-              { key: 'C', text: 'Cümleyi okumadan yalnızca altı çizili kısmı okumak', isCorrect: false },
-              { key: 'D', text: 'En kısa şıkkı her zaman doğru kabul etmek', isCorrect: false },
-              { key: 'E', text: 'Metindeki tüm kelimelerin eş anlamlılarını ezberden yazmak', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. Cümle-içi yerine koyma yöntemi, anlam uyumunu teyit eden en pratik sınav tekniğidir.',
-          },
-          {
-            question: '5. "Genç şair, şiirlerinde kelimeleri adeta kılı kırk yaran bir kuyumcu titizliğiyle seçmiştir."\n\nBu cümledeki "kılı kırk yarmak" ifadesinin bağlamdaki anlamı nedir?',
-            options: [
-              { key: 'A', text: 'Çok aceleci ve dikkatsiz davranmak', isCorrect: false },
-              { key: 'B', text: 'Aşırı derecede titiz, ayrıntılı ve özenli davranmak', isCorrect: true },
-              { key: 'C', text: 'Maddi kazancı ön planda tutmak', isCorrect: false },
-              { key: 'D', text: 'Geleneksel kalıplara sıkı sıkıya bağlı kalmak', isCorrect: false },
-              { key: 'E', text: 'Şiirlerini sadece yakın çevresiyle paylaşmak', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. "Kılı kırk yarmak", en küçük detaylara kadar büyük bir özen ve titizlik göstermek demektir.',
-          },
-        ],
-      };
-    }
-  }
-
-  // 2. UNIT 2: PARAGRAF VE METİN MİMARİSİ
-  if (isUnit2) {
-    if (topic.id === 'topic-sozel-2-3' || topic.title.includes('Akışı Bozan')) {
-      return {
-        id: `tc-${topic.id}`,
-        topic_id: topic.id,
-        title: topic.title,
-        why_it_matters: 'Akışı bozan cümle soruları, AGS Sözel Yetenek testinde metin yapısını ve düşünce zincirini test eden en pratik soru tipidir. Bir parçada anlatılan ana konudan, konunun ele alınış yönünden veya genel/özel dengesinden sapan cümleyi hızlıca yakalayarak saniyeler içinde tam puan alabilirsiniz.',
-        learning_objectives: [
-          'Paragraftaki düşünce zincirini ve mantıksal sürekliliği takip edebilmek.',
-          'Aynı konudan bahsetse bile konunun "farklı bir yönüne" sapan cümleyi ayırt edebilmek.',
-          'Şüpheli cümleyi metinden çıkardığınızda önceki ve sonraki cümlenin birbirine bağlanıp bağlanmadığını test edebilmek.',
-          'Bağlantı ögelerinin (bu yüzden, oysa, nitekim, ancak) doğru cümleyi işaret edip etmediğini kontrol edebilmek.',
-        ],
-        core_explanation: `## 1. Bu Soru Tipini Nasıl Çözerim? (Adım Adım Strateji)
-1. **Her Cümlenin "Konu Başlığını" Belirleyin:** Cümleleri (I), (II), (III) okurken zihninizde 2-3 kelimelik konu etiketi koyun.
-2. **"Konu Aynı Ama Yön Farklı mı?" Tuzağını Yakalayın:** Akışı bozan cümle genellikle tamamen alakasız bir konudan bahsetmez! Örneğin: Parça "yazarın üslubunu" anlatırken aradaki tek bir cümle "yazarın kitap satış rakamlarından" bahsediyorsa konu aynı (yazar) ama **yön farklıdır**. Akışı bozan cümle budur!
-3. **Genel - Özel Dengesini İnceleyin:** Parça genel bir felsefi ilkeden bahsederken aniden tek bir kişisel anıya inip sonra tekrar genele dönüyorsa o cümle akışı bozar.
-4. **Sağlama Yöntemi (Köprü Testi):** Akışı bozduğunu düşündüğünüz cümleyi parmağınızla kapatın. Bir önceki cümle ile bir sonraki cümleyi art arda okuyun. Eğer iki cümle birbirine pürüzsüz bir mantıkla bağlanıyorsa teşhisiniz %100 doğrudur.
-
-## 2. Çeldiriciler Nasıl Hazırlanır? (ÖSYM Tuzakları)
-* **Kelime Kamuflesi:** Akışı bozan cümlenin içine, önceki cümlede geçen bir kelime bilerek yerleştirilir. Aday kelimeyi görünce bağlantılı zanneder.
-* **Görünüşte Mantıklı Olma:** Cümle kendi başına çok doğru ve edebi bir fikir taşır. Ancak o parçanın o noktasına ait değildir.
-
-## 3. Yanlış Analizi: Neden Hata Yapıldı?
-* *Hata:* "Ama bu cümle de o yazarla ilgili, neden akışı bozsun ki?" dedim → **Teşhis:** Konu ile konunun işlenen yönünü birbirine karıştırdınız.`,
-        key_concepts: [
-          {
-            term: 'Düşünce Zinciri',
-            definition: 'Paragraftaki her cümlenin bir önceki cümlenin mantıksal devamı niteliğinde olmasıdır.',
-            practical_meaning: 'Zincirin halkasını kıran yabancı cümle akışı bozar.',
-          },
-          {
-            term: 'Köprü Testi (Sağlama)',
-            definition: 'Şüpheli cümle çıkarıldığında bir önceki ve bir sonraki cümlenin anlamsal olarak kavuşmasıdır.',
-            practical_meaning: 'Akışı bozan cümle çıktığında metin çok daha akıcı hale gelir.',
-          },
-        ],
-        subtopics: [
-          {
-            id: `${topic.id}-sub-1`,
-            number: '2.1',
-            title: 'Konu Kayması ve Bakış Açısı Değişikliğini Saptama',
-            content: 'Öznede, zamanda veya odak noktasında meydana gelen ani sıçramaları tespit edin.',
-            key_takeaway: 'Konu aynı kalsa bile odak noktası değiştiğinde akış kırılır.',
-          },
-          {
-            id: `${topic.id}-sub-2`,
-            number: '2.2',
-            title: 'Bağlaç ve Zamir Takibi ile Köprü Sağlaması',
-            content: '"Bu durum", "bunun aksine", "nitekim" gibi gönderim ögelerinin hangi cümleye bağlı olduğunu eşleştirin.',
-            key_takeaway: 'Bağlaçlar mantıksal zincirin kilitleridir.',
-          },
-        ],
-        examples: [
-          {
-            title: 'Akışı Bozan Cümle Soru ve Köprü Analizi',
-            scenario: '(I) Klasik müzik dinlemenin insan beynindeki odaklanma merkezlerini uyardığı bilinmektedir. (II) Özellikle karmaşık matematiksel problemler çözülürken enstrümantal müzik dikkati toplamayı kolaylaştırır. (III) Konser biletlerinin pahalı olması gençlerin bu etkinliklere katılımını sınırlandırmaktadır. (IV) Yapılan nörolojik testler, ritmik seslerin zihinsel yorgunluğu azalttığını kanıtlamıştır.\n\nSoru: Hangisi düşüncenin akışını bozmaktadır?',
-            analysis: 'Cümle I, II ve IV müziğin zihinsel odaklanma ve beyin üzerindeki olumlu etkilerini incelerken; III. cümle ekonomik bir mesele olan "konser biletlerinin pahalılığına" sıçramıştır. III. cümle çıkarıldığında II ve IV mükemmel bir köprü kurmaktadır. Doğru cevap III (C şıkkı).',
-            domain: 'Sözel Yetenek & Paragraf Yapısı',
-          },
-        ],
-        comparison_tables: [
-          {
-            title: 'Akış Bozulması Teşhis Tablosu',
-            headers: ['Cümle Numarası', 'İşlenen Odak', 'Parçanın Ana Odağı', 'Durum'],
-            rows: [
-              ['Cümle I', 'Müziğin beyne etkisi', 'Müziğin nörolojik faydası', 'Akışa Uygun'],
-              ['Cümle II', 'Odaklanma ve problem çözme', 'Müziğin nörolojik faydası', 'Akışa Uygun'],
-              ['Cümle III', 'Bilet fiyatlarının pahalılığı', 'Müziğin nörolojik faydası', '❌ AKIŞI BOZAN CÜMLE'],
-              ['Cümle IV', 'Ritmik seslerin zihinsel etkisi', 'Müziğin nörolojik faydası', 'Akışa Uygun'],
-            ],
-          },
-        ],
-        common_confusions: [
-          {
-            wrong_belief: 'Akışı bozan cümle daima en kısa olan cümledir.',
-            correct_distinction: 'Cümlenin boyutuyla hiçbir ilgisi yoktur; tamamen anlamsal odak kaymasına bağlıdır.',
-            tip: 'Cümleleri tek tek numaralı birer halka gibi birbirine ekleyerek okuyun.',
-          },
-        ],
-        exam_tips: [
-          {
-            tip: "AGS'DE DİKKAT: Şüpheli cümleyi eledikten sonra mutlaka bir önceki cümle ile bir sonraki cümleyi arka arkaya okuyup köprüyü test edin.",
-            importance: 'critical',
-          },
-        ],
-        mnemonics: [
-          {
-            title: 'Köprü Sağlaması Kuralı',
-            memory_trick: '🔑 Kural: ŞÜPHELİ CÜMLEYİ ÇIKAR, ÖNCEKİYLE SONRAKİYİ BİRLEŞTİR',
-            description: 'Köprü kusursuz bağlanıyorsa doğru şıkkı buldunuz.',
-          },
-        ],
-        summary: 'Akışı bozan cümle, paragrafın tematik bütünlüğünden sapan yabancı unsurdur. Köprü testiyle anında doğrulanır.',
-        what_to_remember: [
-          '✓ Konu aynı olsa bile anlatımın yönü değişmişse akış bozulur.',
-          '✓ Cümlenin içindeki kelime benzerliklerine kanma.',
-          '✓ Çıkarma ve köprü testi yapmadan şıkkı işaretleme.',
-          '✓ Numaraların cümlenin başında mı sonunda mı verildiğine dikkat et.',
-        ],
-        self_check_questions: [
-          {
-            question: '1. (I) Roman yazarı, kurmaca dünyasını inşa ederken gerçek yaşamdan beslenir. (II) Sokakta gördüğü bir yüz, duyduğu bir ses onun muhayyilesinde yepyeni karakterlere dönüşür. (III) İyi bir romanın yayınevi tarafından basılması aylar süren titiz bir süreç gerektirir. (IV) Böylece yazar, sıradan olayları evrensel bir insanlık durumuna tercüme eder.\n\nBu parçadaki numaralanmış cümlelerden hangisi düşüncenin akışını bozmaktadır?',
-            options: [
-              { key: 'A', text: 'I', isCorrect: false },
-              { key: 'B', text: 'II', isCorrect: false },
-              { key: 'C', text: 'III', isCorrect: true },
-              { key: 'D', text: 'IV', isCorrect: false },
-              { key: 'E', text: 'Hiçbiri', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap C seçeneğidir. Parçada yazarın gerçek hayattan esinlenme ve karakter yaratma süreci anlatılırken III. cümlede aniden "yayınevi baskı süreçlerine" geçilmiş ve akış kırılmıştır. III çıkarıldığında II ile IV birbirine doğrudan bağlanmaktadır.',
-          },
-          {
-            question: '2. (I) Çocuklukta edinilen okuma alışkanlığı, bireyin kelime hazinesini ve ifade gücünü zenginleştirir. (II) Erken yaşta kitaplarla tanışan bireyler, duygu ve düşüncelerini daha rahat aktarır. (III) Kitap fuarları her yıl yüz binlerce ziyaretçiyi ağırlamaktadır. (IV) Bu zihinsel esneklik, onların akademik ve sosyal hayatlarında da belirgin bir başarı sağlar.\n\nBu parçada akışı bozan cümle hangisidir?',
-            options: [
-              { key: 'A', text: 'I', isCorrect: false },
-              { key: 'B', text: 'II', isCorrect: false },
-              { key: 'C', text: 'III', isCorrect: true },
-              { key: 'D', text: 'IV', isCorrect: false },
-              { key: 'E', text: 'I ve II', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap C seçeneğidir. Metin erken yaşta okumanın bireysel ve zihinsel gelişimine odaklanmışken III. cümle fuar ziyaretçi istatistiğine geçerek akışı bozmuştur. IV. cümledeki "Bu zihinsel esneklik" ifadesi doğrudan II. cümleye bağlanır.',
-          },
-          {
-            question: '3. Akışı bozan cümle sorularında adayın cevabı teyit etmek için uygulayabileceği en güvenilir yöntem hangisidir?',
-            options: [
-              { key: 'A', text: 'Tüm metni tersten okumak', isCorrect: false },
-              { key: 'B', text: 'Şüpheli cümleyi metinden çıkarıp bir önceki cümle ile bir sonraki cümleyi art arda okuyarak anlam köprüsünü kontrol etmek', isCorrect: true },
-              { key: 'C', text: 'Sadece cümlenin uzunluğuna bakmak', isCorrect: false },
-              { key: 'D', text: 'İlk cümleyi doğrudan doğru cevap kabul etmek', isCorrect: false },
-              { key: 'E', text: 'Yalnızca fiil kiplerini saymak', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. Köprü testi, akışı bozan cümlenin tespitinde en kesin ve güvenilir sınav tekniğidir.',
-          },
-          {
-            question: '4. (I) Öğretmenlerin sınıf içi iletişim dili, öğrencilerin derse katılımını doğrudan etkiler. (II) Kapsayıcı ve teşvik edici bir üslup, öğrencinin hata yapma korkusunu yenmesini sağlar. (III) Öğretmen maaşları gelişmiş ülkelerde daha yüksek standartlardadır. (IV) Kendini güvende hisseden öğrenci ise derste daha aktif rol alır.\n\nBu parçada hangi cümle akışı bozmaktadır?',
-            options: [
-              { key: 'A', text: 'I', isCorrect: false },
-              { key: 'B', text: 'II', isCorrect: false },
-              { key: 'C', text: 'III', isCorrect: true },
-              { key: 'D', text: 'IV', isCorrect: false },
-              { key: 'E', text: 'I ve IV', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap C seçeneğidir. Metin pedagojik iletişim ve sınıf içi katılım üzerine kuruluyken III. cümle ekonomik ve idari bir konuya atlamıştır.',
-          },
-          {
-            question: '5. Bir paragrafta akışın bozulması genellikle aşağıdakilerin hangisinden kaynaklanır?',
-            options: [
-              { key: 'A', text: 'Metinde çok sayıda sıfat kullanılmış olmasından', isCorrect: false },
-              { key: 'B', text: 'Konunun işlenen yönünün veya bakış açısının aniden değişip metnin tematik bütünlüğünden sapmasından', isCorrect: true },
-              { key: 'C', text: 'Cümlelerin devrik olmasından', isCorrect: false },
-              { key: 'D', text: 'Paragrafın tek bir paragraf olmasından', isCorrect: false },
-              { key: 'E', text: 'Metnin düşünce yazısı olmasından', isCorrect: false },
-            ],
-            explanation: 'Doğru cevap B seçeneğidir. Akış bozulması; tematik sapma, odak değişikliği veya mantıksal zincirin kırılması durumunda ortaya çıkar.',
-          },
-        ],
-      };
-    }
-  }
-
-  // 3. UNIT 3: SÖZEL AKIL YÜRÜTME VE MANTIK
-  if (isUnit3) {
-    return {
-      id: `tc-${topic.id}`,
-      topic_id: topic.id,
-      title: topic.title,
-      why_it_matters: 'Sözel Mantık ve Akıl Yürütme, AGS Sözel Yetenek testinde en yüksek puan getiren ve doğru organize edildiğinde adaya 3-4 neti firesiz kazandıran alandır. Bu bölümde ezber yoktur; bilgiyi tabloya dökmek, kesin öncüllerle olasılıkları ayrıştırmak ve koşullardan sistematik çıkarım yapma becerisi ölçülür.',
-      learning_objectives: [
-        'Soruda verilen karmaşık sözel verileri sade bir değişkenler tablosuna dönüştürebilmek.',
-        'Kesin bilgileri doğrudan tabloya yerleştirip değişken olasılıkları dallandırabilmek.',
-        'Olumsuz öncülleri ("...değildir", "...aynı grupta olamaz") tablonun kenarında sembolleştirebilmek.',
-        '"Kesinlikle doğrudur / yanlıştır" ile "Hangisi olabilir?" soru köklerini doğru stratejiyle çözebilmek.',
-      ],
-      core_explanation: `## 1. Bu Soru Tipini Nasıl Çözerim? (Adım Adım Strateji)
-1. **Değişkenleri Belirleyin ve Sabit Olanı Tablo Başlığı Yapın:** Soruda geçen unsurlardan (Örn: Günler: Pzt-Salı-Çrş; Katlar: 1-2-3; Kişiler: A, B, C, D) **sayısı az veya sırası değişmeyen unsuru** tablo başlığı yapın.
-2. **Kesin Bilgileri İlk Olarak Yerleştirin:** "Ahmet 3. kattadır", "Salı günü Elif nöbetçidir" gibi tereddütsüz kesin öncülleri doğrudan tabloya yazın.
-3. **Bağlantılı ve Göreceli Koşulları Sembolleştirin:**
-   * "A, B'nin hemen sonrasındadır" → [ B ][ A ] (blok kutu yapın).
-   * "C ve D farklı günlerde nöbet tutmuştur" → C ≠ D.
-   * "E ya 1. ya da 5. sıradadır" → E = 1 / 5 (olasılık dalı açın).
-4. **Olasılık Sayısı 2 ise İki Ayrı Tablo Çizin:** Zihinde tutmaya çalışmak en büyük zaman kaybıdır. 1. İhtimal ve 2. İhtimal olarak yan yana iki küçük tablo çizin.
-5. **Soru Köküne Göre Seçenekleri Eleme:**
-   * *"Kesinlikle doğrudur":* Her iki olasılık tablosunda da istisnasız doğru olan seçenektir.
-   * *"Hangisi olabilir":* İhtimal tablolarından en az birinde kurallarla çelişmeyen seçenektir.
-
-## 2. Çeldiriciler Nasıl Hazırlanır? (ÖSYM Tuzakları)
-* **Yalnızca Bir Olasılıkta Doğru Olanı "Kesin Doğru" Gibi Sunma:** 1. senaryoda doğru olan ama 2. senaryoda değişebilen bir durumu "Kesinlikle doğrudur" sorusunun A şıkkına koyarlar.
-* **Ters Yön Tuzağı:** "Ahmet, Burak'ın önündedir" ifadesini adayın "hemen önündedir" gibi kısıtlı algılaması beklenir. (Arada başkaları da olabilir!)
-
-## 3. Yanlış Analizi: Neden Hata Yapıldı?
-* *Hata:* Tablo çizmeden zihnimden çözmeye çalıştım, ihtimaller birbirine girdi → **Teşhis:** Sözel mantık tablosuz çözülemez; görselleştirme şarttır.
-* *Hata:* İhtimal dahilindeki bir bilgiyi kesin doğru kabul ettim → **Teşhis:** Olasılık dallarını birbirinden ayırmadınız.`,
-      key_concepts: [
-        {
-          term: 'Sabit Değişken İlkesi',
-          definition: 'Sırası ve yapısı değişmeyen unsurların (günler, katlar, saatler) tablonun iskeletini oluşturmasıdır.',
-          practical_meaning: 'Hareketli olan kişiler bu sabit sütunların altına dağıtılır.',
-        },
-        {
-          term: 'Bloklama Yöntemi',
-          definition: 'Birbirinden ayrılmayan öncüllerin (Örn: "A, B\'nin hemen ardındadır") tek bir blok olarak taşınmasıdır.',
-          practical_meaning: 'Tablodaki boşluklara tek tek değil, ikili blok olarak yerleştirilir.',
-        },
-      ],
-      subtopics: [
-        {
-          id: `${topic.id}-sub-1`,
-          number: '3.1',
-          title: 'Hızlı ve Pratik Değişken Tablosu Oluşturma',
-          content: 'Sorudaki verileri 30 saniye içinde matrise dönüştürme taktikleri.',
-          key_takeaway: 'İyi kurgulanmış bir tablo sorunun %80\'ini çözer.',
-        },
-        {
-          id: `${topic.id}-sub-2`,
-          number: '3.2',
-          title: 'Kesinlik ve Olasılık Köklerini Ayrıştırma',
-          content: 'Kesinlikle doğrudur/yanlıştır sorularında ortak kesişim kümesini bulma.',
-          key_takeaway: 'Tüm senaryolarda değişmeyen yargı tek kesin doğrudur.',
-        },
-      ],
-      examples: [
-        {
-          title: 'Sözel Mantık Örnek Tablo ve Çözüm Analizi',
-          scenario: 'Veriler: Ali, Burak, Cem, Derya, Elif bir binanın 1, 2, 3, 4 ve 5. katlarında oturmaktadır.\n1. Burak 2. kattadır (Kesin).\n2. Ali, Derya’nın hemen üst katındadır (Blok: [Derya][Ali]).\n3. Cem en üst katta değildir (Cem ≠ 5).\n\nSoru: Buna göre 5. katta kesinlikle kim oturmaktadır?',
-          analysis: 'Çözüm Adımı:\nKatlar: 1, 2, 3, 4, 5.\nBurak = 2. kat (dolu).\nGeriye kalan katlar: 1, 3, 4, 5.\n[Derya][Ali] bloğu için yan yana iki boş kat lazım: Yalnızca (3 ve 4) veya (4 ve 5) olabilir mi? Eğer Derya=4, Ali=5 olursa geriye 1 ve 3 kalır; Cem ≠ 5 kuralı bozulmaz. Eğer Derya=3, Ali=4 olursa geriye 1 ve 5 kalır; Cem 5 olamayacağı için Cem=1 olur, geriye kalan Elif ise zorunlu olarak 5. katta oturur!\nHer iki durumda da kuralları sağlayan kesin sonuç: Elif veya Ali 5. kattadır, Cem asla 5 olamaz.',
-          domain: 'Sözel Yetenek & Mantık',
-        },
-      ],
-      comparison_tables: [
-        {
-          title: 'Sözel Mantık Soru Kökü Karşılaştırma Tablosu',
-          headers: ['Soru Kökü', 'Aranan Şart', 'İzlenecek Yol'],
-          rows: [
-            ['Kesinlikle Doğrudur', 'Tüm olasılıklarda istisnasız gerçekleşen durum', 'Olasılıkların ortak kesişimini işaretle.'],
-            ['Kesinlikle Yanlıştır', 'Hiçbir olasılıkta gerçekleşmesi mümkün olmayan durum', 'Öncüllerle doğrudan çelişen şıkkı bul.'],
-            ['Hangisi Olabilir', 'En az bir olasılıkta gerçekleşebilen durum', 'Kurallara aykırı olmayan tek bir senaryo yeterlidir.'],
-          ],
-        },
-      ],
-      common_confusions: [
-        {
-          wrong_belief: 'Tüm kişilerin yerini kesin olarak bulmadan sorular çözülemez.',
-          correct_distinction: 'Sözel mantıkta bazı kişilerin yeri belirsiz kalabilir; soru kökü zaten olasılıkları sorar.',
-          tip: 'Tabloda kalan belirsizlikleri dert etmeyin, soru köküne odaklanın.',
-        },
-      ],
-      exam_tips: [
-        {
-          tip: "AGS'DE DİKKAT: 'Hemen önünde/arkasında' ifadesi bitişikliği belirtir; 'önündedir' ifadesi ise araya başkalarının girebileceğini gösterir.",
-          importance: 'critical',
-        },
-      ],
-      mnemonics: [
-        {
-          title: 'Sözel Mantık 3A Kuralı',
-          memory_trick: '🔑 Kural: AYIKLA (Kesinleri) → BAĞLA (Blokları) → ÇATALLANDIR (Olasılıkları)',
-          description: 'Bu üç adımı izleyen aday sıfır hatayla tam puan alır.',
-        },
-      ],
-      summary: 'Sözel mantık görselleştirme ve tümdengelim sanatıdır. Tablo kuran aday zaman kazanır ve çeldiricilere takılmaz.',
-      what_to_remember: [
-        '✓ Sabit olanı başlık yap, hareketli olanı dağıt.',
-        '✓ Kesin bilgileri hemen tabloya yerleştir.',
-        '✓ Blok şartları tek parça halinde taşı.',
-        '✓ En fazla 2 olasılık tablosu aç ve netleştir.',
-      ],
-      self_check_questions: [
-        {
-          question: '1. Bir sözel mantık sorusunda "Ahmet ve Berk farklı branşlarda görev yapmaktadır." öncülü verildiğinde izlenecek en doğru yaklaşım hangisidir?',
-          options: [
-            { key: 'A', text: 'Ahmet ve Berk’in asla aynı branş sütununa yazılamayacağını belirleyip olasılıkları buna göre sınırlamak', isCorrect: true },
-            { key: 'B', text: 'Ahmet’i rastgele bir branşa yerleştirip Berk’i görmezden gelmek', isCorrect: false },
-            { key: 'C', text: 'Bu öncülü sorunun sonunda hatırlamak üzere unutmak', isCorrect: false },
-            { key: 'D', text: 'İkisinin de aynı gün sınava girdiğini varsaymak', isCorrect: false },
-            { key: 'E', text: 'Branş sayısını iki katına çıkarmak', isCorrect: false },
-          ],
-          explanation: 'Doğru cevap A seçeneğidir. Farklı branşta olma koşulu, iki kişinin aynı kümede kesişemeyeceğini gösteren kesin bir kısıtlamadır.',
-        },
-        {
-          question: '2. "A, B’nin hemen önündeki sırada yer almaktadır." ifadesini şematize etmenin en doğru yolu hangisidir?',
-          options: [
-            { key: 'A', text: 'A ve B arasına 2 kişi koymak', isCorrect: false },
-            { key: 'B', text: '[ A ][ B ] şeklinde ayrılmaz bir blok oluşturmak', isCorrect: true },
-            { key: 'C', text: 'A’yı en başa, B’yi en sona yazmak', isCorrect: false },
-            { key: 'D', text: 'B’yi A’nın üstüne yazmak', isCorrect: false },
-            { key: 'E', text: 'A ve B’yi tablodan tamamen çıkarmak', isCorrect: false },
-          ],
-          explanation: 'Doğru cevap B seçeneğidir. "Hemen önünde" ifadesi aralarında hiç kimsenin bulunmadığı bitişik bir ikili blok ([A][B]) anlamına gelir.',
-        },
-        {
-          question: '3. Bir sözel mantık sorusunda 2 farklı geçerli senaryo oluştuğunda en hızlı ve hatasız çözüm yöntemi nedir?',
-          options: [
-            { key: 'A', text: 'İki ihtimali de zihinde ezberleyip soruya geçmek', isCorrect: false },
-            { key: 'B', text: 'Yan yana iki küçük şablon çizip olasılıkları ayrı tablolara işlemek', isCorrect: true },
-            { key: 'C', text: 'Olasılıklardan birini keyfi olarak silip tek tabloyla devam etmek', isCorrect: false },
-            { key: 'D', text: 'Soruyu çözmekten vazgeçip diğer derse geçmek', isCorrect: false },
-            { key: 'E', text: 'Tüm seçeneklerin yanlış olduğunu varsaymak', isCorrect: false },
-          ],
-          explanation: 'Doğru cevap B seçeneğidir. Çatallanan iki senaryoyu yan yana çizmek zihinsel karışıklığı önler ve soruların saniyeler içinde çözülmesini sağlar.',
-        },
-        {
-          question: '4. Soru kökünde "Aşağıdakilerden hangisi kesinlikle yanlıştır?" sorulduğunda adayın araması gereken seçenek hangisidir?',
-          options: [
-            { key: 'A', text: 'Olasılıklardan birinde doğru olabilen seçenek', isCorrect: false },
-            { key: 'B', text: 'Verilen öncüllerle ve kurallarla hiçbir koşulda bağdaşmayan, imkânsız durum', isCorrect: true },
-            { key: 'C', text: 'Metinde en uzun kelimelerden oluşan seçenek', isCorrect: false },
-            { key: 'D', text: 'İlk tabloda doğru olan seçenek', isCorrect: false },
-            { key: 'E', text: 'Yalnızca soru numarasını içeren seçenek', isCorrect: false },
-          ],
-          explanation: 'Doğru cevap B seçeneğidir. "Kesinlikle yanlıştır", hiçbir senaryoda gerçekleşmesi mümkün olmayan, kuralları doğrudan ihlal eden durumdur.',
-        },
-        {
-          question: '5. Sözel mantık sorularında tablonun sütun başlıkları belirlenirken hangi ilke esas alınmalıdır?',
-          options: [
-            { key: 'A', text: 'En çok sayıda olan ve yer değiştiren değişkeni başlık yapmak', isCorrect: false },
-            { key: 'B', text: 'Sayısı az, sırası sabit veya değişmez olan unsurları (günler, katlar, saatler) sütun başlığı yapmak', isCorrect: true },
-            { key: 'C', text: 'Hiç tablo çizmeden sadece şıkları okumak', isCorrect: false },
-            { key: 'D', text: 'Kişi isimlerini alfabetik olarak sıralamak', isCorrect: false },
-            { key: 'E', text: 'Yalnızca olumsuz öncülleri başlık yapmak', isCorrect: false },
-          ],
-          explanation: 'Doğru cevap B seçeneğidir. Sabit unsurlar (gün, kat, sıra) tablonun iskeletini oluşturur; hareketli unsurlar bu başlıkların altına yerleştirilir.',
-        },
-      ],
-    };
-  }
-
-  // General Fallback for any other Sözel topic (e.g. Paragrafın Yapısı, vb.)
-  return {
-    id: `tc-${topic.id}`,
-    topic_id: topic.id,
-    title: topic.title,
-    why_it_matters: `"${topic.title}", AGS Sözel Yetenek sınavında okuma hızınızı ve anlama derinliğinizi optimize ederek çeldiricileri hızla elemenizi sağlar.`,
-    learning_objectives: [
-      `"${topic.title}" konusunda AGS soru kalıplarını ve çözüm basamaklarını kavramak.`,
-      'Metin, cümle ve seçenek ilişkilerini hızlıca çözümleyebilmek.',
-      'Aşırı genelleme ve kapsam daraltması yapan çeldiricileri eleyebilmek.',
-      'Soru kökünün yönlendirmesine uygun doğru cevaba en kısa sürede ulaşmak.',
-    ],
-    core_explanation: `## 1. Bu Soru Tipini Nasıl Çözerim? (Adım Adım Strateji)
-1. **Soru Kökünü Netleştirin:** Metinden ne istendiğini tespit edin.
-2. **Metnin Anahtar İpuçlarını Yakalayın:** Bağlaçlar, yönlendirici ifadeler ve yazarın odak noktasını belirleyin.
-3. **Çeldiricileri Eleme:** Metin dışı yorum, aşırı genelleme ve kapsam daraltması içeren şıkları eleyin.
-
-## 2. Çeldiriciler Nasıl Hazırlanır?
-* Metinde geçen bir kelimeyi alıp anlamını saptıran şıklar.
-* Genel geçer doğru olan ama metinde geçmeyen iddialar.
-
-## 3. Yanlış Analizi: Neden Hata Yapıldı?
-* Metne sadık kalmayıp kendi kanaatinizi kattığınızda hata oluşur.`,
-    key_concepts: [
-      {
-        term: 'Metne Sadakat İlkesi',
-        definition: 'Yalnızca ve sadece metinde verilen bilgi ve iletileri doğru kabul etme kuralıdır.',
-        practical_meaning: 'Kişisel yorum katmadan metnin sınırları içinde kalmaktır.',
-      },
-    ],
-    subtopics: [
-      {
-        id: `${topic.id}-sub-1`,
-        number: '1.1',
-        title: 'Soru Kökü ve Seçenek Eşleştirme',
-        content: 'Metindeki yargıları seçeneklerle karşılaştırarak eleme yapın.',
-        key_takeaway: 'Metin dışı doğrulara kanmayın.',
-      },
-    ],
-    examples: [
-      {
-        title: `${topic.title} Soru Analizi`,
-        scenario: 'Metin: "Eleştiri, bir eserin kusurlarını yüzüne vurmak değil; onun sanatsal değerini ortaya çıkaracak yolları aydınlatmaktır."',
-        analysis: 'Bu cümlede eleştirinin yapıcı ve yol gösterici bir kılavuz olduğu vurgulanmaktadır.',
-        domain: 'Sözel Yetenek',
-      },
-    ],
-    comparison_tables: [
-      {
-        title: `${topic.title} Çeldirici Eleme Tablosu`,
-        headers: ['Ölçüt', 'Doğru Yaklaşım', 'Çeldirici Tuzak'],
-        rows: [
-          ['Metne Bağlılık', 'Parçada verilen bilgiyi esas almak', 'Kişisel kanaat veya genel kültür katmak'],
-          ['Kapsam', 'Bütünü kucaklayan seçeneği bulmak', 'Tek bir ayrıntıya odaklanan dar şıkkı seçmek'],
-        ],
-      },
-    ],
-    common_confusions: [
-      {
-        wrong_belief: 'Seçenek doğru bir bilgi içeriyorsa kesinlikle doğru cevaptır.',
-        correct_distinction: 'Metinde geçmeyen veya metnin odağı olmayan bilgi doğru cevap olamaz.',
-        tip: 'Şıktaki ifadenin metindeki karşılığını arayın.',
-      },
-    ],
-    exam_tips: [
-      {
-        tip: "AGS'DE DİKKAT: Seçenekleri birbiriyle değil, doğrudan metinle karşılaştırın.",
-        importance: 'critical',
-      },
-    ],
-    mnemonics: [
-      {
-        title: 'Çözüm İlkesi',
-        memory_trick: '🔑 Kural: METNİN DIŞINA ÇIKMA, YAZARIN GÖZÜYLE BAK',
-        description: 'Seçenekleri metin filtresinden geçirerek eleyin.',
-      },
-    ],
-    summary: `${topic.title}, AGS Sözel Yetenek testinde okuduğunu anlama ve çıkarım yapma becerisini ölçer.`,
-    what_to_remember: [
-      '✓ Soru kökünü dikkatle oku.',
-      '✓ Metne bağlı kal.',
-      '✓ Çeldiricileri ele.',
-    ],
-    self_check_questions: [
-      {
-        question: `1. "${topic.title}" alanında bir AGS sorusunu çözerken izlenecek en etkili yaklaşım hangisidir?`,
-        options: [
-          { key: 'A', text: 'Metne bağlı kalarak yalnızca metindeki ipuçlarını ve mantıksal zinciri değerlendirmek', isCorrect: true },
-          { key: 'B', text: 'Kişisel fikirleri metnin önüne geçirmek', isCorrect: false },
-          { key: 'C', text: 'Sadece en uzun seçeneği doğru kabul etmek', isCorrect: false },
-          { key: 'D', text: 'Soru kökünü okumadan şıklara geçmek', isCorrect: false },
-          { key: 'E', text: 'Tüm seçeneklerin aynı anda doğru olduğunu varsaymak', isCorrect: false },
-        ],
-        explanation: 'Doğru cevap A seçeneğidir. Metne sadık kalmak ve mantıksal çıkarım yapmak analitik çözümün esasıdır.',
-      },
-      {
-        question: '2. Paragraf ve sözel akıl yürütme sorularında çeldirici seçeneklerin en belirgin özelliği hangisidir?',
-        options: [
-          { key: 'A', text: 'Metnin ana fikrini doğrudan ve eksiksiz yansıtması', isCorrect: false },
-          { key: 'B', text: 'Metindeki tek bir ayrıntıyı öne çıkarıp parçanın bütününü kapsamaması ya da aşırı genelleme yapması', isCorrect: true },
-          { key: 'C', text: 'Her zaman en kısa cümlelerden oluşması', isCorrect: false },
-          { key: 'D', text: 'Soru kökündeki kelimeleri hiç içermemesi', isCorrect: false },
-          { key: 'E', text: 'Yazım kurallarına aykırı olması', isCorrect: false },
-        ],
-        explanation: 'Doğru cevap B seçeneğidir. Çeldiriciler genellikle doğru gibi görünen ancak kapsamı daraltılmış ya da aşırı genelleştirilmiş ifadelerden kurulur.',
-      },
-      {
-        question: '4. Sözel mantık ve akıl yürütme sorularında hız ve doğruluk kazanmanın en etkili yolu nedir?',
-        options: [
-          { key: 'A', text: 'Tüm ihtimalleri zihinde tutmaya çalışmak', isCorrect: false },
-          { key: 'B', text: 'Öncülleri şematize eden net bir tablo kurup kesin bilgilerle olasılıkları ayrıştırmak', isCorrect: true },
-          { key: 'C', text: 'Sadece ilk öncülü okuyup hemen şıklara geçmek', isCorrect: false },
-          { key: 'D', text: 'Metni birden fazla kez okumadan rastgele işaretleme yapmak', isCorrect: false },
-          { key: 'E', text: 'Olumsuz öncülleri görmezden gelmek', isCorrect: false },
-        ],
-        explanation: 'Doğru cevap B seçeneğidir. Görsel bir tablo kurmak ve kesin verileri yerleştirmek karmaşık sözel mantık sorularını hatasız çözmenin yoludur.',
-      },
-      {
-        question: '5. Bir metinde geçen anahtar sözcüklerin bağlamsal anlamını doğru saptamak aşağıdakilerden hangisini doğrudan kolaylaştırır?',
-        options: [
-          { key: 'A', text: 'Paragrafın ana düşüncesini ve yazarın temel iletisini eksiksiz kavramayı', isCorrect: true },
-          { key: 'B', text: 'Yalnızca sözcük sayısını hesaplamayı', isCorrect: false },
-          { key: 'C', text: 'Metnin yazıldığı yılı kesin olarak tahmin etmeyi', isCorrect: false },
-          { key: 'D', text: 'Yazarın biyografisini ezberlemeyi', isCorrect: false },
-          { key: 'E', text: 'Soru kökünü okumadan cevaplamayı', isCorrect: false },
-        ],
-        explanation: 'Doğru cevap A seçeneğidir. Sözcüklerin bağlamdaki anlamını yakalamak, paragrafın ana iletisini ve kurgusunu çözmenin temelidir.',
-      },
-    ],
-  };
-};
-
 import { resolveAuthenticTopicContent } from './topics';
 
 // Domain-specific content generators ensuring academic depth and compliance with the AGS Content Quality System
@@ -1224,34 +424,56 @@ AGS_TOPICS.forEach((t) => {
 
 // Rich questions for each unit
 export const AGS_QUESTIONS: Question[] = [
-  // Sözel Yetenek Soru 1 (Okuduğunu Anlama & Çıkarım)
+  // Sözel Yetenek Soru 1 (Sözcükte Anlam)
   {
     id: 'q-soz-u1-1',
     subject_id: 'sozel-yetenek',
     unit_id: 'unit-sozel-1',
-    topic_id: 'topic-sozel-1-1',
+    topic_id: 'topic-sozel-1',
     question_text:
-      'Eğitimde bilgi aktarımının hızı ile bilginin zihinde işlenme derinliği arasında her zaman doğrusal bir ilişki yoktur. Günümüzde öğrenciler internet ortamında muazzam bir bilgi akışına maruz kalmakta ancak bilgiyi eleştirel süzgeçten geçirme ve problem çözmede kullanma becerisinde gerileme yaşamaktadır.\n\nBu parçada asıl vurgulanmak istenen düşünce aşağıdakilerden hangisidir?',
+      'Geleneksel motifleri modern bir üslupla harmanlayan ressam, son sergisinde tuvalin sınırlarını *zorlayarak* izleyiciyi tablonun içine çeken üç boyutlu bir atmosfer oluşturmuş.\n\nBu cümledeki "zorlamak" sözcüğünün cümleye kattığı anlam aşağıdakilerden hangisidir?',
     explanation:
-      'Parçada bilginin çokluğundan veya hızlı edinilmesinden ziyade, bilginin eleştirel olarak işlenmesi ve niteliği üzerinde durulmuştur. [Doğru Cevap: C]',
+      'Cümlede ressamın alışılagelmiş kalıpların, mevcut sınırların ötesine geçtiği ve imkânları sonuna kadar kullandığı ifade edilmektedir. [Doğru Cevap: B]',
     difficulty: 'orta',
     question_type: 'conceptual',
     source_type: 'ozgun',
     is_past_exam: false,
     options: [
-      { id: 'opt-sz1-a', question_id: 'q-soz-u1-1', option_key: 'A', option_text: 'İnternet kullanımının tamamen sınırlandırılması gerektiği', is_correct: false },
-      { id: 'opt-sz1-b', question_id: 'q-soz-u1-1', option_key: 'B', option_text: 'Bilgiye hızlı erişimin her koşulda başarı getirdiği', is_correct: false },
-      { id: 'opt-sz1-c', question_id: 'q-soz-u1-1', option_key: 'C', option_text: 'Bilginin niceliğinden ve erişim hızından çok eleştirel işlenme derinliğinin değerli olduğu', is_correct: true },
-      { id: 'opt-sz1-d', question_id: 'q-soz-u1-1', option_key: 'D', option_text: 'Öğrencilerin geleneksel kütüphaneleri daha çok sevdiği', is_correct: false },
-      { id: 'opt-sz1-e', question_id: 'q-soz-u1-1', option_key: 'E', option_text: 'Sınavların yalnızca ezber bilgiyi ölçtüğü', is_correct: false },
+      { id: 'opt-sz1-a', question_id: 'q-soz-u1-1', option_key: 'A', option_text: 'Baskı ve şiddet uygulayarak bir şeyi yaptırmak', is_correct: false },
+      { id: 'opt-sz1-b', question_id: 'q-soz-u1-1', option_key: 'B', option_text: 'Alışılmış sınırların ötesine geçmek, imkânları sonuna kadar kullanmak', is_correct: true },
+      { id: 'opt-sz1-c', question_id: 'q-soz-u1-1', option_key: 'C', option_text: 'Bir eşyayı kırılacak derecede bükmek', is_correct: false },
+      { id: 'opt-sz1-d', question_id: 'q-soz-u1-1', option_key: 'D', option_text: 'İstemediği bir tercihe mecbur bırakmak', is_correct: false },
+      { id: 'opt-sz1-e', question_id: 'q-soz-u1-1', option_key: 'E', option_text: 'Fiziksel güç uygulayarak bir engeli aşmak', is_correct: false },
     ],
   },
-  // Sözel Yetenek Soru 2 (Paragraf & Metin Mimarisi)
+  // Sözel Yetenek Soru 2 (Cümlede Anlam)
   {
     id: 'q-soz-u2-1',
     subject_id: 'sozel-yetenek',
     unit_id: 'unit-sozel-2',
-    topic_id: 'topic-sozel-2-3',
+    topic_id: 'topic-sozel-2',
+    question_text:
+      '"Bir yazarın başarısı, anlattığı olayların olağanüstülüğünde değil; en sıradan insanlık durumlarını bile okurun yüreğine dokunacak bir samimiyetle aktarabilmesinde gizlidir."\n\nBu cümleden çıkarılabilecek **kesin** yargı aşağıdakilerden hangisidir?',
+    explanation:
+      'Cümleye göre yazarlık başarısının ölçütü konunun sıra dışı olması değil, sıradan olayları içtenlikle aktarma yetisidir. [Doğru Cevap: C]',
+    difficulty: 'orta',
+    question_type: 'conceptual',
+    source_type: 'ozgun',
+    is_past_exam: false,
+    options: [
+      { id: 'opt-sz2-a', question_id: 'q-soz-u2-1', option_key: 'A', option_text: 'Olağanüstü konuları işleyen yazarlar hiçbir zaman başarılı olamaz.', is_correct: false },
+      { id: 'opt-sz2-b', question_id: 'q-soz-u2-1', option_key: 'B', option_text: 'Okurun ilgisini çeken tek unsur eserdeki kurgusal derinliktir.', is_correct: false },
+      { id: 'opt-sz2-c', question_id: 'q-soz-u2-1', option_key: 'C', option_text: 'Edebî başarıda belirleyici olan, konunun özgünlüğünden ziyade anlatımın içtenliği ve işleniş biçimidir.', is_correct: true },
+      { id: 'opt-sz2-d', question_id: 'q-soz-u2-1', option_key: 'D', option_text: 'Sıradan hayatları anlatan tüm eserler geniş kitlelerce sevilir.', is_correct: false },
+      { id: 'opt-sz2-e', question_id: 'q-soz-u2-1', option_key: 'E', option_text: 'Samimi bir dille yazılmayan metinler eğitici nitelik taşımaz.', is_correct: false },
+    ],
+  },
+  // Sözel Yetenek Soru 3 (Anlatımın Oluşması)
+  {
+    id: 'q-soz-u3-1',
+    subject_id: 'sozel-yetenek',
+    unit_id: 'unit-sozel-3',
+    topic_id: 'topic-sozel-3',
     question_text:
       '(I) Eğitimde teknoloji kullanımı her geçen gün artmaktadır. (II) Dijital araçlar öğrencilerin derse olan ilgisini ve motivasyonunu canlı tutar. (III) Akıllı tahtalar ve tabletler sınıf ortamında etkileşimi güçlendirir. (IV) Kitap fiyatlarının yükselmesi öğrencilerin kaynak teminini zorlaştırmaktadır. (V) Bu nedenle öğretmenlerin dijital materyal hazırlama becerileri büyük önem taşır.\n\nBu parçadaki numaralanmış cümlelerden hangisi düşüncenin akışını bozmaktadır?',
     explanation:
@@ -1261,19 +483,41 @@ export const AGS_QUESTIONS: Question[] = [
     source_type: 'ozgun',
     is_past_exam: false,
     options: [
-      { id: 'opt-sz2-a', question_id: 'q-soz-u2-1', option_key: 'A', option_text: 'I', is_correct: false },
-      { id: 'opt-sz2-b', question_id: 'q-soz-u2-1', option_key: 'B', option_text: 'II', is_correct: false },
-      { id: 'opt-sz2-c', question_id: 'q-soz-u2-1', option_key: 'C', option_text: 'III', is_correct: false },
-      { id: 'opt-sz2-d', question_id: 'q-soz-u2-1', option_key: 'D', option_text: 'IV', is_correct: true },
-      { id: 'opt-sz2-e', question_id: 'q-soz-u2-1', option_key: 'E', option_text: 'V', is_correct: false },
+      { id: 'opt-sz3-a', question_id: 'q-soz-u3-1', option_key: 'A', option_text: 'I', is_correct: false },
+      { id: 'opt-sz3-b', question_id: 'q-soz-u3-1', option_key: 'B', option_text: 'II', is_correct: false },
+      { id: 'opt-sz3-c', question_id: 'q-soz-u3-1', option_key: 'C', option_text: 'III', is_correct: false },
+      { id: 'opt-sz3-d', question_id: 'q-soz-u3-1', option_key: 'D', option_text: 'IV', is_correct: true },
+      { id: 'opt-sz3-e', question_id: 'q-soz-u3-1', option_key: 'E', option_text: 'V', is_correct: false },
     ],
   },
-  // Sözel Yetenek Soru 3 (Sözel Mantık)
+  // Sözel Yetenek Soru 4 (Paragrafta Anlam)
   {
-    id: 'q-soz-u3-1',
+    id: 'q-soz-u4-1',
     subject_id: 'sozel-yetenek',
-    unit_id: 'unit-sozel-3',
-    topic_id: 'topic-sozel-3-1',
+    unit_id: 'unit-sozel-4',
+    topic_id: 'topic-sozel-4',
+    question_text:
+      'Eğitimde bilgi aktarımının hızı ile bilginin zihinde işlenme derinliği arasında her zaman doğrusal bir ilişki yoktur. Günümüzde öğrenciler internet ortamında muazzam bir bilgi akışına maruz kalmakta ancak bilgiyi eleştirel süzgeçten geçirme ve problem çözmede kullanma becerisinde gerileme yaşamaktadır.\n\nBu parçada asıl vurgulanmak istenen düşünce aşağıdakilerden hangisidir?',
+    explanation:
+      'Parçada bilginin niceliğinden ve erişim hızından ziyade, bilginin eleştirel olarak derinlemesine işlenmesi ve niteliğinin değerli olduğu vurgulanmaktadır. [Doğru Cevap: C]',
+    difficulty: 'orta',
+    question_type: 'conceptual',
+    source_type: 'ozgun',
+    is_past_exam: false,
+    options: [
+      { id: 'opt-sz4-a', question_id: 'q-soz-u4-1', option_key: 'A', option_text: 'İnternet kullanımının tamamen sınırlandırılması gerektiği', is_correct: false },
+      { id: 'opt-sz4-b', question_id: 'q-soz-u4-1', option_key: 'B', option_text: 'Bilgiye hızlı erişimin her koşulda başarı getirdiği', is_correct: false },
+      { id: 'opt-sz4-c', question_id: 'q-soz-u4-1', option_key: 'C', option_text: 'Bilginin niceliğinden ve erişim hızından çok eleştirel işlenme derinliğinin değerli olduğu', is_correct: true },
+      { id: 'opt-sz4-d', question_id: 'q-soz-u4-1', option_key: 'D', option_text: 'Öğrencilerin geleneksel kütüphaneleri daha çok sevdiği', is_correct: false },
+      { id: 'opt-sz4-e', question_id: 'q-soz-u4-1', option_key: 'E', option_text: 'Sınavların yalnızca ezber bilgiyi ölçtüğü', is_correct: false },
+    ],
+  },
+  // Sözel Yetenek Soru 5 (Sözel Mantık)
+  {
+    id: 'q-soz-u5-1',
+    subject_id: 'sozel-yetenek',
+    unit_id: 'unit-sozel-5',
+    topic_id: 'topic-sozel-5',
     question_text:
       'Ahmet, Burak, Ceyda ve Damla isimli dört öğretmen; Pazartesi, Salı, Çarşamba ve Perşembe günleri birer gün nöbet tutacaktır.\n• Ahmet, Ceyda’dan hemen sonraki gün nöbetçidir ([Ceyda][Ahmet]).\n• Burak Perşembe günü nöbet tutmamıştır (Burak ≠ Perşembe).\n\nBuna göre Ceyda’nın Salı günü nöbet tuttuğu biliniyorsa, Perşembe günü kesinlikle kim nöbetçidir?',
     explanation:
@@ -1283,11 +527,11 @@ export const AGS_QUESTIONS: Question[] = [
     source_type: 'ozgun',
     is_past_exam: false,
     options: [
-      { id: 'opt-sz3-a', question_id: 'q-soz-u3-1', option_key: 'A', option_text: 'Ahmet', is_correct: false },
-      { id: 'opt-sz3-b', question_id: 'q-soz-u3-1', option_key: 'B', option_text: 'Burak', is_correct: false },
-      { id: 'opt-sz3-c', question_id: 'q-soz-u3-1', option_key: 'C', option_text: 'Damla', is_correct: true },
-      { id: 'opt-sz3-d', question_id: 'q-soz-u3-1', option_key: 'D', option_text: 'Ceyda', is_correct: false },
-      { id: 'opt-sz3-e', question_id: 'q-soz-u3-1', option_key: 'E', option_text: 'Belirlenemez', is_correct: false },
+      { id: 'opt-sz5-a', question_id: 'q-soz-u5-1', option_key: 'A', option_text: 'Ahmet', is_correct: false },
+      { id: 'opt-sz5-b', question_id: 'q-soz-u5-1', option_key: 'B', option_text: 'Burak', is_correct: false },
+      { id: 'opt-sz5-c', question_id: 'q-soz-u5-1', option_key: 'C', option_text: 'Damla', is_correct: true },
+      { id: 'opt-sz5-d', question_id: 'q-soz-u5-1', option_key: 'D', option_text: 'Ceyda', is_correct: false },
+      { id: 'opt-sz5-e', question_id: 'q-soz-u5-1', option_key: 'E', option_text: 'Belirlenemez', is_correct: false },
     ],
   },
   // Sayısal Yetenek Soru 1
@@ -1428,8 +672,8 @@ export const AGS_MINI_EXAMS: MiniExam[] = [
   {
     id: 'mini-exam-sozel-1',
     unit_id: 'unit-sozel-1',
-    title: 'Okuduğunu Anlama ve Bağlamsal Çıkarım Mini Sınavı',
-    description: 'Ana fikir, çıkarım ve bağlamsal analiz becerilerini ölçen 10 soruluk tarama testi.',
+    title: 'Sözcükte Anlam Mini Sınavı',
+    description: 'Bağlamsal anlam, çok anlamlılık ve sözcük ilişkilerini ölçen soru çözme testi.',
     duration_minutes: 15,
     passing_score: 70,
     questions: [AGS_QUESTIONS[0]],
@@ -1437,8 +681,8 @@ export const AGS_MINI_EXAMS: MiniExam[] = [
   {
     id: 'mini-exam-sozel-2',
     unit_id: 'unit-sozel-2',
-    title: 'Paragraf ve Metin Mimarisi Mini Sınavı',
-    description: 'Paragraf yapısı, akış bozma, tamamlama ve çeldirici eleme tarama testi.',
+    title: 'Cümlede Anlam Mini Sınavı',
+    description: 'Cümleden kesin yargı çıkarma ve anlam ilişkileri tarama testi.',
     duration_minutes: 15,
     passing_score: 70,
     questions: [AGS_QUESTIONS[1]],
@@ -1446,11 +690,29 @@ export const AGS_MINI_EXAMS: MiniExam[] = [
   {
     id: 'mini-exam-sozel-3',
     unit_id: 'unit-sozel-3',
-    title: 'Sözel Akıl Yürütme ve Mantık Mini Sınavı',
-    description: 'Tablo kurma, sıralama ve koşullu çıkarım tarama testi.',
+    title: 'Anlatımın Oluşması Mini Sınavı',
+    description: 'Akış bozma, sıralama ve cümle yerleştirme soru pratiği testi.',
     duration_minutes: 15,
     passing_score: 70,
     questions: [AGS_QUESTIONS[2]],
+  },
+  {
+    id: 'mini-exam-sozel-4',
+    unit_id: 'unit-sozel-4',
+    title: 'Paragrafta Anlam Mini Sınavı',
+    description: 'Ana düşünce, yardımcı düşünce ve paragraf kurgusu tarama testi.',
+    duration_minutes: 15,
+    passing_score: 70,
+    questions: [AGS_QUESTIONS[3]],
+  },
+  {
+    id: 'mini-exam-sozel-5',
+    unit_id: 'unit-sozel-5',
+    title: 'Sözel Mantık Mini Sınavı',
+    description: 'Tablo kurma, sıralama ve mantıksal çıkarım tarama testi.',
+    duration_minutes: 15,
+    passing_score: 70,
+    questions: [AGS_QUESTIONS[4]],
   },
   {
     id: 'mini-exam-sayisal-1',
