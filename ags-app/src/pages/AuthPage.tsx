@@ -6,7 +6,6 @@ import {
   Lock,
   User,
   ArrowRight,
-  ShieldCheck,
   CheckCircle2,
   AlertCircle,
   Sparkles,
@@ -18,7 +17,6 @@ export const AuthPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [role, setRole] = useState<'student' | 'admin'>('student');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -39,7 +37,7 @@ export const AuthPage: React.FC = () => {
           setLoading(false);
           return;
         }
-        const res = await signUp(email, password, fullName, role);
+        const res = await signUp(email, password, fullName);
         if (res.error) setErrorMessage(res.error);
         else setSuccessMessage('Hesabınız başarıyla oluşturuldu! Giriş yapılıyor...');
       } else if (mode === 'forgot') {
@@ -54,14 +52,10 @@ export const AuthPage: React.FC = () => {
     }
   };
 
-  const handleQuickDemo = async (demoRole: 'student' | 'admin') => {
+  const handleQuickDemo = async () => {
     setLoading(true);
     setErrorMessage('');
-    if (demoRole === 'student') {
-      await signIn('ogrenci@ags.meb.gov.tr', 'demo123456');
-    } else {
-      await signIn('admin@ags.meb.gov.tr', 'admin123456');
-    }
+    await signIn('ogrenci@ags.meb.gov.tr', 'demo123456');
     setLoading(false);
   };
 
@@ -110,7 +104,7 @@ export const AuthPage: React.FC = () => {
             AGS Hazırlık Platformu
           </h1>
           <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-            MEB Akademi Giriş Sınavı Akıllı Hazırlık Sistemi
+            Öğrenci & Aday Sınav Hazırlık ve İlerleme Takip Sistemi
           </p>
         </div>
 
@@ -236,7 +230,7 @@ export const AuthPage: React.FC = () => {
               <input
                 type="email"
                 required
-                placeholder="ornek@ogretmen.meb.gov.tr"
+                placeholder="ornek@ogrenci.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={{ width: '100%', paddingLeft: '40px' }}
@@ -272,50 +266,6 @@ export const AuthPage: React.FC = () => {
             </div>
           )}
 
-          {mode === 'register' && (
-            <div>
-              <label style={{ display: 'block', fontSize: '0.825rem', fontWeight: 600, marginBottom: '6px' }}>
-                Hesap Rolü
-              </label>
-              <div style={{ display: 'flex', gap: '8px' }}>
-                <button
-                  type="button"
-                  onClick={() => setRole('student')}
-                  style={{
-                    flex: 1,
-                    padding: '8px',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    border: '1px solid',
-                    borderColor: role === 'student' ? 'var(--primary)' : 'var(--border-subtle)',
-                    backgroundColor: role === 'student' ? 'var(--primary-subtle)' : 'var(--bg-input)',
-                    color: role === 'student' ? 'var(--primary)' : 'var(--text-secondary)',
-                  }}
-                >
-                  Öğrenci (Aday)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRole('admin')}
-                  style={{
-                    flex: 1,
-                    padding: '8px',
-                    borderRadius: 'var(--radius-md)',
-                    fontSize: '0.8rem',
-                    fontWeight: 600,
-                    border: '1px solid',
-                    borderColor: role === 'admin' ? '#8b5cf6' : 'var(--border-subtle)',
-                    backgroundColor: role === 'admin' ? 'rgba(139, 92, 246, 0.15)' : 'var(--bg-input)',
-                    color: role === 'admin' ? '#a78bfa' : 'var(--text-secondary)',
-                  }}
-                >
-                  Eğitmen / Admin
-                </button>
-              </div>
-            </div>
-          )}
-
           <button
             type="submit"
             disabled={loading}
@@ -327,31 +277,22 @@ export const AuthPage: React.FC = () => {
           </button>
         </form>
 
-        {/* Demo Fast Login Cards */}
+        {/* Quick Demo Student Account Login */}
         <div style={{ marginTop: '24px', paddingTop: '20px', borderTop: '1px solid var(--border-subtle)' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textAlign: 'center', marginBottom: '10px' }}>
-            Hızlı Test / Demo Hesaplar:
+            Hızlı Test / Demo Öğrenci:
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              onClick={() => handleQuickDemo('student')}
-              className="btn btn-secondary"
-              style={{ flex: 1, padding: '8px', fontSize: '0.78rem' }}
-            >
-              <GraduationCap size={15} color="var(--primary)" />
-              <span>Öğrenci Girişi</span>
-            </button>
-            <button
-              onClick={() => handleQuickDemo('admin')}
-              className="btn btn-secondary"
-              style={{ flex: 1, padding: '8px', fontSize: '0.78rem' }}
-            >
-              <ShieldCheck size={15} color="#a78bfa" />
-              <span>Admin Girişi</span>
-            </button>
-          </div>
+          <button
+            onClick={handleQuickDemo}
+            className="btn btn-secondary"
+            style={{ width: '100%', padding: '10px', fontSize: '0.85rem' }}
+          >
+            <GraduationCap size={16} color="var(--primary)" />
+            <span>Örnek Öğrenci Hesabıyla Giriş Yap</span>
+          </button>
         </div>
       </div>
     </div>
   );
 };
+

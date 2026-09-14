@@ -12,7 +12,6 @@ import { PastQuestionsPage } from './pages/PastQuestionsPage';
 import { MockExamsPage } from './pages/MockExamsPage';
 import { MockExamSimulatorPage } from './pages/MockExamSimulatorPage';
 import { ProgressAnalyticsPage } from './pages/ProgressAnalyticsPage';
-import { AdminPage } from './pages/AdminPage';
 
 const AppContent: React.FC = () => {
   const { user, isLoading } = useAuth();
@@ -85,15 +84,15 @@ const AppContent: React.FC = () => {
           {activeTab === 'topic-detail' && (
             <TopicDetailPage
               subjectId={navParams.subjectId || 'egitim-bilimleri'}
-              unitId={navParams.unitId || 'unit-ogrenme-psikolojisi'}
-              topicId={navParams.topicId || 'topic-davranisci-yaklasim'}
+              unitId={navParams.unitId || 'unit-eb-1'}
+              topicId={navParams.topicId || 'topic-eb-1-18'}
               onNavigate={handleNavigate}
             />
           )}
 
           {activeTab === 'mini-exam' && (
             <MiniExamPage
-              unitId={navParams.unitId || 'unit-ogrenme-psikolojisi'}
+              unitId={navParams.unitId || 'unit-eb-1'}
               unitTitle={navParams.unitTitle}
               onNavigate={handleNavigate}
             />
@@ -109,17 +108,13 @@ const AppContent: React.FC = () => {
 
           {activeTab === 'mock-exam-run' && (
             <MockExamSimulatorPage
-              mockExamId={navParams.mockExamId || 'mock-ags-turkiye-geneli-1'}
+              mockExamId={navParams.mockExamId || 'mock-ags-tier-1'}
               onNavigate={handleNavigate}
             />
           )}
 
           {activeTab === 'progress' && (
             <ProgressAnalyticsPage onNavigate={handleNavigate} />
-          )}
-
-          {activeTab === 'admin' && (
-            <AdminPage onNavigate={handleNavigate} />
           )}
         </main>
       </div>

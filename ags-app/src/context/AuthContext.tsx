@@ -8,11 +8,10 @@ interface AuthContextType {
   isLoading: boolean;
   isLiveSupabase: boolean;
   signIn: (email: string, pass: string) => Promise<{ error?: string }>;
-  signUp: (email: string, pass: string, fullName: string, role?: UserRole) => Promise<{ error?: string }>;
+  signUp: (email: string, pass: string, fullName: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<{ error?: string; success?: boolean }>;
   updateTargetScore: (score: number) => Promise<void>;
-  switchDemoRole: (role: UserRole) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -49,7 +48,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 id: data.session.user.id,
                 email: data.session.user.email || '',
                 full_name: data.session.user.user_metadata?.full_name || 'AGS Öğrencisi',
-                role: (data.session.user.user_metadata?.role as UserRole) || 'student',
+                role: 'student',
                 target_score: 85,
               });
             }
@@ -67,16 +66,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
           }
         } else {
-          // Default initial demo student user
-          const defaultDemoUser: UserProfile = {
-            id: 'demo-student-uuid-101',
+          // Default initial student user
+          const defaultStudent: UserProfile = {
+            id: 'student-demo-uuid-1',
             email: 'ogrenci@ags.meb.gov.tr',
             full_name: 'Ahmet Yılmaz',
             role: 'student',
             target_score: 85,
           };
-          localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(defaultDemoUser));
-          setUser(defaultDemoUser);
+          localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(defaultStudent));
+          setUser(defaultStudent);
         }
       }
       setIsLoading(false);
@@ -140,20 +139,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: err.message || 'Giriş yapılamadı.' };
       }
     } else {
-      // Local authenticated session
-      const existingUserStr = localStorage.getItem(`ags_registered_${email.toLowerCase()}`);
+      // Local authenticated session - isolated per email
+      const cleanEmail = email.trim().toLowerCase();
+      const existingUserStr = localStorage.getItem(`ags_registered_${cleanEmail}`);
       let userObj: UserProfile;
       if (existingUserStr) {
         userObj = JSON.parse(existingUserStr);
       } else {
-        const role: UserRole = email.includes('admin') ? 'admin' : 'student';
+        const safeId = 'student_' + cleanEmail.replace(/[^a-z0-9]/g, '_');
         userObj = {
-          id: 'usr_' + Math.random().toString(36).substring(2, 9),
-          email,
-          full_name: email.split('@')[0].toUpperCase(),
-          role,
+          id: safeId,
+          email: cleanEmail,
+          full_name: cleanEmail.split('@')[0].toUpperCase(),
+          role: 'student',
           target_score: 85,
         };
+        localStorage.setItem(`ags_registered_${cleanEmail}`, JSON.stringify(userObj));
       }
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(userObj));
       setUser(userObj);
@@ -164,18 +165,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signUp = async (
     email: string,
     pass: string,
-    fullName: string,
-    role: UserRole = 'student'
+    fullName: string
   ): Promise<{ error?: string }> => {
+    const cleanEmail = email.trim().toLowerCase();
     if (isLiveSupabaseConfigured()) {
       try {
         const { data, error } = await supabase.auth.signUp({
-          email,
+          email: cleanEmail,
           password: pass,
           options: {
             data: {
               full_name: fullName,
-              role,
+              role: 'student',
             },
           },
         });
@@ -183,9 +184,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (data.user) {
           const newUser: UserProfile = {
             id: data.user.id,
-            email,
+            email: cleanEmail,
             full_name: fullName,
-            role,
+            role: 'student',
             target_score: 85,
           };
           setUser(newUser);
@@ -195,14 +196,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return { error: err.message || 'Kayıt başarısız.' };
       }
     } else {
+      const safeId = 'student_' + cleanEmail.replace(/[^a-z0-9]/g, '_');
       const newUser: UserProfile = {
-        id: 'usr_' + Math.random().toString(36).substring(2, 9),
-        email,
+        id: safeId,
+        email: cleanEmail,
         full_name: fullName,
-        role,
+        role: 'student',
         target_score: 85,
       };
-      localStorage.setItem(`ags_registered_${email.toLowerCase()}`, JSON.stringify(newUser));
+      localStorage.setItem(`ags_registered_${cleanEmail}`, JSON.stringify(newUser));
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(newUser));
       setUser(newUser);
       return {};
@@ -246,14 +248,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       await supabase.from('profiles').update({ target_score: score }).eq('id', user.id);
     } else {
       localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(updated));
+      localStorage.setItem(`ags_registered_${user.email.toLowerCase()}`, JSON.stringify(updated));
     }
-  };
-
-  const switchDemoRole = (role: UserRole) => {
-    if (!user) return;
-    const updated = { ...user, role };
-    setUser(updated);
-    localStorage.setItem(LOCAL_USER_KEY, JSON.stringify(updated));
   };
 
   return (
@@ -268,7 +264,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signOut,
         resetPassword,
         updateTargetScore,
-        switchDemoRole,
       }}
     >
       {children}

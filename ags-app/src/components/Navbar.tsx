@@ -18,7 +18,7 @@ interface NavbarProps {
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenSupabaseModal }) => {
-  const { user, signOut, isLiveSupabase, switchDemoRole, updateTargetScore } = useAuth();
+  const { user, signOut, isLiveSupabase, updateTargetScore } = useAuth();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [editingTarget, setEditingTarget] = useState(false);
   const [targetInput, setTargetInput] = useState(user?.target_score?.toString() || '85');
@@ -87,11 +87,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenSupabaseM
                 AGS PRO
               </span>
               <span className="badge badge-blue" style={{ fontSize: '0.65rem', padding: '2px 6px' }}>
-                2025
+                Öğrenci Portalı
               </span>
             </div>
             <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
-              Akademi Giriş Sınavı Hazırlık Platformu
+              Akademi Giriş Sınavı Bireysel Hazırlık ve İlerleme Sistemi
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenSupabaseM
                   width: '28px',
                   height: '28px',
                   borderRadius: '50%',
-                  background: user.role === 'admin' ? '#8b5cf6' : '#3b82f6',
+                  background: '#3b82f6',
                   color: '#fff',
                   display: 'flex',
                   alignItems: 'center',
@@ -152,7 +152,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenSupabaseM
               <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
                 <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{user.full_name || 'Öğrenci'}</div>
                 <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
-                  {user.role === 'admin' ? 'Yönetici' : 'AGS Adayı'}
+                  AGS Adayı
                 </div>
               </div>
             </button>
@@ -175,8 +175,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenSupabaseM
                   <div style={{ fontWeight: 700, fontSize: '0.95rem' }}>{user.full_name}</div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{user.email}</div>
                   <div style={{ marginTop: '6px' }}>
-                    <span className={user.role === 'admin' ? 'badge badge-amber' : 'badge badge-blue'}>
-                      {user.role === 'admin' ? 'Yönetici (Admin)' : 'Öğrenci Hesabı'}
+                    <span className="badge badge-blue">
+                      Öğrenci Hesabı
                     </span>
                   </div>
                 </div>
@@ -216,29 +216,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onToggleSidebar, onOpenSupabaseM
                       Hedefi Değiştir
                     </button>
                   )}
-                </div>
-
-                {/* Role Switcher for quick evaluation */}
-                <div style={{ padding: '12px 0', borderBottom: '1px solid var(--border-subtle)' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '8px' }}>
-                    Hızlı Rol Değiştir (Test):
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                      onClick={() => switchDemoRole('student')}
-                      className={`btn ${user.role === 'student' ? 'btn-primary' : 'btn-secondary'}`}
-                      style={{ flex: 1, padding: '6px', fontSize: '0.75rem' }}
-                    >
-                      Öğrenci
-                    </button>
-                    <button
-                      onClick={() => switchDemoRole('admin')}
-                      className={`btn ${user.role === 'admin' ? 'btn-primary' : 'btn-secondary'}`}
-                      style={{ flex: 1, padding: '6px', fontSize: '0.75rem' }}
-                    >
-                      Admin
-                    </button>
-                  </div>
                 </div>
 
                 {/* Logout */}

@@ -20,8 +20,7 @@ export type NavigationTab =
   | 'mock-exams'
   | 'mini-exam'
   | 'mock-exam-run'
-  | 'progress'
-  | 'admin';
+  | 'progress';
 
 interface SidebarProps {
   activeTab: NavigationTab;
@@ -70,15 +69,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       badge: null,
     },
   ];
-
-  if (user?.role === 'admin') {
-    navItems.push({
-      id: 'admin' as NavigationTab,
-      label: 'Admin Paneli',
-      icon: ShieldCheck,
-      badge: 'Yönetim',
-    });
-  }
 
   return (
     <aside
