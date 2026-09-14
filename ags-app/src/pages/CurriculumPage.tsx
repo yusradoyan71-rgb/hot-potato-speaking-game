@@ -382,138 +382,247 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate, init
         {/* Left Column: Sections, Videos, Exams */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           {/* A) QUESTION TYPE & CONCEPT SECTIONS */}
-          {(activeFilter === 'all' || activeFilter === 'tasks') &&
-            currentPlan.sections.map((section, sIndex) => {
-              const totalSec = section.tasks.length;
-              const compSec = section.tasks.filter((t) => completedTaskIds.has(t.id)).length;
-              const isSecFull = totalSec > 0 && compSec === totalSec;
-              const isCollapsed = !!collapsedSections[section.id];
+          {(activeFilter === 'all' || activeFilter === 'tasks') && (
+            currentPlan.subject_id === 'sozel-yetenek' ? (
+              <div
+                className="glass-panel"
+                style={{
+                  borderRadius: '20px',
+                  padding: '24px 28px',
+                  border: '1px solid rgba(99, 102, 241, 0.25)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                      Sözel Yetenek
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+                      Çalışmanızı tamamladığınız konuyu işaretleyin (5 Görev = %100)
+                    </p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--color-primary)', lineHeight: 1 }}>
+                      %{currentSubjectStats?.percentage || 0}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                      {currentSubjectStats?.completedTasks || 0} / 5 Tamamlandı
+                    </div>
+                  </div>
+                </div>
 
-              return (
-                <div
-                  key={section.id}
-                  className="glass-panel"
-                  style={{
-                    borderRadius: '16px',
-                    border: isSecFull ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-subtle)',
-                    overflow: 'hidden',
-                  }}
-                >
-                  {/* Section Header */}
+                {/* Sözel Yetenek Progress Bar */}
+                <div style={{ width: '100%', height: '12px', backgroundColor: 'rgba(0, 0, 0, 0.08)', borderRadius: '999px', overflow: 'hidden', marginBottom: '12px' }}>
                   <div
                     style={{
-                      padding: '16px 20px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      background: isSecFull ? 'rgba(16, 185, 129, 0.05)' : 'rgba(255, 255, 255, 0.02)',
-                      borderBottom: isCollapsed ? 'none' : '1px solid var(--border-subtle)',
-                      cursor: 'pointer',
+                      width: `${currentSubjectStats?.percentage || 0}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #10b981 100%)',
+                      borderRadius: '999px',
+                      transition: 'width 0.4s ease',
                     }}
-                    onClick={() => toggleCollapse(section.id)}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleToggleSectionAll(section);
-                        }}
+                  />
+                </div>
+
+                {/* 5-Step Scale Indicator */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '22px', padding: '0 2px' }}>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 0 ? 700 : 400 }}>0/5 (%0)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 1 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 1 ? 'var(--color-primary)' : 'inherit' }}>1/5 (%20)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 2 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 2 ? 'var(--color-primary)' : 'inherit' }}>2/5 (%40)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 3 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 3 ? 'var(--color-primary)' : 'inherit' }}>3/5 (%60)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 4 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 4 ? 'var(--color-primary)' : 'inherit' }}>4/5 (%80)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 5 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks === 5 ? 'var(--color-success)' : 'inherit' }}>5/5 (%100)</span>
+                </div>
+
+                {/* 5 Sözel Yetenek Checkboxes */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {currentPlan.sections[0]?.tasks.map((task) => {
+                    const isDone = completedTaskIds.has(task.id);
+                    return (
+                      <div
+                        key={task.id}
+                        onClick={() => handleToggleTask(task.id)}
                         style={{
-                          background: 'none',
-                          border: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '16px',
+                          padding: '16px 20px',
+                          borderRadius: '14px',
                           cursor: 'pointer',
-                          padding: 0,
-                          color: isSecFull ? 'var(--color-success)' : 'var(--text-muted)',
+                          border: isDone ? '1.5px solid rgba(16, 185, 129, 0.4)' : '1px solid var(--border-subtle)',
+                          backgroundColor: isDone ? 'rgba(16, 185, 129, 0.07)' : 'rgba(255, 255, 255, 0.02)',
+                          transition: 'all 0.2s ease',
                         }}
-                        title={isSecFull ? 'Tümünü Kaldır' : 'Tümünü Tamamla'}
                       >
-                        {isSecFull ? <CheckCircle2 size={22} /> : <Circle size={22} />}
-                      </button>
-                      <div>
-                        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
-                          {section.title}
-                        </h3>
-                        {section.description && (
-                          <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                            {section.description}
-                          </div>
-                        )}
+                        <div
+                          style={{
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '8px',
+                            border: isDone ? '2px solid var(--color-success)' : '2px solid var(--border-medium)',
+                            backgroundColor: isDone ? 'var(--color-success)' : 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#ffffff',
+                            flexShrink: 0,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {isDone && <Check size={16} strokeWidth={3} />}
+                        </div>
+                        <span
+                          style={{
+                            fontSize: '1.05rem',
+                            fontWeight: 600,
+                            color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                            textDecoration: isDone ? 'line-through' : 'none',
+                            userSelect: 'none',
+                            letterSpacing: '-0.01em',
+                          }}
+                        >
+                          {task.text}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : (
+              currentPlan.sections.map((section, sIndex) => {
+                const totalSec = section.tasks.length;
+                const compSec = section.tasks.filter((t) => completedTaskIds.has(t.id)).length;
+                const isSecFull = totalSec > 0 && compSec === totalSec;
+                const isCollapsed = !!collapsedSections[section.id];
+
+                return (
+                  <div
+                    key={section.id}
+                    className="glass-panel"
+                    style={{
+                      borderRadius: '16px',
+                      border: isSecFull ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid var(--border-subtle)',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {/* Section Header */}
+                    <div
+                      style={{
+                        padding: '16px 20px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        background: isSecFull ? 'rgba(16, 185, 129, 0.05)' : 'rgba(255, 255, 255, 0.02)',
+                        borderBottom: isCollapsed ? 'none' : '1px solid var(--border-subtle)',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => toggleCollapse(section.id)}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleSectionAll(section);
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            padding: 0,
+                            color: isSecFull ? 'var(--color-success)' : 'var(--text-muted)',
+                          }}
+                          title={isSecFull ? 'Tümünü Kaldır' : 'Tümünü Tamamla'}
+                        >
+                          {isSecFull ? <CheckCircle2 size={22} /> : <Circle size={22} />}
+                        </button>
+                        <div>
+                          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
+                            {section.title}
+                          </h3>
+                          {section.description && (
+                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                              {section.description}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <span
+                          style={{
+                            fontSize: '0.78rem',
+                            fontWeight: 700,
+                            padding: '3px 8px',
+                            borderRadius: '8px',
+                            backgroundColor: isSecFull ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.1)',
+                            color: isSecFull ? 'var(--color-success)' : 'var(--color-primary)',
+                          }}
+                        >
+                          {compSec} / {totalSec} Görev
+                        </span>
+                        {isCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
                       </div>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                      <span
-                        style={{
-                          fontSize: '0.78rem',
-                          fontWeight: 700,
-                          padding: '3px 8px',
-                          borderRadius: '8px',
-                          backgroundColor: isSecFull ? 'rgba(16, 185, 129, 0.15)' : 'rgba(99, 102, 241, 0.1)',
-                          color: isSecFull ? 'var(--color-success)' : 'var(--color-primary)',
-                        }}
-                      >
-                        {compSec} / {totalSec} Görev
-                      </span>
-                      {isCollapsed ? <ChevronDown size={18} /> : <ChevronUp size={18} />}
-                    </div>
-                  </div>
-
-                  {/* Section Tasks Checklist */}
-                  {!isCollapsed && (
-                    <div style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                      {section.tasks.map((task) => {
-                        const isDone = completedTaskIds.has(task.id);
-                        return (
-                          <div
-                            key={task.id}
-                            onClick={() => handleToggleTask(task.id)}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '12px',
-                              padding: '10px 12px',
-                              borderRadius: '10px',
-                              cursor: 'pointer',
-                              backgroundColor: isDone ? 'rgba(16, 185, 129, 0.05)' : 'transparent',
-                              transition: 'background-color 0.15s ease',
-                            }}
-                          >
+                    {/* Section Tasks Checklist */}
+                    {!isCollapsed && (
+                      <div style={{ padding: '8px 12px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        {section.tasks.map((task) => {
+                          const isDone = completedTaskIds.has(task.id);
+                          return (
                             <div
+                              key={task.id}
+                              onClick={() => handleToggleTask(task.id)}
                               style={{
-                                width: '20px',
-                                height: '20px',
-                                borderRadius: '6px',
-                                border: isDone ? '2px solid var(--color-success)' : '2px solid var(--border-medium)',
-                                backgroundColor: isDone ? 'var(--color-success)' : 'transparent',
                                 display: 'flex',
                                 alignItems: 'center',
-                                justifyContent: 'center',
-                                color: '#ffffff',
-                                flexShrink: 0,
-                                transition: 'all 0.15s ease',
+                                gap: '12px',
+                                padding: '10px 12px',
+                                borderRadius: '10px',
+                                cursor: 'pointer',
+                                backgroundColor: isDone ? 'rgba(16, 185, 129, 0.05)' : 'transparent',
+                                transition: 'background-color 0.15s ease',
                               }}
                             >
-                              {isDone && <Check size={14} strokeWidth={3} />}
+                              <div
+                                style={{
+                                  width: '20px',
+                                  height: '20px',
+                                  borderRadius: '6px',
+                                  border: isDone ? '2px solid var(--color-success)' : '2px solid var(--border-medium)',
+                                  backgroundColor: isDone ? 'var(--color-success)' : 'transparent',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  color: '#ffffff',
+                                  flexShrink: 0,
+                                  transition: 'all 0.15s ease',
+                                }}
+                              >
+                                {isDone && <Check size={14} strokeWidth={3} />}
+                              </div>
+                              <span
+                                style={{
+                                  fontSize: '0.9rem',
+                                  color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                                  textDecoration: isDone ? 'line-through' : 'none',
+                                  lineHeight: '1.4',
+                                  userSelect: 'none',
+                                }}
+                              >
+                                {task.text}
+                              </span>
                             </div>
-                            <span
-                              style={{
-                                fontSize: '0.9rem',
-                                color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
-                                textDecoration: isDone ? 'line-through' : 'none',
-                                lineHeight: '1.4',
-                                userSelect: 'none',
-                              }}
-                            >
-                              {task.text}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                );
+              })
+            )
+          )}
 
           {/* B) VIDEOS SECTION */}
           {(activeFilter === 'all' || activeFilter === 'videos') && currentPlan.videos.length > 0 && (

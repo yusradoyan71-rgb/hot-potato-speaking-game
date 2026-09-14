@@ -160,9 +160,11 @@ class StudyTrackerService {
       const examTotal = plan.exams.length;
       const examCompleted = plan.exams.filter((e) => completedTaskIds.has(e.taskId)).length;
 
-      // Subject totals (Sections + Videos + Exams)
-      const subjectTotalTasks = sectionTotal + videoTotal + examTotal;
-      const subjectCompletedTasks = sectionCompleted + videoCompleted + examCompleted;
+      // Subject totals
+      // For Sözel Yetenek, progress is strictly 5 tasks = 100% (1/5=20%, 2/5=40%, 3/5=60%, 4/5=80%, 5/5=100%)
+      const isSozel = plan.subject_id === 'sozel-yetenek';
+      const subjectTotalTasks = isSozel ? 5 : (sectionTotal + videoTotal + examTotal);
+      const subjectCompletedTasks = isSozel ? sectionCompleted : (sectionCompleted + videoCompleted + examCompleted);
 
       const subjectPercentage =
         subjectTotalTasks > 0 ? Math.round((subjectCompletedTasks / subjectTotalTasks) * 100) : 0;
