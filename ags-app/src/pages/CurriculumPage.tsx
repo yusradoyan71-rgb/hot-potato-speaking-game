@@ -816,6 +816,118 @@ export const CurriculumPage: React.FC<CurriculumPageProps> = ({ onNavigate, init
                   })}
                 </div>
               </div>
+            ) : currentPlan.subject_id === 'egitim-bilimleri' ? (
+              <div
+                className="glass-panel"
+                style={{
+                  borderRadius: '20px',
+                  padding: '24px 28px',
+                  border: '1px solid rgba(99, 102, 241, 0.25)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.06)',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <div>
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                      Eğitim Bilimleri ve Türk Millî Eğitim Sistemi
+                    </h3>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', margin: '4px 0 0' }}>
+                      Çalışmanızı tamamladığınız konuyu işaretleyin (11 Görev = %100)
+                    </p>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ fontSize: '1.75rem', fontWeight: 900, color: 'var(--color-primary)', lineHeight: 1 }}>
+                      %{currentSubjectStats?.percentage || 0}
+                    </div>
+                    <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                      {currentSubjectStats?.completedTasks || 0} / 11 Tamamlandı
+                    </div>
+                  </div>
+                </div>
+
+                {/* Eğitim Bilimleri Progress Bar */}
+                <div style={{ width: '100%', height: '12px', backgroundColor: 'rgba(0, 0, 0, 0.08)', borderRadius: '999px', overflow: 'hidden', marginBottom: '12px' }}>
+                  <div
+                    style={{
+                      width: `${currentSubjectStats?.percentage || 0}%`,
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 50%, #10b981 100%)',
+                      borderRadius: '999px',
+                      transition: 'width 0.4s ease',
+                    }}
+                  />
+                </div>
+
+                {/* 11-Step Scale Indicator */}
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', fontSize: '0.72rem', color: 'var(--text-muted)', marginBottom: '22px', gap: '4px', padding: '0 2px' }}>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 0 ? 700 : 400 }}>0/11 (%0)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 1 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 1 ? 'var(--color-primary)' : 'inherit' }}>1/11 (%9)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 2 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 2 ? 'var(--color-primary)' : 'inherit' }}>2/11 (%18)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 3 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 3 ? 'var(--color-primary)' : 'inherit' }}>3/11 (%27)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 4 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 4 ? 'var(--color-primary)' : 'inherit' }}>4/11 (%36)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 5 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 5 ? 'var(--color-primary)' : 'inherit' }}>5/11 (%45)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 6 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 6 ? 'var(--color-primary)' : 'inherit' }}>6/11 (%55)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 7 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 7 ? 'var(--color-primary)' : 'inherit' }}>7/11 (%64)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 8 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 8 ? 'var(--color-primary)' : 'inherit' }}>8/11 (%73)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 9 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 9 ? 'var(--color-primary)' : 'inherit' }}>9/11 (%82)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 10 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks >= 10 ? 'var(--color-primary)' : 'inherit' }}>10/11 (%91)</span>
+                  <span style={{ fontWeight: currentSubjectStats?.completedTasks === 11 ? 700 : 400, color: currentSubjectStats && currentSubjectStats.completedTasks === 11 ? 'var(--color-success)' : 'inherit' }}>11/11 (%100)</span>
+                </div>
+
+                {/* 11 Eğitim Bilimleri Checkboxes */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                  {currentPlan.sections[0]?.tasks.map((task) => {
+                    const isDone = completedTaskIds.has(task.id);
+                    return (
+                      <div
+                        key={task.id}
+                        onClick={() => handleToggleTask(task.id)}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '16px',
+                          padding: '16px 20px',
+                          borderRadius: '14px',
+                          cursor: 'pointer',
+                          border: isDone ? '1.5px solid rgba(16, 185, 129, 0.4)' : '1px solid var(--border-subtle)',
+                          backgroundColor: isDone ? 'rgba(16, 185, 129, 0.07)' : 'rgba(255, 255, 255, 0.02)',
+                          transition: 'all 0.2s ease',
+                        }}
+                      >
+                        <div
+                          style={{
+                            width: '24px',
+                            height: '24px',
+                            borderRadius: '8px',
+                            border: isDone ? '2px solid var(--color-success)' : '2px solid var(--border-medium)',
+                            backgroundColor: isDone ? 'var(--color-success)' : 'transparent',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            color: '#ffffff',
+                            flexShrink: 0,
+                            transition: 'all 0.15s ease',
+                          }}
+                        >
+                          {isDone && <Check size={16} strokeWidth={3} />}
+                        </div>
+                        <span
+                          style={{
+                            fontSize: '1.05rem',
+                            fontWeight: 600,
+                            color: isDone ? 'var(--text-muted)' : 'var(--text-primary)',
+                            textDecoration: isDone ? 'line-through' : 'none',
+                            userSelect: 'none',
+                            letterSpacing: '-0.01em',
+                          }}
+                        >
+                          {task.text}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             ) : (
               currentPlan.sections.map((section, sIndex) => {
                 const totalSec = section.tasks.length;

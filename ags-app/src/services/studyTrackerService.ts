@@ -165,10 +165,12 @@ class StudyTrackerService {
       // For Sayısal Yetenek: strictly 3 tasks = 100% (1/3=33%, 2/3=67%, 3/3=100%)
       // For Tarih: strictly 4 tasks = 100% (1/4=25%, 2/4=50%, 3/4=75%, 4/4=100%)
       // For Coğrafya: strictly 2 tasks = 100% (1/2=50%, 2/2=100%)
+      // For Eğitim Bilimleri & TMES: strictly 11 tasks = 100%
       const isSozel = plan.subject_id === 'sozel-yetenek';
       const isSayisal = plan.subject_id === 'sayisal-yetenek';
       const isTarih = plan.subject_id === 'tarih';
       const isCografya = plan.subject_id === 'cografya';
+      const isEgitim = plan.subject_id === 'egitim-bilimleri';
 
       let subjectTotalTasks = sectionTotal + videoTotal + examTotal;
       let subjectCompletedTasks = sectionCompleted + videoCompleted + examCompleted;
@@ -184,6 +186,9 @@ class StudyTrackerService {
         subjectCompletedTasks = sectionCompleted;
       } else if (isCografya) {
         subjectTotalTasks = 2;
+        subjectCompletedTasks = sectionCompleted;
+      } else if (isEgitim) {
+        subjectTotalTasks = 11;
         subjectCompletedTasks = sectionCompleted;
       }
 
