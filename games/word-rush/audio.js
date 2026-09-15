@@ -1,5 +1,5 @@
 /**
- * SAYI AVI (Number Hunt) — Web Audio Sound Effects Synthesizer
+ * WORD RUSH — Web Audio Sound Effects Synthesizer
  * Zero external dependencies: works completely offline and instantly in any browser.
  */
 
@@ -52,65 +52,67 @@ class SoundController {
     }
   }
 
-  // Correct answer chime (bright upward chord)
+  // Click UI button sound
+  playClick() {
+    if (!this.enabled) return;
+    this.playTone(600, 'sine', 0.05, 0.12);
+  }
+
+  // Correct word selection chime (crisp, pleasant, energetic rising note)
   playCorrect() {
     if (!this.enabled) return;
-    this.playTone(523.25, 'triangle', 0.12, 0.2, 0.00); // C5
-    this.playTone(659.25, 'triangle', 0.14, 0.22, 0.06); // E5
-    this.playTone(783.99, 'triangle', 0.18, 0.25, 0.12); // G5
-    this.playTone(1046.50, 'sine', 0.25, 0.28, 0.18);   // C6
+    this.playTone(587.33, 'triangle', 0.10, 0.22, 0.00); // D5
+    this.playTone(880.00, 'sine', 0.15, 0.25, 0.05);     // A5
+    this.playTone(1174.66, 'triangle', 0.18, 0.28, 0.10); // D6
   }
 
-  // Wrong answer buzz (low minor discord)
+  // Wrong selection buzz (short, polite non-jarring low buzz)
   playWrong() {
     if (!this.enabled) return;
-    this.playTone(220.00, 'sawtooth', 0.20, 0.18, 0.00); // A3
-    this.playTone(207.65, 'sawtooth', 0.25, 0.18, 0.06); // G#3
+    this.playTone(220.00, 'sawtooth', 0.14, 0.16, 0.00); // A3
+    this.playTone(196.00, 'sawtooth', 0.18, 0.16, 0.05); // G3
   }
 
-  // Bonus fanfare when all correct cards are swept
-  playBonus() {
+  // Round completed fanfare (when the team finds the last target word)
+  playRoundComplete() {
     if (!this.enabled) return;
-    const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51, 1567.98];
-    notes.forEach((freq, idx) => {
-      this.playTone(freq, 'triangle', 0.22, 0.2, idx * 0.07);
+    const notes = [
+      { f: 523.25, d: 0.12, t: 0.00 }, // C5
+      { f: 659.25, d: 0.12, t: 0.08 }, // E5
+      { f: 783.99, d: 0.14, t: 0.16 }, // G5
+      { f: 1046.50, d: 0.35, t: 0.24 }, // C6
+      { f: 1318.51, d: 0.45, t: 0.36 }  // E6
+    ];
+    notes.forEach(n => {
+      this.playTone(n.f, 'triangle', n.d, 0.25, n.t);
     });
   }
 
-  // Timer soft tick
-  playTick() {
-    if (!this.enabled) return;
-    this.playTone(880, 'sine', 0.04, 0.05);
-  }
-
-  // Urgent timer tick (<10s)
-  playUrgentTick() {
-    if (!this.enabled) return;
-    this.playTone(1200, 'square', 0.06, 0.12);
-  }
-
-  // Time's up buzzer
-  playTimeUp() {
-    if (!this.enabled) return;
-    this.playTone(330, 'sawtooth', 0.35, 0.25, 0.00);
-    this.playTone(261.63, 'sawtooth', 0.45, 0.25, 0.18);
-    this.playTone(196.00, 'sawtooth', 0.60, 0.30, 0.38);
-  }
-
-  // Game Victory Fanfare
+  // Match victory fanfare
   playVictory() {
     if (!this.enabled) return;
     const melody = [
-      { f: 523.25, d: 0.15, t: 0.00 },
-      { f: 523.25, d: 0.15, t: 0.15 },
-      { f: 523.25, d: 0.15, t: 0.30 },
-      { f: 659.25, d: 0.35, t: 0.45 },
-      { f: 783.99, d: 0.20, t: 0.80 },
-      { f: 1046.50, d: 0.60, t: 1.00 }
+      { f: 523.25, d: 0.12, t: 0.00 },
+      { f: 523.25, d: 0.12, t: 0.12 },
+      { f: 523.25, d: 0.12, t: 0.24 },
+      { f: 659.25, d: 0.30, t: 0.36 },
+      { f: 783.99, d: 0.20, t: 0.65 },
+      { f: 1046.50, d: 0.50, t: 0.85 },
+      { f: 1318.51, d: 0.70, t: 1.15 }
     ];
     melody.forEach(n => {
-      this.playTone(n.f, 'triangle', n.d, 0.25, n.t);
+      this.playTone(n.f, 'triangle', n.d, 0.26, n.t);
     });
+  }
+
+  // Countdown / Go beep
+  playReadyBeep(isHigh = false) {
+    if (!this.enabled) return;
+    if (isHigh) {
+      this.playTone(1046.50, 'sine', 0.25, 0.28);
+    } else {
+      this.playTone(523.25, 'sine', 0.15, 0.20);
+    }
   }
 }
 
