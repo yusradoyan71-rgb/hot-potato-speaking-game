@@ -1,16 +1,729 @@
-<!doctype html>
-<html lang="tr">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233b82f6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M22 10v6M2 10l10-5 10 5-10 5z'/><path d='M6 12v5c3 3 9 3 12 0v-5'/></svg>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AGS Pro | MEB Akademi Giriş Sınavı Hazırlık Platformu</title>
-    <meta name="description" content="Milli Eğitim Akademisi Giriş Sınavı (AGS) Akıllı Hazırlık Sistemi. Eğitim Bilimleri, Genel Yetenek, Genel Kültür, Mevzuat konu anlatımları, mini sınavlar ve Türkiye Geneli Denemeler." />
-    <meta name="theme-color" content="#0a0f1d" />
-    <script type="module" crossorigin src="/assets/index-BvDGKl8I.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Btk7Gpit.css">
-  </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Games - Learn English. Play. Speak.</title>
+  <meta name="description" content="Engaging, interactive English learning games for speaking and vocabulary practice. Designed for classroom smartboards, laptops, and mobile devices.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Decorative background elements -->
+  <div class="bg-shape shape-1" aria-hidden="true"></div>
+  <div class="bg-shape shape-2" aria-hidden="true"></div>
+  <div class="bg-shape shape-3" aria-hidden="true"></div>
+  <div class="bg-grid-pattern" aria-hidden="true"></div>
+
+  <!-- Header / Navigation Bar -->
+  <header class="site-header">
+    <div class="container header-container">
+      <div class="logo-group">
+        <span class="logo-icon" aria-hidden="true">🎮</span>
+        <span class="logo-text">English Games</span>
+      </div>
+      <div class="header-badges">
+        <span class="badge-pill">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          19 Interactive Games
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content container">
+    <!-- Hero Section -->
+    <section class="hero-section" aria-labelledby="hero-title">
+      <div class="hero-tag">
+        <span class="hero-tag-icon" aria-hidden="true">✨</span>
+        <span>Classroom &amp; Speaking Activities</span>
+      </div>
+      <h1 id="hero-title" class="hero-title">
+        English Games
+      </h1>
+      <p class="hero-subtitle">
+        Learn English. Play. Speak.
+      </p>
+      <p class="hero-description">
+        Choose a game below to practice vocabulary, boost speaking fluency, and have fun together in class!
+      </p>
+    </section>
+
+    <!-- Games Grid Section -->
+    <section class="games-section" aria-label="Available Games">
+      <div class="games-grid">
+
+        <!-- Game Card: Grammar Auction -->
+        <article class="game-card card-grammar-auction" id="card-grammar-auction" style="border-top: 4px solid #f59e0b;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.45) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+              <span class="topic-icon" aria-hidden="true">🔨</span>
+              Grammar Strategy
+            </span>
+            <span class="difficulty-tag" style="background: rgba(16, 185, 129, 0.2); color: #6ee7b7;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.3), rgba(234, 88, 12, 0.35)); border-color: rgba(245, 158, 11, 0.5);">
+              <span class="game-emoji" role="img" aria-label="Grammar Auction">🔨</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(245, 158, 11, 0.15); color: #fef08a;">✨ Live Bidding &bull; Gavel Strike &bull; 2-4 Teams</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">GRAMMAR AUCTION</h2>
+            <p class="game-description">
+              Bid team cash on English sentences you think are correct! Win double bonuses for correct grammar, but watch out for costly grammar traps!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/grammar-auction/index.html" class="play-button btn-grammar-auction" id="btn-play-grammar-auction" aria-label="Play Grammar Auction" style="background: linear-gradient(135deg, #f59e0b, #ea580c); color: #fff; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card: Word Rush (Speed Word-Hunting Arena) -->
+        <article class="game-card card-word-rush" id="card-word-rush" style="border-top: 4px solid #38bdf8;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">
+              <span class="topic-icon" aria-hidden="true">⚡</span>
+              Speed Word Hunt
+            </span>
+            <span class="difficulty-tag" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.3), rgba(99, 102, 241, 0.35)); border-color: rgba(56, 189, 248, 0.5);">
+              <span class="game-emoji" role="img" aria-label="Word Rush">⚡</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(56, 189, 248, 0.15); color: #bae6fd;">✨ 15 Categories &bull; Millisecond Timer &bull; 1-4 Teams</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">WORD RUSH</h2>
+            <p class="game-description">
+              Fast-paced smartboard word-hunting competition! Spot and select all category words before time runs out. The fastest team takes the victory!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/word-rush/index.html" class="play-button btn-word-rush" id="btn-play-word-rush" aria-label="Play Word Rush" style="background: linear-gradient(135deg, #0284c7, #6366f1); color: #fff; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card: Tense Building Race (7th & 8th Grade Grammar) -->
+        <article class="game-card card-tense-race" id="card-tense-race" style="border-top: 4px solid #6366f1;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(99, 102, 241, 0.4) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(99, 102, 241, 0.2); color: #a5b4fc;">
+              <span class="topic-icon" aria-hidden="true">🏗️</span>
+              Grammar Race
+            </span>
+            <span class="difficulty-tag" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(56, 189, 248, 0.35)); border-color: rgba(99, 102, 241, 0.45);">
+              <span class="game-emoji" role="img" aria-label="Tense Building Race">🏗️</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(99, 102, 241, 0.15); color: #c7d2fe;">✨ 3 Tenses &bull; Timed Race &bull; 2-4 Teams</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">TENSE BUILDING RACE</h2>
+            <p class="game-description">
+              A thrilling classroom skyscraper race! Answer Simple Present, Present Continuous, and Simple Past questions to climb floors before the global timer expires!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/tense-building-race/index.html" class="play-button btn-tense-race" id="btn-play-tense-race" aria-label="Play Tense Building Race" style="background: linear-gradient(135deg, #4f46e5, #06b6d4); color: #fff; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card: Spin & Choose (Preschool & Kindergarten) -->
+        <article class="game-card card-spin-choose" id="card-spin-choose" style="border-top: 4px solid #ff4757;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(255, 71, 87, 0.4) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(255, 71, 87, 0.2); color: #ff6b81;">
+              <span class="topic-icon" aria-hidden="true">🎡</span>
+              Speaking &amp; Visual
+            </span>
+            <span class="difficulty-tag" style="background: rgba(46, 213, 115, 0.2); color: #2ed573;">Ages 4–6 (Preschool)</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(255, 71, 87, 0.25), rgba(255, 159, 67, 0.35)); border-color: rgba(255, 71, 87, 0.45);">
+              <span class="game-emoji" role="img" aria-label="Spin and Choose">🎡</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(255, 71, 87, 0.15); color: #ffd2d6;">✨ Spin &bull; Tap &bull; Speak</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">SPIN &amp; CHOOSE</h2>
+            <p class="game-description">
+              A colorful wheel game for very young learners. Spin the wheel, pick your favorite item with cute cartoon visuals, and speak simple English!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/spin-and-choose/index.html" class="play-button btn-spin-choose" id="btn-play-spin-choose" aria-label="Play Spin and Choose" style="background: linear-gradient(135deg, #ff4757, #ff9f43); color: #fff; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card: Who Wants to Be a Millionaire? -->
+        <article class="game-card card-millionaire" id="card-millionaire" style="border-top: 4px solid #ffd700;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-millionaire" style="background: rgba(255, 215, 0, 0.2); color: #ffd700;">
+              <span class="topic-icon" aria-hidden="true">💰</span>
+              TV Game Show
+            </span>
+            <span class="difficulty-tag">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(255, 215, 0, 0.25), rgba(30, 58, 138, 0.35)); border-color: rgba(255, 215, 0, 0.45);">
+              <span class="game-emoji" role="img" aria-label="Who Wants to Be a Millionaire">💰</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(255, 215, 0, 0.15); color: #fef08a;">✨ Grammar &bull; Teams &bull; Jokers</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">WHO WANTS TO BE A MILLIONAIRE?</h2>
+            <p class="game-description">
+              Climb the money ladder by answering English grammar questions. Use your three jokers wisely and try to reach the top!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/who-wants-to-be-a-millionaire/index.html" class="play-button btn-millionaire" id="btn-play-millionaire" aria-label="Play Who Wants to Be a Millionaire" style="background: linear-gradient(135deg, #ffd700, #f59e0b); color: #050814; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card: Would You Rather? -->
+        <article class="game-card card-would-you-rather" id="card-would-you-rather" style="border-top: 4px solid #ec4899;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(236, 72, 153, 0.4) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-rather" style="background: rgba(236, 72, 153, 0.2); color: #f472b6;">
+              <span class="topic-icon" aria-hidden="true">🎯</span>
+              Speaking Ice-Breaker
+            </span>
+            <span class="difficulty-tag">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(236, 72, 153, 0.25), rgba(6, 182, 212, 0.25)); border-color: rgba(236, 72, 153, 0.4);">
+              <span class="game-emoji" role="img" aria-label="Would You Rather">🎯</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(236, 72, 153, 0.15); color: #fbcfe8;">✨ Choose &bull; Speak &bull; Explain</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">WOULD YOU RATHER?</h2>
+            <p class="game-description">
+              A fun speaking ice-breaker where students choose between two impossible, funny, or difficult choices and explain their decisions.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/would-you-rather/index.html" class="play-button btn-would-you-rather" id="btn-play-would-you-rather" aria-label="Play Would You Rather" style="background: linear-gradient(135deg, #ec4899, #8b5cf6); color: #fff; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card: Deal or No Deal - Speaking Showdown -->
+        <article class="game-card card-deal-or-no-deal" id="card-deal-or-no-deal">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle, rgba(245, 158, 11, 0.4) 0%, transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-deal" style="background: rgba(245, 158, 11, 0.2); color: #fbbf24;">
+              <span class="topic-icon" aria-hidden="true">💼</span>
+              TV Game Show
+            </span>
+            <span class="difficulty-tag">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.25), rgba(217, 119, 6, 0.25)); border-color: rgba(245, 158, 11, 0.4);">
+              <span class="game-emoji" role="img" aria-label="Deal or No Deal">💼</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(245, 158, 11, 0.15); color: #fde68a;">💼 Speak &bull; Open Boxes &bull; Beat Banker</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">DEAL OR NO DEAL</h2>
+            <p class="game-description">
+              Classroom TV game show! Answer speaking challenges, eliminate boxes, negotiate with the Banker, and win the jackpot.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/deal-or-no-deal/index.html" class="play-button btn-deal-showdown" id="btn-play-deal-showdown" aria-label="Play Deal or No Deal" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; font-weight: 800;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+        
+        <!-- Game Card: Speaking Wheel -->
+        <article class="game-card card-speaking-wheel" id="card-speaking-wheel">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-speaking" style="background: rgba(99, 102, 241, 0.2); color: #818cf8;">
+              <span class="topic-icon" aria-hidden="true">🎡</span>
+              Speaking Fluency
+            </span>
+            <span class="difficulty-tag">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(168, 85, 247, 0.2)); border-color: rgba(99, 102, 241, 0.3);">
+              <span class="game-emoji" role="img" aria-label="Speaking Wheel">🎡</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(99, 102, 241, 0.15); color: #c7d2fe;">🎡 Spin &bull; Speak &bull; Challenge</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">SPEAKING WHEEL</h2>
+            <p class="game-description">
+              Spin the wheel and answer speaking questions that become more challenging each round.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/speaking-wheel/index.html" class="play-button btn-speaking-wheel" id="btn-play-speaking-wheel" aria-label="Play Speaking Wheel" style="background: linear-gradient(135deg, #4f46e5, #7c3aed); color: #fff;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 0: English Wheel -->
+        <article class="game-card card-wheel" id="card-wheel">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-wheel">
+              <span class="topic-icon" aria-hidden="true">🎡</span>
+              Idioms &amp; Phrases
+            </span>
+            <span class="difficulty-tag">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble">
+              <span class="game-emoji" role="img" aria-label="Spinning Wheel">🎡</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true">✨ Spin &bull; Guess &bull; Solve</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">English Wheel</h2>
+            <p class="game-description">
+              A classroom wheel game for practicing English expressions! Spin the wheel, guess consonants, purchase vowels, and solve idioms &amp; proverbs.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/english-wheel/" class="play-button btn-wheel" id="btn-play-wheel" aria-label="Play English Wheel">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 1: English Taboo -->
+        <article class="game-card card-taboo" id="card-taboo">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-taboo">
+              <span class="topic-icon" aria-hidden="true">🎯</span>
+              Vocabulary &amp; Speaking
+            </span>
+            <span class="difficulty-tag">Team Fun</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble">
+              <span class="game-emoji" role="img" aria-label="Taboo cards">🃏</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true">🤫 No Taboo Words!</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">English Taboo</h2>
+            <p class="game-description">
+              Describe words in English without saying the forbidden words.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/english-taboo/" class="play-button btn-taboo" id="btn-play-taboo" aria-label="Play English Taboo">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 2: Keep or Pass -->
+        <article class="game-card card-keep-pass" id="card-keep-pass">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-keep-pass">
+              <span class="topic-icon" aria-hidden="true">🏆</span>
+              Vocabulary &amp; Speaking
+            </span>
+            <span class="difficulty-tag">Strategy</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble">
+              <span class="game-emoji" role="img" aria-label="Mystery box">🎁</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true">⚡ Points Risk</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Keep or Pass</h2>
+            <p class="game-description">
+              A team-based vocabulary game where players decide whether to keep or pass points.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/keep-or-pass/" class="play-button btn-keep-pass" id="btn-play-keep-pass" aria-label="Play Keep or Pass">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 3: Don't Say Yes or No -->
+        <article class="game-card card-yes-no" id="card-yes-no">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-yes-no">
+              <span class="topic-icon" aria-hidden="true">💬</span>
+              Speaking
+            </span>
+            <span class="difficulty-tag">Fast Reflexes</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble">
+              <span class="game-emoji" role="img" aria-label="Zipped mouth">🤐</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true">🚫 No Yes / No</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Don't Say Yes or No</h2>
+            <p class="game-description">
+              Answer questions and keep the conversation going without saying the forbidden words.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/dont-say-yes-or-no/" class="play-button btn-yes-no" id="btn-play-yes-no" aria-label="Play Don't Say Yes or No">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 4: Escape the Island -->
+        <article class="game-card card-island" id="card-island">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-island">
+              <span class="topic-icon" aria-hidden="true">🧭</span>
+              English Questions &amp; Speaking
+            </span>
+            <span class="difficulty-tag">Co-op Quest</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble">
+              <span class="game-emoji" role="img" aria-label="Tropical Island">🏝️</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true">⛵ Island Adventure</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Escape the Island</h2>
+            <p class="game-description">
+              Work as a team, answer English questions and find a way to escape the island.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/escape-the-island/" class="play-button btn-island" id="btn-play-island" aria-label="Play Escape the Island">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 5: Monster Dance -->
+        <article class="game-card card-monster" id="card-monster">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge topic-monster">
+              <span class="topic-icon" aria-hidden="true">👾</span>
+              Body Parts &amp; Dance
+            </span>
+            <span class="difficulty-tag">Kindergarten</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble">
+              <span class="game-emoji" role="img" aria-label="Dancing Monster">🕺</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true">✨ Create &amp; Dance</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Monster Dance</h2>
+            <p class="game-description">
+              Create your cute monster, learn body parts and colors, and dance along together!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/monster-dance/" class="play-button btn-monster" id="btn-play-monster" aria-label="Play Monster Dance">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 6: SORT IT! -->
+        <article class="game-card card-sort-it" id="card-sort-it" style="border-top: 4px solid #00cec9;">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(0, 206, 201, 0.15); color: #00cec9;">
+              <span class="topic-icon" aria-hidden="true">🧠</span>
+              Vocabulary &amp; Grammar
+            </span>
+            <span class="difficulty-tag" style="background: rgba(108, 92, 231, 0.15); color: #a29bfe;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(0, 206, 201, 0.2), rgba(108, 92, 231, 0.2));">
+              <span class="game-emoji" role="img" aria-label="Brain sorting">🧠</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(0, 206, 201, 0.1); color: #00cec9;">⚡ Drag &amp; Drop Station</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Sort It!</h2>
+            <p class="game-description">
+              Fast-paced English sorting station! Categorize vocabulary, sentence context, and verb tenses for Grade 7 &amp; 8.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/sort-it/" class="play-button" id="btn-play-sort-it" aria-label="Play Sort It" style="background: linear-gradient(135deg, #00cec9, #6c5ce7); color: #fff;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 7: HANGMAN -->
+        <article class="game-card card-hangman" id="card-hangman" style="border-top: 4px solid #6366f1;">
+          <div class="card-glow" aria-hidden="true"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(99, 102, 241, 0.15); color: #818cf8;">
+              <span class="topic-icon" aria-hidden="true">🎯</span>
+              Vocabulary &amp; Spelling
+            </span>
+            <span class="difficulty-tag" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(6, 182, 212, 0.25));">
+              <span class="game-emoji" role="img" aria-label="Target Hangman Game">🎯</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(99, 102, 241, 0.12); color: #a5b4fc;">🎨 6-Part Line Art</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Hangman</h2>
+            <p class="game-description">
+              Classic vocabulary and spelling challenge for Grade 7 &amp; 8! Solve text clues, guess letters, and build word power before the figure is complete.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/hangman/" class="play-button" id="btn-play-hangman" aria-label="Play Hangman" style="background: linear-gradient(135deg, #4f46e5, #06b6d4); color: #fff;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 8: WORD PATH -->
+        <article class="game-card card-word-path" id="card-word-path" style="border-top: 4px solid #00d2ff;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle at 50% 0%, rgba(0, 210, 255, 0.3), transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(0, 210, 255, 0.15); color: #38bdf8;">
+              <span class="topic-icon" aria-hidden="true">⚡</span>
+              Word Formation &amp; Parts of Speech
+            </span>
+            <span class="difficulty-tag" style="background: rgba(168, 85, 247, 0.15); color: #c084fc;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(0, 210, 255, 0.25), rgba(99, 102, 241, 0.25));">
+              <span class="game-emoji" role="img" aria-label="Word Path Journey">⚡</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(0, 210, 255, 0.12); color: #38bdf8;">👑 Suffixes &amp; Prefixes</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Word Path</h2>
+            <p class="game-description">
+              Build your journey path by mastering word formation, suffixes, prefixes, adjectives vs adverbs, and word families.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/word-path/" class="play-button" id="btn-play-word-path" aria-label="Play Word Path" style="background: linear-gradient(135deg, #00d2ff, #6366f1); color: #fff;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 9: PASAPAROLA -->
+        <article class="game-card card-pasaparola" id="card-pasaparola" style="border-top: 4px solid #38bdf8;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.35), transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">
+              <span class="topic-icon" aria-hidden="true">🔤</span>
+              A to Z Vocabulary
+            </span>
+            <span class="difficulty-tag" style="background: rgba(34, 197, 94, 0.15); color: #4ade80;">Grade 7 &amp; 8</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(56, 189, 248, 0.25), rgba(14, 165, 233, 0.25));">
+              <span class="game-emoji" role="img" aria-label="Alphabet Pasaparola">🔤</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8;">✨ TV Format &bull; A to Z Arena</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Pasaparola</h2>
+            <p class="game-description">
+              Classic English alphabet vocabulary challenge! Answer simple clues for each letter from A to Z, pass when unsure, and loop back to win together!
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/pasaparola/" class="play-button btn-pasaparola" id="btn-play-pasaparola" aria-label="Play Pasaparola" style="background: linear-gradient(135deg, #0284c7, #38bdf8); color: #fff;">
+              <span class="btn-text">PLAY</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- Game Card 10: SAYI AVI (NUMBER HUNT) -->
+        <article class="game-card card-sayi-avi" id="card-sayi-avi" style="border-top: 4px solid #10b981;">
+          <div class="card-glow" aria-hidden="true" style="background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.35), transparent 70%);"></div>
+          <div class="card-badge-row">
+            <span class="topic-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+              <span class="topic-icon" aria-hidden="true">🔢</span>
+              Matematik &amp; Mantık
+            </span>
+            <span class="difficulty-tag" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">Tüm Sınıflar</span>
+          </div>
+
+          <div class="card-icon-container">
+            <div class="card-icon-bubble" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.25), rgba(6, 182, 212, 0.25)); border-color: rgba(16, 185, 129, 0.4);">
+              <span class="game-emoji" role="img" aria-label="Sayı Avı - Number Hunt">🔎</span>
+            </div>
+            <span class="secret-chip" aria-hidden="true" style="background: rgba(16, 185, 129, 0.12); color: #a7f3d0;">✨ Hedef Sayı &bull; Hızlı İşlem &bull; Takım Yarışı</span>
+          </div>
+
+          <div class="card-body">
+            <h2 class="game-title">Sayı Avı</h2>
+            <p class="game-description">
+              Hedef sayıyı veren matematiksel işlemleri kartlar arasından bul! Tek kişilik veya çok takımlı heyecan dolu sınıf matematik oyunu.
+            </p>
+          </div>
+
+          <div class="card-footer">
+            <a href="games/sayi-avi/index.html" class="play-button btn-sayi-avi" id="btn-play-sayi-avi" aria-label="Play Sayı Avı" style="background: linear-gradient(135deg, #10b981, #06b6d4); color: #fff; font-weight: 800;">
+              <span class="btn-text">OYNA</span>
+              <span class="btn-arrow" aria-hidden="true">➜</span>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Classroom Features / Tips Section -->
+    <section class="features-bar" aria-label="Platform Highlights">
+      <div class="feature-item">
+        <span class="feature-icon" aria-hidden="true">🚀</span>
+        <div class="feature-text">
+          <strong>Instant Play</strong>
+          <span>No login or download required</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon" aria-hidden="true">👥</span>
+        <div class="feature-text">
+          <strong>Classroom Ready</strong>
+          <span>Optimized for smartboards &amp; team activities</span>
+        </div>
+      </div>
+      <div class="feature-item">
+        <span class="feature-icon" aria-hidden="true">🌟</span>
+        <div class="feature-text">
+          <strong>Fluency Focused</strong>
+          <span>Encourages active speaking &amp; confidence</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <p class="footer-copy">
+        English Games &bull; Interactive Educational Games for Language Learners
+      </p>
+      <p class="footer-note">
+        Compatible with Classroom Smartboards, Tablets &amp; Laptops
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
 </html>
